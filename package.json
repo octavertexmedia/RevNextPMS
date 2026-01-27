@@ -1,0 +1,14 @@
+{
+  "name": "revnext-channel-manager",
+  "version": "1.0.0",
+  "description": "Hotel Channel Manager SaaS Platform",
+  "scripts": {
+    "build-css": "tailwindcss -i ./static/landing/css/input.css -o ./static/landing/css/main.css --minify",
+    "watch-css": "tailwindcss -i ./static/landing/css/input.css -o ./static/landing/css/main.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32"
+  }
+}

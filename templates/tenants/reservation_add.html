@@ -1,0 +1,159 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block page_title %}New Reservation{% endblock %}
+{% block page_description %}Create a new booking reservation{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Create New Reservation</h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Property Selection -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Property & Room Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.property.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Property *
+                        </label>
+                        {{ form.property }}
+                        {% if form.property.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.property.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.room_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Room Type *
+                        </label>
+                        {{ form.room_type }}
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label for="{{ form.rate_plan.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Rate Plan *
+                        </label>
+                        {{ form.rate_plan }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Guest Information -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Guest Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.guest_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Guest Name *
+                        </label>
+                        {{ form.guest_name }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.guest_email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email *
+                        </label>
+                        {{ form.guest_email }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.guest_phone.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Phone *
+                        </label>
+                        {{ form.guest_phone }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dates & Occupancy -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Booking Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.check_in.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Check-in Date *
+                        </label>
+                        {{ form.check_in }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.check_out.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Check-out Date *
+                        </label>
+                        {{ form.check_out }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.adults.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Adults *
+                        </label>
+                        {{ form.adults }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.children.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Children
+                        </label>
+                        {{ form.children }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pricing -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Pricing</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.base_room_rate.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Base Room Rate (₹) *
+                        </label>
+                        {{ form.base_room_rate }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.total_amount.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Total Amount (₹) *
+                        </label>
+                        {{ form.total_amount }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Status *
+                        </label>
+                        {{ form.status }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Special Requests -->
+            <div class="pb-6">
+                <label for="{{ form.special_requests.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    Special Requests
+                </label>
+                {{ form.special_requests }}
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="flex justify-end space-x-4 pt-6">
+                <a href="{% url 'tenants:reservations' %}" class="btn-secondary">Cancel</a>
+                <button type="submit" class="btn-primary">Create Reservation</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Update room types and rate plans when property changes
+    document.getElementById('{{ form.property.id_for_label }}').addEventListener('change', function() {
+        const propertyId = this.value;
+        // This would typically fetch room types and rate plans via AJAX
+        // For now, the form will handle it server-side
+    });
+</script>
+{% endblock %}
+{% endblock %}

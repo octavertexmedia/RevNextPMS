@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}RevNext Channel Manager - Hotel Channel Management SaaS{% endblock %}">
+    <title>{% block title %}RevNext Channel Manager{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://www.revnext.in/logo.png">
+    <link rel="apple-touch-icon" href="https://www.revnext.in/logo.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (Compiled) -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'landing/css/main.css' %}">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .brand-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .brand-logo {
+            height: 3rem;
+            width: auto;
+        }
+        .brand-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4b5563;
+            letter-spacing: 0.025em;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="font-inter antialiased">
+    {% block content %}{% endblock %}
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

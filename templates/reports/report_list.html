@@ -1,0 +1,119 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block page_title %}Reports{% endblock %}
+{% block page_description %}View and manage your generated reports{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <h2 class="text-xl font-semibold text-gray-900">Generated Reports</h2>
+    <a href="{% url 'tenants:report_create' %}" class="btn-primary">Generate New Report</a>
+</div>
+
+<!-- Filters -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+    <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select name="status" class="form-select">
+                <option value="">All Statuses</option>
+                <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+                <option value="generating" {% if status_filter == 'generating' %}selected{% endif %}>Generating</option>
+                <option value="failed" {% if status_filter == 'failed' %}selected{% endif %}>Failed</option>
+                <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Report Type</label>
+            <select name="report_type" class="form-select">
+                <option value="">All Types</option>
+                <option value="revenue" {% if report_type_filter == 'revenue' %}selected{% endif %}>Revenue</option>
+                <option value="occupancy" {% if report_type_filter == 'occupancy' %}selected{% endif %}>Occupancy</option>
+                <option value="bookings" {% if report_type_filter == 'bookings' %}selected{% endif %}>Bookings</option>
+                <option value="channel_performance" {% if report_type_filter == 'channel_performance' %}selected{% endif %}>Channel Performance</option>
+            </select>
+        </div>
+        <div class="flex items-end gap-2">
+            <button type="submit" class="btn-primary w-full">Filter</button>
+            <a href="{% url 'tenants:reports_list' %}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200">Clear</a>
+        </div>
+    </form>
+</div>
+
+<!-- Reports Table -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Report Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Range</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Format</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Generated</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for report in reports %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">{{ report.template.name }}</div>
+                        {% if report.description %}
+                        <div class="text-sm text-gray-500">{{ report.template.description|truncatewords:10 }}</div>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {{ report.get_report_type_display }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {% if report.date_range_start and report.date_range_end %}
+                            {{ report.date_range_start|date:"M d, Y" }} - {{ report.date_range_end|date:"M d, Y" }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 uppercase">
+                        {{ report.format }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {% if report.status == 'completed' %}
+                            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">Completed</span>
+                        {% elif report.status == 'generating' %}
+                            <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded-full">Generating</span>
+                        {% elif report.status == 'failed' %}
+                            <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-full">Failed</span>
+                        {% else %}
+                            <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {% if report.generated_at %}
+                            {{ report.generated_at|date:"M d, Y H:i" }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <a href="{% url 'tenants:report_detail' report.id %}" class="text-indigo-600 hover:text-indigo-900 mr-3">View</a>
+                        {% if report.status == 'completed' %}
+                            <a href="{% url 'tenants:report_download' report.id %}" class="text-green-600 hover:text-green-900">Download</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <p class="text-gray-500 mb-4">No reports generated yet</p>
+                        <a href="{% url 'tenants:report_create' %}" class="btn-primary">Generate Your First Report</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

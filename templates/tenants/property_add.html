@@ -1,0 +1,165 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block page_title %}Add Property{% endblock %}
+{% block page_description %}Register a new hotel property{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Add New Property</h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Basic Information -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Property Name *
+                        </label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.legal_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Legal Name
+                        </label>
+                        {{ form.legal_name }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.property_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Property Type *
+                        </label>
+                        {{ form.property_type }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Address -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Address</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label for="{{ form.address_line1.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Address Line 1 *
+                        </label>
+                        {{ form.address_line1 }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.address_line2.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Address Line 2
+                        </label>
+                        {{ form.address_line2 }}
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="{{ form.city.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                City *
+                            </label>
+                            {{ form.city }}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.state.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                State *
+                            </label>
+                            {{ form.state }}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.postal_code.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Postal Code *
+                            </label>
+                            {{ form.postal_code }}
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="{{ form.country.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Country *
+                            </label>
+                            {{ form.country }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Phone
+                        </label>
+                        {{ form.phone }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email
+                        </label>
+                        {{ form.email }}
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label for="{{ form.website.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Website
+                        </label>
+                        {{ form.website }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Business Details -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Business Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.timezone.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Timezone
+                        </label>
+                        {{ form.timezone }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.currency.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Currency
+                        </label>
+                        {{ form.currency }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.gstin.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            GSTIN
+                        </label>
+                        {{ form.gstin }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.pan.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            PAN
+                        </label>
+                        {{ form.pan }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="flex justify-end space-x-4 pt-6">
+                <a href="{% url 'tenants:properties' %}" class="btn-secondary">Cancel</a>
+                <button type="submit" class="btn-primary">Create Property</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

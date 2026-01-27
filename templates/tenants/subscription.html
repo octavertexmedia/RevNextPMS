@@ -1,0 +1,157 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block page_title %}Subscription{% endblock %}
+{% block page_description %}Manage your subscription plan and billing{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl space-y-6">
+    <!-- Current Subscription Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-semibold text-gray-900">Current Subscription</h3>
+            {% if tenant.subscription_plan %}
+            <span class="px-4 py-2 text-sm font-medium rounded-lg {% if tenant.subscription_status == 'active' %}bg-green-100 text-green-700{% elif tenant.subscription_status == 'trial' %}bg-yellow-100 text-yellow-700{% else %}bg-gray-100 text-gray-700{% endif %}">
+                {{ tenant.get_subscription_status_display }}
+            </span>
+            {% endif %}
+        </div>
+        
+        {% if tenant.subscription_plan %}
+        <div class="border border-gray-200 rounded-lg p-6 mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h4 class="text-xl font-bold text-gray-900">{{ tenant.subscription_plan.display_name }}</h4>
+                    <p class="text-sm text-gray-500 mt-1">{{ tenant.subscription_plan.description }}</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <div>
+                    <p class="text-xs text-gray-500">Properties</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ tenant.property_count }}/{{ tenant.subscription_plan.max_properties }}</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div class="bg-indigo-600 h-2 rounded-full" style="width: {% widthratio tenant.property_count tenant.subscription_plan.max_properties 100 %}%"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">Users</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ tenant.users.count }}/{{ tenant.subscription_plan.max_users }}</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div class="bg-indigo-600 h-2 rounded-full" style="width: {% widthratio tenant.users.count tenant.subscription_plan.max_users 100 %}%"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">API Calls/Month</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ tenant.api_calls_this_month }}/{{ tenant.subscription_plan.max_api_calls_per_month }}</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div class="bg-indigo-600 h-2 rounded-full" style="width: {% widthratio tenant.api_calls_this_month tenant.subscription_plan.max_api_calls_per_month 100 %}%"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">Monthly Price</p>
+                    <p class="text-lg font-semibold text-gray-900">₹{{ tenant.subscription_plan.monthly_price.amount|floatformat:0 }}</p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-8">
+            <p class="text-gray-500 mb-4">No active subscription plan</p>
+            <a href="#upgrade" class="btn-primary">Choose a Plan</a>
+        </div>
+        {% endif %}
+        
+        {% if tenant.trial_end_date %}
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <p class="text-sm text-yellow-800">
+                <strong>Trial Period:</strong> Your trial ends on {{ tenant.trial_end_date|date:"F d, Y" }}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Payment History -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-6">Payment History</h3>
+        {% if payment_history %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Plan</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for payment in payment_history %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ payment.created_at|date:"M d, Y" }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ payment.subscription_plan.display_name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{{ payment.amount.amount|floatformat:0 }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full {% if payment.payment_status == 'completed' %}bg-green-100 text-green-700{% elif payment.payment_status == 'failed' %}bg-red-100 text-red-700{% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                                {{ payment.get_payment_status_display }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-indigo-600">
+                            {% if payment.invoice_number %}<a href="#" class="hover:underline">#{{ payment.invoice_number }}</a>{% else %}-{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-500 text-center py-8">No payment history available</p>
+        {% endif %}
+    </div>
+
+    <!-- Upgrade Plans -->
+    {% if available_plans %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8" id="upgrade">
+        <h3 class="text-lg font-semibold text-gray-900 mb-6">Available Plans</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for plan in available_plans %}
+            <div class="border-2 rounded-lg p-6 {% if plan.id == tenant.subscription_plan.id %}border-indigo-500 bg-indigo-50{% else %}border-gray-200{% endif %}">
+                <h4 class="text-xl font-bold text-gray-900 mb-2">{{ plan.display_name }}</h4>
+                <p class="text-sm text-gray-500 mb-4">{{ plan.description }}</p>
+                <div class="mb-4">
+                    <span class="text-3xl font-bold text-gray-900">₹{{ plan.monthly_price.amount|floatformat:0 }}</span>
+                    <span class="text-gray-500">/month</span>
+                </div>
+                <ul class="space-y-2 mb-6 text-sm text-gray-600">
+                    <li>✓ {{ plan.max_properties }} Properties</li>
+                    <li>✓ {{ plan.max_users }} Users</li>
+                    <li>✓ {{ plan.max_api_calls_per_month|floatformat:0 }} API Calls/Month</li>
+                    <li>✓ {{ plan.max_integrations_per_property }} Integrations/Property</li>
+                </ul>
+                {% if plan.id == tenant.subscription_plan.id %}
+                <button class="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium cursor-not-allowed" disabled>Current Plan</button>
+                {% else %}
+                <a href="#" class="block w-full text-center px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700">Upgrade</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Usage Analytics -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-6">API Usage Trend</h3>
+        <div class="h-64 flex items-end justify-between gap-2">
+            {% for month_data in api_usage_trend %}
+            <div class="flex-1 flex flex-col items-center">
+                <div class="w-full bg-gray-200 rounded-t" style="height: {% widthratio month_data.calls tenant.subscription_plan.max_api_calls_per_month 200 %}px; max-height: 200px;">
+                    <div class="bg-indigo-600 w-full rounded-t" style="height: 100%;"></div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2 text-center">{{ month_data.month }}</p>
+                <p class="text-xs font-medium text-gray-700 mt-1">{{ month_data.calls }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

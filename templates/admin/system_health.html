@@ -1,0 +1,82 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}System Health - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="mb-4">System Health Dashboard</h1>
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">System Status</h3>
+                    <p class="text-muted mb-0">Last updated: {{ health_data.timestamp|date:"M d, Y H:i:s" }}</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for check_name, check_data in health_data.checks.items %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-{% if check_data.status == 'healthy' %}success{% elif check_data.status == 'warning' %}warning{% elif check_data.status == 'degraded' %}warning{% else %}danger{% endif %}">
+                                <div class="card-body">
+                                    <h5 class="card-title text-capitalize">{{ check_name }}</h5>
+                                    <p class="card-text">
+                                        <span class="badge badge-{% if check_data.status == 'healthy' %}success{% elif check_data.status == 'warning' %}warning{% elif check_data.status == 'degraded' %}warning{% else %}danger{% endif %}">
+                                            {{ check_data.status|upper }}
+                                        </span>
+                                    </p>
+                                    {% if check_data.message %}
+                                        <p class="text-muted">{{ check_data.message }}</p>
+                                    {% endif %}
+                                    {% if check_data.usage_percent %}
+                                        <div class="progress mb-2">
+                                            <div class="progress-bar bg-{% if check_data.usage_percent < 70 %}success{% elif check_data.usage_percent < 90 %}warning{% else %}danger{% endif %}" 
+                                                 role="progressbar" 
+                                                 style="width: {{ check_data.usage_percent }}%"
+                                                 aria-valuenow="{{ check_data.usage_percent }}" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">
+                                                {{ check_data.usage_percent }}%
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if check_data.free_gb %}
+                                        <p class="text-muted small">
+                                            Free: {{ check_data.free_gb }} GB
+                                            {% if check_data.total_gb %}
+                                                / Total: {{ check_data.total_gb }} GB
+                                            {% endif %}
+                                        </p>
+                                    {% endif %}
+                                    {% if check_data.active_workers %}
+                                        <p class="text-muted small">
+                                            Active Workers: {{ check_data.active_workers }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Quick Actions</h3>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'core:health_check' %}" target="_blank" class="btn btn-primary">View JSON Health Check</a>
+                    <a href="{% url 'core:admin_backup_management' %}" class="btn btn-secondary">Backup Management</a>
+                    <button onclick="location.reload()" class="btn btn-info">Refresh Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+{% if kpis %}
+<div class="dashboard-kpis mb-8 p-6 bg-gray-50 rounded-lg">
+    <h2 class="mb-6 text-xl font-semibold">Key Performance Indicators</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {% for kpi in kpis %}
+        <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <a href="{{ kpi.link }}" class="block no-underline text-inherit">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="m-0 text-sm text-gray-600 font-medium">{{ kpi.title }}</p>
+                        <p class="mt-2 mb-0 text-2xl font-bold text-gray-900">{{ kpi.value }}</p>
+                    </div>
+                    <div class="text-4xl">{{ kpi.icon }}</div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% if quick_links %}
+<div class="quick-links mb-8 p-6 bg-white rounded-lg border border-gray-200">
+    <h2 class="mb-6 text-xl font-semibold text-gray-900">Quick Links</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        {% for link in quick_links %}
+        <a href="{{ link.link }}" class="block no-underline text-inherit">
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 transition-all cursor-pointer hover:bg-gray-100 hover:border-gray-300 hover:-translate-y-0.5">
+                <div class="flex items-center gap-3">
+                    <div class="text-3xl">{{ link.icon }}</div>
+                    <div class="flex-1">
+                        <p class="m-0 text-sm font-semibold text-gray-900">{{ link.title }}</p>
+                        <p class="mt-1 mb-0 text-xs text-gray-600">{{ link.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{# Include the default Unfold app list #}
+<!-- <div class="flex flex-col lg:flex-row lg:gap-8">
+    <div class="grow">
+        {% include "unfold/helpers/app_list_default.html" %}
+    </div>
+    {% include "unfold/helpers/history.html" %}
+</div> -->
+{% endblock %}

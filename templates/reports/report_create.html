@@ -1,0 +1,86 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block page_title %}Generate Report{% endblock %}
+{% block page_description %}Create a new report for your hotel data{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Generate New Report</h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Report Template -->
+            <div>
+                <label for="template" class="block text-sm font-medium text-gray-700 mb-2">
+                    Report Template *
+                </label>
+                <select name="template" id="template" required class="form-select w-full">
+                    <option value="">Select a report template</option>
+                    {% for template in templates %}
+                    <option value="{{ template.id }}">{{ template.name }}</option>
+                    {% endfor %}
+                </select>
+                <p class="mt-1 text-sm text-gray-500">Choose the type of report you want to generate</p>
+            </div>
+            
+            <!-- Date Range -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">
+                        Start Date *
+                    </label>
+                    <input type="date" name="start_date" id="start_date" value="{{ default_start }}" required class="form-input w-full">
+                </div>
+                <div>
+                    <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">
+                        End Date *
+                    </label>
+                    <input type="date" name="end_date" id="end_date" value="{{ default_end }}" required class="form-input w-full">
+                </div>
+            </div>
+            
+            <!-- Format -->
+            <div>
+                <label for="format" class="block text-sm font-medium text-gray-700 mb-2">
+                    Report Format *
+                </label>
+                <div class="grid grid-cols-3 gap-4">
+                    <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-indigo-500 {% if not request.POST or request.POST.format == 'pdf' %}border-indigo-500 bg-indigo-50{% endif %}">
+                        <input type="radio" name="format" value="pdf" class="mr-2" {% if not request.POST or request.POST.format == 'pdf' %}checked{% endif %}>
+                        <div>
+                            <div class="font-medium text-gray-900">PDF</div>
+                            <div class="text-sm text-gray-500">Portable Document</div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-indigo-500 {% if request.POST.format == 'excel' %}border-indigo-500 bg-indigo-50{% endif %}">
+                        <input type="radio" name="format" value="excel" class="mr-2" {% if request.POST.format == 'excel' %}checked{% endif %}>
+                        <div>
+                            <div class="font-medium text-gray-900">Excel</div>
+                            <div class="text-sm text-gray-500">Spreadsheet</div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-indigo-500 {% if request.POST.format == 'csv' %}border-indigo-500 bg-indigo-50{% endif %}">
+                        <input type="radio" name="format" value="csv" class="mr-2" {% if request.POST.format == 'csv' %}checked{% endif %}>
+                        <div>
+                            <div class="font-medium text-gray-900">CSV</div>
+                            <div class="text-sm text-gray-500">Comma Separated</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="flex justify-end gap-4 pt-4 border-t border-gray-200">
+                <a href="{% url 'tenants:reports_list' %}" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200">
+                    Cancel
+                </a>
+                <button type="submit" class="btn-primary">
+                    Generate Report
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

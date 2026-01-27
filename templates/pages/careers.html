@@ -1,0 +1,116 @@
+{% extends 'landing/base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<section class="pt-32 pb-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Hero Section -->
+        <div class="max-w-4xl mx-auto text-center mb-16">
+            <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Join Our Team</h1>
+            <p class="text-xl text-gray-600">
+                Help us transform hotel channel management in India
+            </p>
+        </div>
+
+        <!-- Why Join Us -->
+        <div class="max-w-4xl mx-auto mb-20">
+            <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">Why Join RevNext?</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">🚀 Growth Opportunities</h3>
+                    <p class="text-gray-600">Work on cutting-edge technology and grow your career in a fast-paced startup environment.</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">💡 Innovation</h3>
+                    <p class="text-gray-600">Be part of a team that's revolutionizing how hotels manage their online presence.</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">🤝 Great Culture</h3>
+                    <p class="text-gray-600">Collaborative, inclusive, and supportive work environment where your ideas matter.</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">💰 Competitive Benefits</h3>
+                    <p class="text-gray-600">Competitive salary, health insurance, flexible work hours, and more.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Open Positions -->
+        <div class="max-w-4xl mx-auto mb-20">
+            <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">Open Positions</h2>
+            
+            <div class="space-y-6">
+                <!-- Job 1 -->
+                <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Senior Backend Developer (Python/Django)</h3>
+                            <div class="flex flex-wrap gap-3 text-sm text-gray-600">
+                                <span>📍 Remote / Mumbai</span>
+                                <span>⏰ Full-time</span>
+                                <span>💼 3-5 years experience</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn-primary">Apply Now</a>
+                    </div>
+                </div>
+
+                <!-- Job 2 -->
+                <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Frontend Developer (React/TypeScript)</h3>
+                            <div class="flex flex-wrap gap-3 text-sm text-gray-600">
+                                <span>📍 Remote / Bangalore</span>
+                                <span>⏰ Full-time</span>
+                                <span>💼 2-4 years experience</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn-primary">Apply Now</a>
+                    </div>
+                </div>
+
+                <!-- Job 3 -->
+                <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Customer Success Manager</h3>
+                            <div class="flex flex-wrap gap-3 text-sm text-gray-600">
+                                <span>📍 Mumbai</span>
+                                <span>⏰ Full-time</span>
+                                <span>💼 2-3 years experience</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn-primary">Apply Now</a>
+                    </div>
+                </div>
+
+                <!-- Job 4 -->
+                <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">DevOps Engineer</h3>
+                            <div class="flex flex-wrap gap-3 text-sm text-gray-600">
+                                <span>📍 Remote</span>
+                                <span>⏰ Full-time</span>
+                                <span>💼 3-5 years experience</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn-primary">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- General Application -->
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-12 text-center text-white">
+                <h2 class="text-3xl font-bold mb-4">Don't See a Role That Fits?</h2>
+                <p class="text-xl text-indigo-100 mb-8">We're always looking for talented individuals. Send us your resume!</p>
+                <a href="{% url 'core:contact' %}" class="btn-white-large">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

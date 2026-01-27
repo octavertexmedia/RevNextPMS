@@ -1,0 +1,44 @@
+<header class="header fixed top-0 left-0 right-0 z-50 bg-white shadow-sm transition-all duration-300">
+    <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 lg:h-20">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <a href="/" class="flex flex-col items-center group">
+                    <img src="https://www.revnext.in/logo.png" alt="RevNext Logo" class="h-8 w-auto lg:h-10 mb-1">
+                    <span class="text-xs lg:text-sm font-semibold text-gray-700 group-hover:text-indigo-600 transition-colors">
+                        Channel Manager
+                    </span>
+                </a>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex items-center space-x-8">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#integrations" class="nav-link">Integrations</a>
+                <a href="#pricing" class="nav-link">Pricing</a>
+                <a href="#testimonials" class="nav-link">Testimonials</a>
+                <a href="{% url 'tenants:login' %}" class="text-gray-600 hover:text-gray-900 transition-colors">Login</a>
+                <a href="{% url 'tenants:register' %}" class="btn-primary">Start Free Trial</a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button class="lg:hidden mobile-menu-btn p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors" aria-label="Toggle menu">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div class="mobile-menu hidden lg:hidden pb-4">
+            <div class="flex flex-col space-y-4 pt-4">
+                <a href="#features" class="nav-link-mobile">Features</a>
+                <a href="#integrations" class="nav-link-mobile">Integrations</a>
+                <a href="#pricing" class="nav-link-mobile">Pricing</a>
+                <a href="#testimonials" class="nav-link-mobile">Testimonials</a>
+                <a href="{% url 'tenants:login' %}" class="nav-link-mobile">Login</a>
+                <a href="{% url 'tenants:register' %}" class="btn-primary w-full text-center">Start Free Trial</a>
+            </div>
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,41 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block page_title %}Properties{% endblock %}
+{% block page_description %}Manage your hotel properties{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <h2 class="text-xl font-semibold text-gray-900">Your Properties</h2>
+    <a href="{% url 'tenants:property_add' %}" class="btn-primary">Add New Property</a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for property in properties %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-4">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">{{ property.name }}</h3>
+                <p class="text-sm text-gray-500">{{ property.city }}, {{ property.state }}</p>
+            </div>
+            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">Active</span>
+        </div>
+        <div class="space-y-2 text-sm text-gray-600">
+            <p><span class="font-medium">Type:</span> {{ property.get_property_type_display }}</p>
+            {% if property.phone %}<p><span class="font-medium">Phone:</span> {{ property.phone }}</p>{% endif %}
+            {% if property.email %}<p><span class="font-medium">Email:</span> {{ property.email }}</p>{% endif %}
+        </div>
+        <div class="mt-4 pt-4 border-t border-gray-200">
+            <a href="#" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Manage →</a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full text-center py-12">
+        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        </svg>
+        <p class="text-gray-500 mb-4">No properties yet</p>
+        <a href="{% url 'tenants:property_add' %}" class="btn-primary">Add Your First Property</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

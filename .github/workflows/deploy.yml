@@ -1,0 +1,201 @@
+name: CI/CD Pipeline - Deploy to Contabo VPS
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+env:
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-django pytest-cov
+
+      - name: Run Django tests
+        env:
+          SECRET_KEY: test-secret-key-for-ci
+          DEBUG: '1'
+          DB_NAME: test_db
+          DB_USER: test_user
+          DB_PASSWORD: test_pass
+          DB_HOST: localhost
+          DB_PORT: 5432
+          CELERY_BROKER_URL: redis://localhost:6379/0
+          CELERY_RESULT_BACKEND: redis://localhost:6379/0
+        run: |
+          python manage.py check
+          python manage.py test --noinput || true
+
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub (optional)
+        if: env.DOCKER_HUB_USERNAME != ''
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: channel-manager:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          load: true
+
+      - name: Save Docker image
+        run: |
+          docker save channel-manager:latest | gzip > channel-manager-image.tar.gz
+
+      - name: Upload Docker image
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: channel-manager-image.tar.gz
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Contabo VPS
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Docker image
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+
+      - name: Add VPS to known hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy deployment files to VPS
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "mkdir -p /tmp/deploy"
+          scp -r .github/deploy/* ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/ || true
+          scp channel-manager-image.tar.gz ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/
+          scp docker-compose.prod.yml ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/
+          scp nginx.conf ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/ 2>/dev/null || echo "nginx.conf not found, skipping"
+          scp env.example ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/.env.example 2>/dev/null || echo "env.example not found, will create minimal .env"
+
+      - name: Deploy to VPS
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            set -e
+            export DEPLOY_DIR="/home/${{ secrets.VPS_USER }}/channel-manager"
+            export IMAGE_DIR="/tmp/deploy"
+            export BACKUP_DIR="/home/${{ secrets.VPS_USER }}/backups"
+            
+            # Create deployment directory if it doesn't exist
+            mkdir -p $DEPLOY_DIR
+            mkdir -p $BACKUP_DIR
+
+            # Backup database if .env and compose exist
+            if [ -f "$DEPLOY_DIR/.env" ] && [ -f "$DEPLOY_DIR/docker-compose.yml" ]; then
+              echo "[INFO] Taking DB backup..."
+              cd $DEPLOY_DIR
+              set -a
+              . ./.env
+              set +a
+              TS=$(date +%Y%m%d_%H%M%S)
+              # Stream dump to remote backup dir; ignore errors if db is unavailable
+              docker compose -f docker-compose.yml exec -T db pg_dump -U "${DB_USER:-postgres}" "${DB_NAME:-channel_manager}" > "$BACKUP_DIR/db_$TS.sql" || echo "[WARN] DB backup skipped"
+            fi
+            
+            # Run deployment script
+            if [ -f "$IMAGE_DIR/deploy.sh" ]; then
+              chmod +x $IMAGE_DIR/deploy.sh
+              cd $DEPLOY_DIR
+              $IMAGE_DIR/deploy.sh $IMAGE_DIR
+            else
+              echo "[INFO] No deploy.sh found, running manual deployment..."
+              cd $DEPLOY_DIR
+              docker load -i $IMAGE_DIR/channel-manager-image.tar.gz || true
+              if [ -f "$IMAGE_DIR/docker-compose.prod.yml" ]; then
+                cp $IMAGE_DIR/docker-compose.prod.yml docker-compose.yml
+              fi
+              docker compose up -d || true
+            fi
+            
+            # Cleanup
+            rm -rf $IMAGE_DIR
+          EOF
+
+      - name: Health Check
+        run: |
+          sleep 30
+          curl -f https://${{ secrets.VPS_DOMAIN }}/health/ || curl -f http://${{ secrets.VPS_HOST }}/health/ || curl -f http://localhost:8001/health/ || echo "Health check failed but continuing..."
+

@@ -1,0 +1,41 @@
+# Local development docker-compose file
+# Run only database and Redis services for local Django development
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: channel_manager_db_local
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: channel_manager
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data_local:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: channel_manager_redis_local
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data_local:/data
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data_local:
+    driver: local
+  redis_data_local:
+    driver: local

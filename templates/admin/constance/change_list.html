@@ -1,0 +1,62 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Constance" %} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="constance-config" style="max-width: 1200px; margin: 0 auto;">
+    <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 1.5rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">{% trans "Configuration Settings" %}</h1>
+        <p style="color: #6b7280; font-size: 0.875rem;">{% trans "Manage system-wide configuration settings" %}</p>
+    </div>
+
+    <form method="post" action="" style="display: flex; flex-direction: column; gap: 1.5rem;">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <div style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <div style="background: white; border-radius: 0.5rem; border: 1px solid #e5e7eb; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            {% for field in form %}
+            <div style="padding: 1.5rem; border-bottom: 1px solid #e5e7eb; {% if not forloop.last %}border-bottom: 1px solid #e5e7eb;{% else %}border-bottom: none;{% endif %} transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f9fafb';" onmouseout="this.style.backgroundColor='white';">
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <label for="{{ field.id_for_label }}" style="display: block; font-size: 0.875rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">
+                        {{ field.label }}
+                        {% if field.field.required %}
+                        <span style="color: #ef4444;">*</span>
+                        {% endif %}
+                    </label>
+                    {% if field.help_text %}
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.5rem;">{{ field.help_text }}</p>
+                    {% endif %}
+                    <div style="margin-top: 0.5rem;">
+                        {{ field }}
+                    </div>
+                    {% if field.errors %}
+                    <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #dc2626;">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+            <a href="{% url 'admin:index' %}" style="padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: #374151; background: white; border: 1px solid #d1d5db; border-radius: 0.375rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#f9fafb';" onmouseout="this.style.backgroundColor='white';">
+                {% trans "Cancel" %}
+            </a>
+            <button type="submit" style="padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: white; background: #4f46e5; border: 1px solid transparent; border-radius: 0.375rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#4338ca';" onmouseout="this.style.backgroundColor='#4f46e5';">
+                {% trans "Save" %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

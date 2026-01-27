@@ -1,0 +1,943 @@
+{% extends 'landing/base.html' %}
+{% load static %}
+
+{% block title %}All Integrations - 75+ Booking Platforms | Channel Manager{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="text-white py-20" style="background: linear-gradient(to bottom right, #2563eb, #1d4ed8, #4f46e5);">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-4xl mx-auto">
+            <h1 class="text-4xl lg:text-5xl font-bold mb-6">
+                Connect with 75+ Booking Platforms
+            </h1>
+            <p class="text-xl text-blue-100 mb-8">
+                Seamlessly integrate with major OTAs, GDS systems, metasearch engines, bedbanks, and more
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="{% url 'tenants:register' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
+                    Get Started Free
+                </a>
+                <a href="#integrations" class="bg-blue-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-400 transition-colors border border-blue-400">
+                    Browse All Platforms
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Integration Categories Filter -->
+<section id="integrations" class="py-12 bg-gray-50 sticky top-0 z-10 shadow-sm">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap justify-center gap-3">
+            <button class="integration-filter-btn active px-6 py-2 rounded-full font-semibold text-sm transition-all" data-category="all">
+                All Platforms (75+)
+            </button>
+            <button class="integration-filter-btn px-6 py-2 rounded-full font-semibold text-sm transition-all bg-white hover:bg-blue-50 text-gray-700" data-category="ota">
+                OTAs (35+)
+            </button>
+            <button class="integration-filter-btn px-6 py-2 rounded-full font-semibold text-sm transition-all bg-white hover:bg-blue-50 text-gray-700" data-category="gds">
+                GDS (4)
+            </button>
+            <button class="integration-filter-btn px-6 py-2 rounded-full font-semibold text-sm transition-all bg-white hover:bg-blue-50 text-gray-700" data-category="metasearch">
+                Metasearch (8+)
+            </button>
+            <button class="integration-filter-btn px-6 py-2 rounded-full font-semibold text-sm transition-all bg-white hover:bg-blue-50 text-gray-700" data-category="bedbank">
+                Bedbanks (12+)
+            </button>
+            <button class="integration-filter-btn px-6 py-2 rounded-full font-semibold text-sm transition-all bg-white hover:bg-blue-50 text-gray-700" data-category="aggregator">
+                Aggregators (10+)
+            </button>
+            <button class="integration-filter-btn px-6 py-2 rounded-full font-semibold text-sm transition-all bg-white hover:bg-blue-50 text-gray-700" data-category="other">
+                Others (6+)
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Integrations Grid -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- OTAs Section -->
+        <div class="integration-category mb-16" data-category="ota">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Online Travel Agencies (OTAs)</h2>
+                <p class="text-gray-600">Connect with the world's leading booking platforms</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                <!-- Major Global OTAs -->
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-blue-500" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/booking.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Booking.com" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Booking.com'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Booking.com</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-purple-500" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/expedia.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Expedia" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Expedia'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Expedia</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-orange-500" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/agoda.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Agoda" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Agoda'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Agoda</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-red-500" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/hotels.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Hotels.com" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Hotels.com'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Hotels.com</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-pink-500" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/airbnb.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Airbnb" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Airbnb'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Airbnb</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <!-- Indian OTAs -->
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-indigo-500" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/makemytrip.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="MakeMyTrip" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='MakeMyTrip'" />
+                        <h3 class="font-bold text-gray-900 mb-1">MakeMyTrip</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-yellow-500" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/goibibo.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Goibibo" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Goibibo'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Goibibo</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-teal-500" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/yatra.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Yatra" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Yatra'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Yatra</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-cyan-500" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/cleartrip.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Cleartrip" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Cleartrip'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Cleartrip</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-emerald-500" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/easemytrip.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="EaseMyTrip" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='EaseMyTrip'" />
+                        <h3 class="font-bold text-gray-900 mb-1">EaseMyTrip</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <!-- More Global OTAs -->
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/priceline.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Priceline" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Priceline'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Priceline</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/hotwire.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Hotwire" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Hotwire'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Hotwire</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/orbitz.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Orbitz" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Orbitz'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Orbitz</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/travelocity.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Travelocity" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Travelocity'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Travelocity</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/trip.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Ctrip" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Ctrip'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Ctrip</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/qunar.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Qunar" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Qunar'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Qunar</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/fliggy.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Fliggy" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Fliggy'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Fliggy</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/traveloka.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Traveloka" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Traveloka'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Traveloka</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/booking.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="BookingGo" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='BookingGo'" />
+                        <h3 class="font-bold text-gray-900 mb-1">BookingGo</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/hostelworld.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Hostelworld" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Hostelworld'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Hostelworld</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <!-- Additional Global OTAs -->
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/hrs.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="HRS" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='HRS'" />
+                        <h3 class="font-bold text-gray-900 mb-1">HRS</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/laterooms.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Laterooms" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Laterooms'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Laterooms</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/venere.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Venere" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Venere'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Venere</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/laterooms.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="LateRooms" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='LateRooms'" />
+                        <h3 class="font-bold text-gray-900 mb-1">LateRooms</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/splendia.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Splendia" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Splendia'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Splendia</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/skoosh.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Skoosh" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Skoosh'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Skoosh</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/ebookers.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="ebookers" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='ebookers'" />
+                        <h3 class="font-bold text-gray-900 mb-1">ebookers</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/cheaptickets.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="CheapTickets" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='CheapTickets'" />
+                        <h3 class="font-bold text-gray-900 mb-1">CheapTickets</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/ratestogo.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="RatesToGo" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='RatesToGo'" />
+                        <h3 class="font-bold text-gray-900 mb-1">RatesToGo</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/hotelsclick.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="HotelsClick" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='HotelsClick'" />
+                        <h3 class="font-bold text-gray-900 mb-1">HotelsClick</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/rakuten.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Rakuten Travel" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Rakuten Travel'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Rakuten Travel</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">J</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Jalan</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">R</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Rakuten</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">L</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Luxury Retreats</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">O</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">OneFineStay</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">P</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Plum Guide</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">K</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Kid & Coe</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">H</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">HomeToGo</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">9</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">9flats</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">W</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Wimdu</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">9</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">9flats</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">H</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Holidu</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">H</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Homestay</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">C</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Couchsurfing</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">B</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">BeMyGuest</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">G</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Getaroom</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">S</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Skoosh</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">R</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Roomorama</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">T</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Tujia</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="ota">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">X</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Xotels</h3>
+                        <p class="text-xs text-gray-500 mb-2">OTA</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GDS Systems Section -->
+        <div class="integration-category mb-16" data-category="gds">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Global Distribution Systems (GDS)</h2>
+                <p class="text-gray-600">Connect with major GDS networks for corporate and travel agent bookings</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-blue-500" data-category="gds">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/amadeus.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Amadeus" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Amadeus'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Amadeus</h3>
+                        <p class="text-xs text-gray-500 mb-2">GDS</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-red-500" data-category="gds">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/sabre.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Sabre" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Sabre'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Sabre</h3>
+                        <p class="text-xs text-gray-500 mb-2">GDS</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-green-500" data-category="gds">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/travelport.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Galileo (Travelport)" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Galileo'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Galileo</h3>
+                        <p class="text-xs text-gray-500 mb-2">GDS</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-purple-500" data-category="gds">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/travelport.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Worldspan (Travelport)" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Worldspan'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Worldspan</h3>
+                        <p class="text-xs text-gray-500 mb-2">GDS</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metasearch Section -->
+        <div class="integration-category mb-16" data-category="metasearch">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Metasearch Engines</h2>
+                <p class="text-gray-600">Increase visibility on comparison and search platforms</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-blue-500" data-category="metasearch">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/google.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Google Hotels" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Google Hotels'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Google Hotels</h3>
+                        <p class="text-xs text-gray-500 mb-2">Metasearch</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-red-500" data-category="metasearch">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/trivago.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Trivago" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Trivago'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Trivago</h3>
+                        <p class="text-xs text-gray-500 mb-2">Metasearch</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-orange-500" data-category="metasearch">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/kayak.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Kayak" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Kayak'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Kayak</h3>
+                        <p class="text-xs text-gray-500 mb-2">Metasearch</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-yellow-500" data-category="metasearch">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/skyscanner.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Skyscanner" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Skyscanner'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Skyscanner</h3>
+                        <p class="text-xs text-gray-500 mb-2">Metasearch</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="metasearch">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/hotelscombined.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="HotelsCombined" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='HotelsCombined'" />
+                        <h3 class="font-bold text-gray-900 mb-1">HotelsCombined</h3>
+                        <p class="text-xs text-gray-500 mb-2">Metasearch</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="metasearch">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/wego.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Wego" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Wego'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Wego</h3>
+                        <p class="text-xs text-gray-500 mb-2">Metasearch</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="metasearch">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/momondo.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Momondo" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Momondo'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Momondo</h3>
+                        <p class="text-xs text-gray-500 mb-2">Metasearch</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="metasearch">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/dohop.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Dohop" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Dohop'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Dohop</h3>
+                        <p class="text-xs text-gray-500 mb-2">Metasearch</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bedbanks Section -->
+        <div class="integration-category mb-16" data-category="bedbank">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Bedbanks & Wholesalers</h2>
+                <p class="text-gray-600">Access wholesale inventory and rates from leading bedbanks</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-blue-500" data-category="bedbank">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/hotelbeds.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Hotelbeds" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Hotelbeds'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Hotelbeds</h3>
+                        <p class="text-xs text-gray-500 mb-2">Bedbank</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-orange-500" data-category="bedbank">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/tbo.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="TBO" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='TBO'" />
+                        <h3 class="font-bold text-gray-900 mb-1">TBO</h3>
+                        <p class="text-xs text-gray-500 mb-2">Bedbank</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-green-500" data-category="bedbank">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/hotelbeds.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="GTA (Hotelbeds)" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='GTA'" />
+                        <h3 class="font-bold text-gray-900 mb-1">GTA</h3>
+                        <p class="text-xs text-gray-500 mb-2">Bedbank</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="bedbank">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">G</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Gullivers</h3>
+                        <p class="text-xs text-gray-500 mb-2">Bedbank</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="bedbank">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">T</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Tourico</h3>
+                        <p class="text-xs text-gray-500 mb-2">Bedbank</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="bedbank">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">H</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Hotusa</h3>
+                        <p class="text-xs text-gray-500 mb-2">Bedbank</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="bedbank">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">J</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">JacTravel</h3>
+                        <p class="text-xs text-gray-500 mb-2">Bedbank</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="bedbank">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">T</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Tourico Holidays</h3>
+                        <p class="text-xs text-gray-500 mb-2">Bedbank</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="bedbank">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">H</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Hotusa Hotels</h3>
+                        <p class="text-xs text-gray-500 mb-2">Bedbank</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="bedbank">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">W</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">WebBeds</h3>
+                        <p class="text-xs text-gray-500 mb-2">Bedbank</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="bedbank">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">T</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Tourico Connect</h3>
+                        <p class="text-xs text-gray-500 mb-2">Bedbank</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="bedbank">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">H</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Hotusa Connect</h3>
+                        <p class="text-xs text-gray-500 mb-2">Bedbank</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aggregators Section -->
+        <div class="integration-category mb-16" data-category="aggregator">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Aggregators & Marketplaces</h2>
+                <p class="text-gray-600">Connect with aggregator platforms and marketplaces</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="aggregator">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">TA</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">TripAdvisor</h3>
+                        <p class="text-xs text-gray-500 mb-2">Aggregator</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="aggregator">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">Y</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Yelp</h3>
+                        <p class="text-xs text-gray-500 mb-2">Aggregator</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="aggregator">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">F</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Foursquare</h3>
+                        <p class="text-xs text-gray-500 mb-2">Aggregator</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="aggregator">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">O</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">OpenTable</h3>
+                        <p class="text-xs text-gray-500 mb-2">Aggregator</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="aggregator">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">R</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Resy</h3>
+                        <p class="text-xs text-gray-500 mb-2">Aggregator</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="aggregator">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">B</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Bookatable</h3>
+                        <p class="text-xs text-gray-500 mb-2">Aggregator</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="aggregator">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">Z</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Zomato</h3>
+                        <p class="text-xs text-gray-500 mb-2">Aggregator</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="aggregator">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">S</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Swiggy</h3>
+                        <p class="text-xs text-gray-500 mb-2">Aggregator</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="aggregator">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">U</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Uber Eats</h3>
+                        <p class="text-xs text-gray-500 mb-2">Aggregator</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="aggregator">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">D</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">DoorDash</h3>
+                        <p class="text-xs text-gray-500 mb-2">Aggregator</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other Platforms Section -->
+        <div class="integration-category mb-16" data-category="other">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Other Platforms</h2>
+                <p class="text-gray-600">Additional booking and distribution platforms</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="other">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">V</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Vrbo</h3>
+                        <p class="text-xs text-gray-500 mb-2">Other</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="other">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">H</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">HomeAway</h3>
+                        <p class="text-xs text-gray-500 mb-2">Other</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="other">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">B</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">BookingPal</h3>
+                        <p class="text-xs text-gray-500 mb-2">Other</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="other">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/rategain.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="RateGain" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='RateGain'" />
+                        <h3 class="font-bold text-gray-900 mb-1">RateGain</h3>
+                        <p class="text-xs text-gray-500 mb-2">Other</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="other">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/siteminder.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="SiteMinder" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='SiteMinder'" />
+                        <h3 class="font-bold text-gray-900 mb-1">SiteMinder</h3>
+                        <p class="text-xs text-gray-500 mb-2">Other</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="other">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/cloudbeds.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Cloudbeds" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Cloudbeds'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Cloudbeds</h3>
+                        <p class="text-xs text-gray-500 mb-2">Other</p>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200" data-category="other">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">L</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Little Hotelier</h3>
+                        <p class="text-xs text-gray-500 mb-2">Other</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl lg:text-4xl font-bold mb-6">Ready to Connect Your Properties?</h2>
+        <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            Start managing all your booking channels from one central dashboard
+        </p>
+        <a href="{% url 'tenants:register' %}" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-50 transition-colors inline-block">
+            Get Started Free
+        </a>
+    </div>
+</section>
+
+<style>
+.integration-filter-btn {
+    background: white;
+    color: #374151;
+    border: 2px solid #e5e7eb;
+}
+
+.integration-filter-btn.active {
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+    color: white;
+    border-color: #3b82f6;
+}
+
+.integration-category {
+    display: block;
+}
+
+.integration-category.hidden {
+    display: none;
+}
+
+.integration-item {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.integration-item:hover {
+    transform: translateY(-4px);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.integration-filter-btn');
+    const categories = document.querySelectorAll('.integration-category');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const category = this.getAttribute('data-category');
+            
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show/hide categories
+            categories.forEach(cat => {
+                if (category === 'all' || cat.getAttribute('data-category') === category) {
+                    cat.classList.remove('hidden');
+                } else {
+                    cat.classList.add('hidden');
+                }
+            });
+            
+            // Scroll to integrations section
+            document.getElementById('integrations').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+});
+</script>
+
+
+{% endblock %}

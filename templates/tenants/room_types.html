@@ -1,0 +1,125 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block page_title %}Room Types{% endblock %}
+{% block page_description %}Manage room categories and configurations{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex items-center justify-between">
+    <div>
+        <h2 class="text-xl font-semibold text-gray-900">Room Types</h2>
+        <p class="text-sm text-gray-500 mt-1">Manage room categories and configurations</p>
+    </div>
+    <a href="{% url 'tenants:room_type_add' %}" class="btn-primary">
+        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Add Room Type
+    </a>
+</div>
+
+<!-- Filters and Search -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+    <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Property</label>
+            <select name="property" class="form-select">
+                <option value="">All Properties</option>
+                {% for property in properties %}
+                <option value="{{ property.id }}" {% if selected_property == property.id|stringformat:"s" %}selected{% endif %}>{{ property.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <input type="text" name="search" value="{{ search_query }}" placeholder="Search room types..." class="form-input">
+        </div>
+        <div class="flex items-end gap-2">
+            <button type="submit" class="btn-primary w-full">Filter</button>
+            <a href="{% url 'tenants:room_types' %}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200">Clear</a>
+        </div>
+    </form>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for room_type in room_types %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+        <div class="mb-4">
+            <h3 class="text-lg font-semibold text-gray-900">{{ room_type.name }}</h3>
+            <p class="text-sm text-gray-500 mt-1">{{ room_type.property.name }}</p>
+        </div>
+        
+        {% if room_type.description %}
+        <p class="text-sm text-gray-600 mb-4">{{ room_type.description|truncatewords:15 }}</p>
+        {% endif %}
+        
+        <div class="space-y-3 mb-4">
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                    <span class="text-gray-500">Max Occupancy</span>
+                    <p class="font-medium text-gray-900">{{ room_type.max_occupancy }} guests</p>
+                </div>
+                <div>
+                    <span class="text-gray-500">Base Occupancy</span>
+                    <p class="font-medium text-gray-900">{{ room_type.base_occupancy }} guests</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                    <span class="text-gray-500">Max Adults</span>
+                    <p class="font-medium text-gray-900">{{ room_type.max_adults }}</p>
+                </div>
+                <div>
+                    <span class="text-gray-500">Max Children</span>
+                    <p class="font-medium text-gray-900">{{ room_type.max_children }}</p>
+                </div>
+            </div>
+            
+            {% if room_type.size_sqm %}
+            <div class="text-sm">
+                <span class="text-gray-500">Size</span>
+                <p class="font-medium text-gray-900">{{ room_type.size_sqm }} sqm</p>
+            </div>
+            {% endif %}
+            
+            {% if room_type.bed_type %}
+            <div class="text-sm">
+                <span class="text-gray-500">Bed Type</span>
+                <p class="font-medium text-gray-900">{{ room_type.bed_type }}</p>
+            </div>
+            {% endif %}
+        </div>
+        
+        {% if room_type.amenities %}
+        <div class="mb-4 pt-4 border-t border-gray-200">
+            <p class="text-xs text-gray-500 mb-2">Amenities:</p>
+            <div class="flex flex-wrap gap-2">
+                {% for amenity in room_type.amenities %}
+                <span class="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded">{{ amenity }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
+            <div class="text-xs text-gray-500">
+                Updated: {{ room_type.updated_at|date:"M d, Y" }}
+            </div>
+            <a href="#" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Edit →</a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full text-center py-12 bg-white rounded-xl shadow-sm border border-gray-200">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+        </svg>
+        <p class="mt-4 text-gray-500 mb-4">No room types configured yet</p>
+        {% if search_query or selected_property %}
+        <a href="{% url 'tenants:room_types' %}" class="text-indigo-600 hover:text-indigo-700 font-medium">Clear filters</a>
+        {% else %}
+        <a href="{% url 'tenants:room_type_add' %}" class="btn-primary">Add Your First Room Type</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,235 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Dashboard - {{ tenant.name|default:"Channel Manager" }}{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+{% block page_description %}Overview of your hotel properties, bookings, and performance{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stat-card {
+        transition: all 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .chart-container {
+        height: 200px;
+    }
+    .recent-item {
+        transition: all 0.2s ease;
+    }
+    .recent-item:hover {
+        background-color: #f9fafb;
+        transform: translateX(4px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Properties Card -->
+            <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Properties</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ total_properties }}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                </div>
+                <a href="{% url 'tenants:properties' %}" class="text-sm text-indigo-600 hover:text-indigo-700 mt-4 inline-block">View all →</a>
+            </div>
+
+            <!-- Reservations Card -->
+            <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Reservations</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ total_reservations }}</p>
+                        <p class="text-xs text-green-600 mt-1">{{ confirmed_reservations }} confirmed</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <a href="{% url 'tenants:reservations' %}" class="text-sm text-indigo-600 hover:text-indigo-700 mt-4 inline-block">View all →</a>
+            </div>
+
+            <!-- Revenue Card -->
+            <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Total Revenue</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2">₹{{ total_revenue|floatformat:0 }}</p>
+                        <p class="text-xs text-green-600 mt-1">₹{{ monthly_revenue|floatformat:0 }} this month</p>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <a href="{% url 'tenants:payments' %}" class="text-sm text-indigo-600 hover:text-indigo-700 mt-4 inline-block">View all →</a>
+            </div>
+
+            <!-- Integrations Card -->
+            <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">OTA Integrations</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ total_integrations }}</p>
+                        <p class="text-xs text-blue-600 mt-1">{{ active_syncs }} active syncs</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                        </svg>
+                    </div>
+                </div>
+                <a href="{% url 'tenants:integrations' %}" class="text-sm text-indigo-600 hover:text-indigo-700 mt-4 inline-block">View all →</a>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Quick Actions Card -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                <div class="space-y-3">
+                    <a href="{% url 'tenants:property_add' %}" class="flex items-center p-3 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
+                        <svg class="w-5 h-5 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-900">Add New Property</span>
+                    </a>
+                    <a href="{% url 'tenants:integration_add' %}" class="flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                        <svg class="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-900">Connect OTA Platform</span>
+                    </a>
+                    <a href="{% url 'tenants:reservation_add' %}" class="flex items-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                        <svg class="w-5 h-5 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-900">Create Reservation</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Reservations -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Reservations</h3>
+                <div class="space-y-3">
+                    {% for reservation in recent_reservations %}
+                    <div class="recent-item p-3 border border-gray-200 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">{{ reservation.guest_name }}</p>
+                                <p class="text-xs text-gray-500">{{ reservation.property.name }}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs font-medium {% if reservation.status == 'CONFIRMED' %}text-green-600{% elif reservation.status == 'CANCELLED' %}text-red-600{% else %}text-yellow-600{% endif %}">
+                                    {{ reservation.status }}
+                                </p>
+                                <p class="text-xs text-gray-500">{{ reservation.check_in|date:"M d" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-sm text-gray-500 text-center py-4">No reservations yet</p>
+                    {% endfor %}
+                </div>
+                <a href="{% url 'tenants:reservations' %}" class="text-sm text-indigo-600 hover:text-indigo-700 mt-4 inline-block">View all →</a>
+            </div>
+
+            <!-- Properties List -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Your Properties</h3>
+                <div class="space-y-3">
+                    {% for property in properties|slice:":5" %}
+                    <div class="recent-item p-3 border border-gray-200 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">{{ property.name }}</p>
+                                <p class="text-xs text-gray-500">{{ property.city }}, {{ property.state }}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full">
+                                    Active
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-sm text-gray-500 text-center py-4">No properties yet</p>
+                    {% endfor %}
+                </div>
+                <a href="{% url 'tenants:properties' %}" class="text-sm text-indigo-600 hover:text-indigo-700 mt-4 inline-block">View all →</a>
+            </div>
+        </div>
+
+        <!-- OTA Platforms -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Connected OTA Platforms</h3>
+            {% if platforms %}
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {% for platform in platforms %}
+                <div class="p-4 border border-gray-200 rounded-lg text-center hover:border-indigo-500 transition-colors">
+                    <div class="text-2xl font-bold text-gray-400 mb-2">{{ platform.name|first }}</div>
+                    <p class="text-xs font-medium text-gray-700">{{ platform.name }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-8">
+                <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                </svg>
+                <p class="text-gray-500 mb-4">No OTA platforms connected yet</p>
+                <a href="{% url 'tenants:integration_add' %}" class="btn-primary">Connect Platform</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Alerts -->
+        {% if low_inventory > 0 or failed_syncs > 0 %}
+        <div class="space-y-4">
+            {% if low_inventory > 0 %}
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    <p class="text-sm text-yellow-800">
+                        <strong>Low Inventory Alert:</strong> {{ low_inventory }} room(s) have less than 5 available rooms in the coming days.
+                    </p>
+                </div>
+                <a href="{% url 'tenants:inventory' %}" class="text-sm text-yellow-700 hover:text-yellow-900 mt-2 inline-block font-medium">Manage Inventory →</a>
+            </div>
+            {% endif %}
+
+            {% if failed_syncs > 0 %}
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p class="text-sm text-red-800">
+                        <strong>Sync Issues:</strong> {{ failed_syncs }} sync(s) failed in the last 7 days.
+                    </p>
+                </div>
+                <a href="{% url 'tenants:sync_logs' %}" class="text-sm text-red-700 hover:text-red-900 mt-2 inline-block font-medium">View Sync Logs →</a>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+{% endblock %}

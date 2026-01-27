@@ -1,0 +1,189 @@
+{% extends 'landing/base.html' %}
+
+{% block title %}Property Management Guide - RevNext Channel Manager{% endblock %}
+
+{% block content %}
+<section class="pt-32 pb-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="mb-12">
+                <a href="{% url 'core:documentation' %}" class="text-indigo-600 hover:text-indigo-700 mb-4 inline-flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to Documentation
+                </a>
+                <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Property Management</h1>
+                <p class="text-xl text-gray-600">Complete guide to managing properties, rooms, and rate plans</p>
+            </div>
+
+            <!-- Content -->
+            <div class="prose prose-lg max-w-none">
+                <!-- Overview -->
+                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 mb-8 rounded-r-lg">
+                    <p class="text-gray-700 mb-0">
+                        Property management is the foundation of your channel manager setup. This guide covers everything you need to know about managing properties, room types, and rate plans effectively.
+                    </p>
+                </div>
+
+                <!-- Managing Properties -->
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Managing Properties</h2>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Adding a New Property</h3>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
+                            <li>Go to <strong>Properties</strong> in your dashboard</li>
+                            <li>Click <strong>"Add New Property"</strong></li>
+                            <li>Fill in the required information:
+                                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                                    <li><strong>Basic Information:</strong> Name, legal name, property type</li>
+                                    <li><strong>Address:</strong> Complete address with location</li>
+                                    <li><strong>Contact Details:</strong> Phone, email, website</li>
+                                    <li><strong>Business Information:</strong> GSTIN, PAN, timezone, currency</li>
+                                </ul>
+                            </li>
+                            <li>Save the property</li>
+                        </ol>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Editing Property Details</h3>
+                    <p class="text-gray-700 mb-4">You can update property information at any time:</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 mb-6">
+                        <li>Navigate to the property you want to edit</li>
+                        <li>Click the <strong>"Edit"</strong> button</li>
+                        <li>Update any fields as needed</li>
+                        <li>Save your changes</li>
+                    </ul>
+
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <p class="text-sm text-yellow-800">
+                            <strong>Important:</strong> Changes to property details may require re-syncing with connected OTA platforms. The system will notify you if a sync is needed.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Room Types Management -->
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Room Types Management</h2>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Creating Room Types</h3>
+                    <p class="text-gray-700 mb-4">Room types define the different categories of rooms at your property:</p>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-3">Room Type Fields</h4>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Name:</strong> Descriptive name (e.g., "Deluxe Sea View Room")</li>
+                            <li><strong>Description:</strong> Detailed description of the room</li>
+                            <li><strong>Max Occupancy:</strong> Maximum number of guests</li>
+                            <li><strong>Bed Configuration:</strong> Number and type of beds</li>
+                            <li><strong>Room Size:</strong> Square footage or square meters</li>
+                            <li><strong>Amenities:</strong> WiFi, AC, TV, minibar, etc.</li>
+                            <li><strong>Images:</strong> Upload room photos</li>
+                        </ul>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Best Practices for Room Types</h3>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li>Create room types that match your OTA listings exactly</li>
+                            <li>Use clear, descriptive names that guests will understand</li>
+                            <li>Include all relevant amenities to help with search rankings</li>
+                            <li>Upload high-quality photos for each room type</li>
+                            <li>Keep descriptions accurate and up-to-date</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Rate Plans Management -->
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Rate Plans Management</h2>
+                    
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Creating Rate Plans</h3>
+                    <p class="text-gray-700 mb-4">Rate plans define pricing strategies for your room types:</p>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-3">Rate Plan Configuration</h4>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Name:</strong> Rate plan name (e.g., "Standard Rate", "Non-Refundable")</li>
+                            <li><strong>Room Type:</strong> Associated room type</li>
+                            <li><strong>Base Rate:</strong> Default price per night</li>
+                            <li><strong>Currency:</strong> INR or other supported currencies</li>
+                            <li><strong>Cancellation Policy:</strong> Free cancellation, non-refundable, etc.</li>
+                            <li><strong>Meal Plan:</strong> Room only, breakfast, half-board, full-board</li>
+                            <li><strong>Length of Stay Discounts:</strong> Discounts for longer stays</li>
+                            <li><strong>Advance Booking Discounts:</strong> Early bird specials</li>
+                        </ul>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Rate Plan Types</h3>
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-900 mb-2">Standard Rate</h4>
+                            <p class="text-sm text-gray-600">Your base rate with standard cancellation policy</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-900 mb-2">Non-Refundable</h4>
+                            <p class="text-sm text-gray-600">Lower rate with no cancellation option</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <div class="font-semibold text-gray-900 mb-2">Early Bird</div>
+                            <p class="text-sm text-gray-600">Discount for advance bookings</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-900 mb-2">Last Minute</h4>
+                            <p class="text-sm text-gray-600">Special rates for same-day bookings</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multi-Property Management -->
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Multi-Property Management</h2>
+                    <p class="text-gray-700 mb-4">If you manage multiple properties, RevNext Channel Manager makes it easy:</p>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                        <ul class="list-disc list-inside space-y-3 text-gray-700">
+                            <li><strong>Centralized Dashboard:</strong> View all properties from one place</li>
+                            <li><strong>Property-Specific Settings:</strong> Each property has its own room types, rates, and integrations</li>
+                            <li><strong>Bulk Operations:</strong> Apply changes to multiple properties at once</li>
+                            <li><strong>Unified Reporting:</strong> Generate reports across all properties or for individual properties</li>
+                            <li><strong>Role-Based Access:</strong> Assign staff to specific properties</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tips and Best Practices -->
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Tips and Best Practices</h2>
+                    <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-6 border border-green-200">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Property Management Best Practices</h3>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li>Keep property information accurate and up-to-date</li>
+                            <li>Use consistent naming conventions across all properties</li>
+                            <li>Regularly review and update room type descriptions</li>
+                            <li>Monitor rate plan performance and adjust as needed</li>
+                            <li>Set up proper cancellation policies for each rate plan</li>
+                            <li>Use high-quality images for all room types</li>
+                            <li>Keep inventory updated to avoid overbookings</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Related Guides -->
+                <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Related Guides</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <a href="{% url 'core:guide_inventory_management' %}" class="block p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all">
+                            <h4 class="font-semibold text-gray-900 mb-2">Inventory Management →</h4>
+                            <p class="text-sm text-gray-600">Learn how to manage room availability</p>
+                        </a>
+                        <a href="{% url 'core:guide_rate_management' %}" class="block p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all">
+                            <h4 class="font-semibold text-gray-900 mb-2">Rate Management →</h4>
+                            <p class="text-sm text-gray-600">Set up dynamic pricing rules</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

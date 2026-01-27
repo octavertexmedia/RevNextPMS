@@ -1,0 +1,41 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block page_title %}OTA Integrations{% endblock %}
+{% block page_description %}Manage your OTA platform connections{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <h2 class="text-xl font-semibold text-gray-900">Connected Platforms</h2>
+    <a href="{% url 'tenants:integration_add' %}" class="btn-primary">Connect Platform</a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for integration in integrations %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-start justify-between mb-4">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">{{ integration.platform.name }}</h3>
+                <p class="text-sm text-gray-500">{{ integration.property.name }}</p>
+            </div>
+            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">Active</span>
+        </div>
+        <div class="space-y-2 text-sm text-gray-600">
+            <p><span class="font-medium">Property ID:</span> {{ integration.provider_property_id }}</p>
+            <p><span class="font-medium">Last Sync:</span> {{ integration.updated_at|date:"M d, Y H:i" }}</p>
+        </div>
+        <div class="mt-4 pt-4 border-t border-gray-200 flex space-x-2">
+            <a href="{% url 'tenants:sync_logs' %}?integration={{ integration.id }}" class="flex-1 text-center text-sm text-indigo-600 hover:text-indigo-700 font-medium py-2">View Logs</a>
+            <a href="#" class="flex-1 text-center text-sm text-gray-600 hover:text-gray-900 font-medium py-2">Settings</a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full text-center py-12">
+        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+        </svg>
+        <p class="text-gray-500 mb-4">No OTA platforms connected yet</p>
+        <a href="{% url 'tenants:integration_add' %}" class="btn-primary">Connect Your First Platform</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

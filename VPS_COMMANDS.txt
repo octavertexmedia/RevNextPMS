@@ -1,0 +1,37 @@
+# Commands to run on VPS (root@5.189.180.67)
+
+# 1. Create directories
+mkdir -p ~/channel-manager
+mkdir -p ~/backups
+cd ~/channel-manager
+
+# 2. Generate secure values
+python3 -c "import secrets; print('SECRET_KEY=' + secrets.token_hex(32))"
+python3 -c "import secrets; print('DB_PASSWORD=' + secrets.token_urlsafe(25))"
+
+# 3. Create .env file (replace the values with generated ones from step 2)
+cat > .env << 'EOF'
+# Django Configuration
+SECRET_KEY=PASTE-GENERATED-SECRET-KEY-HERE
+DEBUG=False
+ALLOWED_HOSTS=channel-manager.revnext.in,5.189.180.67,localhost,127.0.0.1
+
+# Database Configuration
+DB_NAME=channel_manager
+DB_USER=postgres
+DB_PASSWORD=PASTE-GENERATED-DB-PASSWORD-HERE
+DB_HOST=db
+DB_PORT=5432
+
+# Celery Configuration
+CELERY_BROKER_URL=redis://redis:6379/0
+CELERY_RESULT_BACKEND=redis://redis:6379/0
+
+# Environment
+ENVIRONMENT=production
+EOF
+
+# 4. Verify
+ls -la ~/channel-manager/
+cat ~/channel-manager/.env
+

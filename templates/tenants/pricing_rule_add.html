@@ -1,0 +1,172 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block page_title %}{% if is_edit %}Edit{% else %}Create{% endif %} Pricing Rule{% endblock %}
+{% block page_description %}{% if is_edit %}Update{% else %}Create a new{% endif %} dynamic pricing rule{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">{% if is_edit %}Edit{% else %}Create New{% endif %} Pricing Rule</h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Basic Information -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                            Rule Name *
+                        </label>
+                        <input type="text" name="name" id="name" value="{% if rule %}{{ rule.name }}{% endif %}" required class="form-input w-full" placeholder="e.g., Summer Peak Season">
+                    </div>
+                    <div>
+                        <label for="property" class="block text-sm font-medium text-gray-700 mb-2">
+                            Property *
+                        </label>
+                        <select name="property" id="property" required class="form-select w-full">
+                            <option value="">Select Property</option>
+                            {% for property in properties %}
+                            <option value="{{ property.id }}" {% if rule and rule.property.id == property.id %}selected{% endif %}>{{ property.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="rate_plan" class="block text-sm font-medium text-gray-700 mb-2">
+                            Rate Plan (Optional)
+                        </label>
+                        <select name="rate_plan" id="rate_plan" class="form-select w-full">
+                            <option value="">All Rate Plans</option>
+                            {% for rate_plan in rate_plans %}
+                            <option value="{{ rate_plan.id }}" {% if rule and rule.rate_plan and rule.rate_plan.id == rate_plan.id %}selected{% endif %}>{{ rate_plan.property.name }} - {{ rate_plan.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="mt-1 text-sm text-gray-500">Leave empty to apply to all rate plans</p>
+                    </div>
+                    <div>
+                        <label for="rule_type" class="block text-sm font-medium text-gray-700 mb-2">
+                            Rule Type *
+                        </label>
+                        <select name="rule_type" id="rule_type" required class="form-select w-full">
+                            <option value="">Select Type</option>
+                            <option value="seasonal" {% if rule and rule.rule_type == 'seasonal' %}selected{% endif %}>Seasonal Adjustment</option>
+                            <option value="demand" {% if rule and rule.rule_type == 'demand' %}selected{% endif %}>Demand-Based Pricing</option>
+                            <option value="length_of_stay" {% if rule and rule.rule_type == 'length_of_stay' %}selected{% endif %}>Length of Stay Discount</option>
+                            <option value="advance_booking" {% if rule and rule.rule_type == 'advance_booking' %}selected{% endif %}>Advance Booking Discount</option>
+                            <option value="last_minute" {% if rule and rule.rule_type == 'last_minute' %}selected{% endif %}>Last Minute Pricing</option>
+                            <option value="occupancy" {% if rule and rule.rule_type == 'occupancy' %}selected{% endif %}>Occupancy-Based Pricing</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                            Description
+                        </label>
+                        <textarea name="description" id="description" rows="3" class="form-input w-full" placeholder="Describe this pricing rule...">{% if rule %}{{ rule.description }}{% endif %}</textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Adjustment Configuration -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Adjustment Configuration</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="adjustment_type" class="block text-sm font-medium text-gray-700 mb-2">
+                            Adjustment Type *
+                        </label>
+                        <select name="adjustment_type" id="adjustment_type" required class="form-select w-full">
+                            <option value="percentage" {% if rule and rule.adjustment_type == 'percentage' %}selected{% endif %}>Percentage</option>
+                            <option value="fixed" {% if rule and rule.adjustment_type == 'fixed' %}selected{% endif %}>Fixed Amount</option>
+                            <option value="multiplier" {% if rule and rule.adjustment_type == 'multiplier' %}selected{% endif %}>Multiplier</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="adjustment_value" class="block text-sm font-medium text-gray-700 mb-2">
+                            Adjustment Value *
+                        </label>
+                        <input type="number" name="adjustment_value" id="adjustment_value" step="0.01" value="{% if rule %}{{ rule.adjustment_value }}{% endif %}" required class="form-input w-full" placeholder="e.g., 10 or -5">
+                        <p class="mt-1 text-sm text-gray-500">Positive for increase, negative for decrease</p>
+                    </div>
+                    <div>
+                        <label for="priority" class="block text-sm font-medium text-gray-700 mb-2">
+                            Priority *
+                        </label>
+                        <input type="number" name="priority" id="priority" value="{% if rule %}{{ rule.priority }}{% else %}0{% endif %}" required class="form-input w-full" placeholder="0">
+                        <p class="mt-1 text-sm text-gray-500">Higher priority rules are applied first</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Date Range (for seasonal rules) -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Date Range (Optional)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">
+                            Start Date
+                        </label>
+                        <input type="date" name="start_date" id="start_date" value="{% if rule and rule.start_date %}{{ rule.start_date|date:'Y-m-d' }}{% endif %}" class="form-input w-full">
+                    </div>
+                    <div>
+                        <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">
+                            End Date
+                        </label>
+                        <input type="date" name="end_date" id="end_date" value="{% if rule and rule.end_date %}{{ rule.end_date|date:'Y-m-d' }}{% endif %}" class="form-input w-full">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Constraints -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Price Constraints (Optional)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="occupancy_threshold" class="block text-sm font-medium text-gray-700 mb-2">
+                            Occupancy Threshold (%)
+                        </label>
+                        <input type="number" name="occupancy_threshold" id="occupancy_threshold" step="0.01" min="0" max="100" value="{% if rule and rule.occupancy_threshold %}{{ rule.occupancy_threshold }}{% endif %}" class="form-input w-full" placeholder="e.g., 80">
+                    </div>
+                    <div>
+                        <label for="min_price" class="block text-sm font-medium text-gray-700 mb-2">
+                            Minimum Price (₹)
+                        </label>
+                        <input type="number" name="min_price" id="min_price" step="0.01" min="0" value="{% if rule and rule.min_price %}{{ rule.min_price.amount }}{% endif %}" class="form-input w-full" placeholder="e.g., 1000">
+                    </div>
+                    <div>
+                        <label for="max_price" class="block text-sm font-medium text-gray-700 mb-2">
+                            Maximum Price (₹)
+                        </label>
+                        <input type="number" name="max_price" id="max_price" step="0.01" min="0" value="{% if rule and rule.max_price %}{{ rule.max_price.amount }}{% endif %}" class="form-input w-full" placeholder="e.g., 5000">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Status -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Status</h3>
+                <div class="space-y-3">
+                    <label class="flex items-center">
+                        <input type="checkbox" name="is_active" {% if not rule or rule.is_active %}checked{% endif %} class="form-checkbox rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                        <span class="ml-2 text-sm text-gray-700">Active</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="is_automatic" {% if not rule or rule.is_automatic %}checked{% endif %} class="form-checkbox rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                        <span class="ml-2 text-sm text-gray-700">Automatically apply (via scheduled tasks)</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="flex justify-end gap-4 pt-4">
+                <a href="{% url 'tenants:pricing_rules' %}" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200">
+                    Cancel
+                </a>
+                <button type="submit" class="btn-primary">
+                    {% if is_edit %}Update Rule{% else %}Create Rule{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

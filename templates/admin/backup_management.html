@@ -1,0 +1,88 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}Backup Management - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <h1 style="margin-bottom: 20px;">Backup Management</h1>
+    
+    <!-- Create Backup -->
+    <div style="background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h2 style="margin-bottom: 15px;">Create New Backup</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="create_backup">
+            <p style="color: #666; margin-bottom: 15px;">Create a new database backup. This will backup the entire PostgreSQL database.</p>
+            <button type="submit" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="return confirm('This will create a new backup. Continue?');">
+                Create Backup Now
+            </button>
+        </form>
+    </div>
+    
+    <!-- Backup Statistics -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
+        <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <h3 style="margin-top: 0; font-size: 14px; color: #666;">Total Backups</h3>
+            <p style="font-size: 32px; font-weight: bold; margin: 0;">{{ backup_count }}</p>
+        </div>
+        <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <h3 style="margin-top: 0; font-size: 14px; color: #666;">Total Size</h3>
+            <p style="font-size: 32px; font-weight: bold; margin: 0;">{{ total_size_mb }} MB</p>
+        </div>
+        <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <h3 style="margin-top: 0; font-size: 14px; color: #666;">Backup Directory</h3>
+            <p style="font-size: 12px; color: #666; margin: 0; word-break: break-all;">{{ backup_dir }}</p>
+        </div>
+    </div>
+    
+    <!-- Backup List -->
+    <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h2 style="margin-bottom: 15px;">Existing Backups</h2>
+        {% if backups %}
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Filename</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Size</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Created</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for backup in backups %}
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 12px;">{{ backup.filename }}</td>
+                        <td style="padding: 12px;">{{ backup.size_mb }} MB</td>
+                        <td style="padding: 12px;">{{ backup.created|date:"M d, Y H:i:s" }}</td>
+                        <td style="padding: 12px;">
+                            <form method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this backup?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete_backup">
+                                <input type="hidden" name="filename" value="{{ backup.filename }}">
+                                <button type="submit" style="padding: 5px 15px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p style="color: #666;">No backups found. Create your first backup above.</p>
+        {% endif %}
+    </div>
+    
+    <!-- Information -->
+    <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 8px; padding: 20px; margin-top: 20px;">
+        <h3 style="margin-top: 0;">Backup Information</h3>
+        <ul style="margin: 0; padding-left: 20px;">
+            <li>Backups are stored in: <code>{{ backup_dir }}</code></li>
+            <li>Backups are automatically cleaned up after 30 days (configurable)</li>
+            <li>To restore a backup, use: <code>pg_restore -h localhost -U postgres -d channel_manager backup_file.sql</code></li>
+            <li>For more information, see <a href="{% url 'core:admin_system_health' %}">System Health</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

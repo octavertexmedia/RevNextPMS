@@ -1,0 +1,129 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block page_title %}Connect OTA Platform{% endblock %}
+{% block page_description %}Connect your property to an OTA platform{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Connect OTA Platform</h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Property and Platform Selection -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Platform Selection</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.property.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Property *
+                        </label>
+                        {{ form.property }}
+                        {% if form.property.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.property.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.platform.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            OTA Platform *
+                        </label>
+                        {{ form.platform }}
+                        {% if form.platform.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.platform.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label for="{{ form.provider_property_id.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Provider Property ID *
+                        </label>
+                        <p class="text-xs text-gray-500 mb-2">The property ID assigned by the OTA platform (e.g., Booking.com Hotel ID)</p>
+                        {{ form.provider_property_id }}
+                        {% if form.provider_property_id.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.provider_property_id.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sync Settings -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Synchronization Settings</h3>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            {{ form.sync_availability }}
+                            <span class="text-sm font-medium text-gray-700">Sync Availability</span>
+                        </label>
+                        
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            {{ form.sync_rates }}
+                            <span class="text-sm font-medium text-gray-700">Sync Rates</span>
+                        </label>
+                        
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            {{ form.sync_inventory }}
+                            <span class="text-sm font-medium text-gray-700">Sync Inventory</span>
+                        </label>
+                        
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            {{ form.sync_reservations }}
+                            <span class="text-sm font-medium text-gray-700">Sync Reservations</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sync Intervals -->
+            <div class="border-b border-gray-200 pb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Sync Intervals (in minutes)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.availability_sync_interval.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Availability Sync Interval
+                        </label>
+                        {{ form.availability_sync_interval }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.rates_sync_interval.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Rates Sync Interval
+                        </label>
+                        {{ form.rates_sync_interval }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.inventory_sync_interval.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Inventory Sync Interval
+                        </label>
+                        {{ form.inventory_sync_interval }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.reservations_sync_interval.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Reservations Sync Interval
+                        </label>
+                        {{ form.reservations_sync_interval }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Status -->
+            <div class="pb-6">
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    {{ form.is_active }}
+                    <span class="text-sm font-medium text-gray-700">Active</span>
+                </label>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="flex justify-end space-x-4 pt-6">
+                <a href="{% url 'tenants:integrations' %}" class="btn-secondary">Cancel</a>
+                <button type="submit" class="btn-primary">Connect Platform</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

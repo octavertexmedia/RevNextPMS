@@ -1,0 +1,63 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}B2B Agents - RevNext{% endblock %}
+{% block page_title %}B2B Agents{% endblock %}
+{% block page_description %}Corporate partners & travel agents{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center flex-wrap gap-4">
+        <div class="flex gap-2 flex-wrap">
+            <form method="get" class="flex gap-2 flex-wrap items-center">
+                <select name="type" onchange="this.form.submit()" class="form-select text-sm">
+                    <option value="">All types</option>
+                    <option value="CORPORATE" {% if request.GET.type == 'CORPORATE' %}selected{% endif %}>Corporate</option>
+                    <option value="TRAVEL_AGENT" {% if request.GET.type == 'TRAVEL_AGENT' %}selected{% endif %}>Travel Agent</option>
+                    <option value="WHOLESALER" {% if request.GET.type == 'WHOLESALER' %}selected{% endif %}>Wholesaler</option>
+                </select>
+                <select name="active" onchange="this.form.submit()" class="form-select text-sm">
+                    <option value="">All status</option>
+                    <option value="1" {% if request.GET.active == '1' %}selected{% endif %}>Active</option>
+                    <option value="0" {% if request.GET.active == '0' %}selected{% endif %}>Inactive</option>
+                </select>
+                {% if properties %}
+                <select name="property" onchange="this.form.submit()" class="form-select text-sm">
+                    <option value="">All properties</option>
+                    {% for p in properties %}
+                    <option value="{{ p.id }}" {% if request.GET.property == p.id|stringformat:'d' %}selected{% endif %}>{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+            </form>
+        </div>
+        <a href="{% url 'b2b_network:agent_create' %}" class="btn-primary">+ New Agent</a>
+    </div>
+<div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Company</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Commission</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+            {% for agent in agents %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 font-medium"><a href="{% url 'b2b_network:agent_detail' agent.id %}" class="text-indigo-600 hover:underline">{{ agent.company_name }}</a></td>
+                <td class="px-6 py-4">{{ agent.get_agent_type_display }}</td>
+                <td class="px-6 py-4">{{ agent.commission_percent }}%</td>
+                <td class="px-6 py-4">
+                    <span class="px-2 py-1 text-xs rounded-full {% if agent.is_active %}bg-green-100{% else %}bg-gray-100{% endif %}">{% if agent.is_active %}Active{% else %}Inactive{% endif %}</span>
+                    <a href="{% url 'b2b_network:agent_edit' agent.id %}" class="ml-2 text-indigo-600 text-sm">Edit</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="px-6 py-12 text-center text-gray-500">No B2B agents</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+{% endblock %}

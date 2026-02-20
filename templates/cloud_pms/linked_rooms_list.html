@@ -1,0 +1,43 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Linked Room Units - RevNext{% endblock %}
+{% block page_title %}Linked Room Units{% endblock %}
+{% block page_description %}Villas & apartments - sell as whole unit or individual rooms{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-end">
+        <a href="{% url 'cloud_pms:linked_room_create' %}" class="btn-primary">+ New Linked Unit</a>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold">Villa & Apartment Units</h2>
+            <p class="text-sm text-gray-500">Manage inventory for units that can be sold as whole or by room</p>
+        </div>
+        <div class="p-6">
+            {% if units %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for unit in units %}
+                <div class="p-6 rounded-lg border border-gray-200 flex justify-between items-start">
+                    <div>
+                    <h3 class="font-semibold text-lg">{{ unit.name }}</h3>
+                    <p class="text-sm text-gray-500 mt-1">{{ unit.property.name }}</p>
+                    <div class="mt-4 space-y-2">
+                        <p class="text-sm"><span class="font-medium">Rooms:</span> {{ unit.total_rooms }}</p>
+                        <p class="text-sm"><span class="font-medium">Sell as whole:</span> {% if unit.sell_as_whole %}Yes{% else %}No{% endif %}</p>
+                        {% if unit.room_types.exists %}
+                        <p class="text-sm"><span class="font-medium">Room types:</span> {% for rt in unit.room_types.all %}{{ rt.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                        {% endif %}
+                    </div>
+                    </div>
+                    <a href="{% url 'cloud_pms:linked_room_edit' unit.id %}" class="text-indigo-600 text-sm">Edit</a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500">No linked room units. Create villa/apartment units in the admin or via API.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

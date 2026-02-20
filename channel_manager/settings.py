@@ -51,6 +51,15 @@ INSTALLED_APPS = [
     'integrations',
     'bookings',
     'reports',
+    # Solution apps (eGlobe parity)
+    'cloud_pms',
+    'cloud_pos',
+    'booking_engine',
+    'website_builder',
+    'b2b_network',
+    'ota_listing',
+    'google_hotel_ads',
+    'payment_gateways',
 ]
 
 MIDDLEWARE = [

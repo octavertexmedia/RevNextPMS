@@ -1,0 +1,227 @@
+{% extends 'landing/base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<section class="pt-32 pb-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Hero -->
+        <div class="text-center mb-16">
+            <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Pricing</h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Choose the plan that fits your hotel. All plans include 14-day free trial. No credit card required.
+            </p>
+        </div>
+
+        <!-- Pricing Cards -->
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-20">
+            <!-- Starter Plan -->
+            <div class="pricing-card flex flex-col">
+                <div class="pricing-header">
+                    <h3 class="pricing-name text-xl font-bold">Starter Plan</h3>
+                    <p class="text-sm text-indigo-600 font-medium mb-2">Only Channel Manager</p>
+                    <div class="pricing-price mb-4">
+                        <span class="price-amount text-3xl font-extrabold">₹2,999</span>
+                        <span class="price-period text-gray-500">/month</span>
+                    </div>
+                    <a href="{% url 'tenants:register' %}" class="btn-primary w-full block text-center">Get Pricing</a>
+                </div>
+                <div class="flex-1 space-y-4 mt-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Centralized Hotel Booking System</h4>
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li>• Front Desk</li>
+                            <li>• Channel Manager</li>
+                            <li>• Booking Engine *</li>
+                            <li>• Google Hotel Ads *</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Security & Accessibility</h4>
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li>• PCI-DSS certified</li>
+                            <li>• 99.99% uptime</li>
+                            <li>• User Rights and Roles</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standard Plan (Featured) -->
+            <div class="pricing-card featured flex flex-col border-2 border-indigo-500 shadow-xl md:-mt-4 md:mb-4">
+                <div class="pricing-badge">Most Popular</div>
+                <div class="pricing-header">
+                    <h3 class="pricing-name text-xl font-bold">Standard Plan</h3>
+                    <p class="text-sm text-indigo-600 font-medium mb-2">Channel Manager + Property Management System</p>
+                    <div class="pricing-price mb-4">
+                        <span class="price-amount text-3xl font-extrabold">₹4,999</span>
+                        <span class="price-period text-gray-500">/month</span>
+                    </div>
+                    <a href="{% url 'tenants:register' %}" class="btn-primary w-full block text-center">Get Pricing</a>
+                </div>
+                <div class="flex-1 space-y-4 mt-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Centralized Hotel Booking System</h4>
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li>• Front Desk</li>
+                            <li>• Channel Manager</li>
+                            <li>• Booking Engine *</li>
+                            <li>• Google Hotel Ads *</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Security & Accessibility</h4>
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li>• PCI-DSS certified</li>
+                            <li>• 99.99% uptime</li>
+                            <li>• User Rights and Roles</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">PMS</h4>
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li>• Group Management</li>
+                            <li>• Walk-ins and Reservations</li>
+                            <li>• User Activity Logs</li>
+                            <li>• Multiple Payment Methods</li>
+                            <li>• Billing and Settlements</li>
+                            <li>• Offline Bookings Management</li>
+                            <li>• User Roles and Privileges</li>
+                            <li>• MIS Reports</li>
+                            <li>• Multiple Property Management</li>
+                            <li>• Handle Arrivals and Departures</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PMS Pro Plan -->
+            <div class="pricing-card flex flex-col">
+                <div class="pricing-header">
+                    <h3 class="pricing-name text-xl font-bold">PMS Pro Plan</h3>
+                    <p class="text-sm text-indigo-600 font-medium mb-2">Channel Manager + PMS + Point of Sale + Housekeeping</p>
+                    <div class="pricing-price mb-4">
+                        <span class="price-amount text-3xl font-extrabold">₹5,999</span>
+                        <span class="price-period text-gray-500">/month</span>
+                    </div>
+                    <a href="{% url 'tenants:register' %}" class="btn-primary w-full block text-center">Get Pricing</a>
+                </div>
+                <div class="flex-1 space-y-4 mt-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Centralized Hotel Booking System</h4>
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li>• Front Desk</li>
+                            <li>• Channel Manager</li>
+                            <li>• Booking Engine *</li>
+                            <li>• Google Hotel Ads *</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Security & Accessibility</h4>
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li>• PCI-DSS certified</li>
+                            <li>• 99.99% uptime</li>
+                            <li>• User Rights and Roles</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">PMS</h4>
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li>• Group Management</li>
+                            <li>• Walk-ins and Reservations</li>
+                            <li>• Billing and Settlements</li>
+                            <li>• Invoice Splitting</li>
+                            <li>• City Ledger Management</li>
+                            <li>• Night Audit Process</li>
+                            <li>• Advance Reports (ARR, Sales, Audit, Collection)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">POS</h4>
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li>• Multiple Outlet</li>
+                            <li>• Dine In, Room Service, Delivery, Take Away</li>
+                            <li>• Settlement of Invoice in Rooms</li>
+                            <li>• POS Tax Reports</li>
+                            <li>• Kitchen Order Printing</li>
+                            <li>• Self Ordering by Guest</li>
+                            <li>• Table Booking & Billing</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Housekeeping</h4>
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li>• Staff Wise Room Assignment</li>
+                            <li>• Cleaning Log</li>
+                            <li>• Room Wise Room Report</li>
+                            <li>• Room Blocking</li>
+                            <li>• Room Service App</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add-Ons Section -->
+        <div class="max-w-4xl mx-auto mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Powerful Add-Ons to Boost Your Online Visibility</h2>
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div class="p-4 rounded-lg border border-gray-200 bg-gray-50">
+                    <p class="font-medium text-gray-900">Website Builder</p>
+                    <p class="text-sm text-gray-500">Hosting + SSL, Domain</p>
+                </div>
+                <div class="p-4 rounded-lg border border-gray-200 bg-gray-50">
+                    <p class="font-medium text-gray-900">OTA Listing</p>
+                    <p class="text-sm text-gray-500">Professional setup & optimization</p>
+                </div>
+                <div class="p-4 rounded-lg border border-gray-200 bg-gray-50">
+                    <p class="font-medium text-gray-900">Google Hotel Ads</p>
+                    <p class="text-sm text-gray-500">Pay-Per-Conversion integration *</p>
+                </div>
+                <div class="p-4 rounded-lg border border-gray-200 bg-gray-50">
+                    <p class="font-medium text-gray-900">Rate Parity Monitoring</p>
+                    <p class="text-sm text-gray-500">Channel Rate Comparison Report</p>
+                </div>
+                <div class="p-4 rounded-lg border border-gray-200 bg-gray-50">
+                    <p class="font-medium text-gray-900">Payment Gateway</p>
+                    <p class="text-sm text-gray-500">Razorpay, PayPal, iPay88 & more</p>
+                </div>
+                <div class="p-4 rounded-lg border border-gray-200 bg-gray-50">
+                    <p class="font-medium text-gray-900">AI Dynamic Pricing</p>
+                    <p class="text-sm text-gray-500">Automated rate optimization</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TDR Note -->
+        <div class="max-w-3xl mx-auto p-6 bg-amber-50 border border-amber-200 rounded-xl mb-16">
+            <p class="text-sm text-amber-800">
+                <strong>Note:</strong> * Bookings generated via the RevNext Booking Engine and Google Hotel Ads are subject to applicable TDR charges.
+            </p>
+        </div>
+
+        <!-- Get Pricing CTA -->
+        <div class="max-w-2xl mx-auto text-center">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Get Pricing</h2>
+            <p class="text-gray-600 mb-6">Contact us for custom enterprise plans or volume discounts.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'tenants:register' %}" class="btn-primary-large">Start Free Trial</a>
+                <a href="{% url 'core:contact' %}" class="btn-secondary-large">Contact Sales</a>
+            </div>
+        </div>
+
+        <!-- Industries We Serve -->
+        <div class="mt-20 pt-16 border-t border-gray-200">
+            <h2 class="text-xl font-bold text-gray-900 mb-6 text-center">Industries We Serve</h2>
+            <div class="flex flex-wrap justify-center gap-4">
+                <span class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm">Hotels & Resorts</span>
+                <span class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm">Boutique Properties</span>
+                <span class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm">Vacation Rentals</span>
+                <span class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm">Hostels</span>
+                <span class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm">Guest Houses</span>
+                <span class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm">Travel Agencies</span>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

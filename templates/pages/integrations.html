@@ -4,8 +4,8 @@
 {% block title %}All Integrations - 75+ Booking Platforms | Channel Manager{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="text-white py-20" style="background: linear-gradient(to bottom right, #2563eb, #1d4ed8, #4f46e5);">
+<!-- Hero Section - pt-24 accounts for fixed navbar (h-16 lg:h-20) -->
+<section class="text-white pt-24 lg:pt-28 pb-20" style="background: linear-gradient(to bottom right, #2563eb, #1d4ed8, #4f46e5);">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-4xl mx-auto">
             <h1 class="text-4xl lg:text-5xl font-bold mb-6">
@@ -47,6 +47,9 @@
             </button>
             <button class="integration-filter-btn px-6 py-2 rounded-full font-semibold text-sm transition-all bg-white hover:bg-blue-50 text-gray-700" data-category="aggregator">
                 Aggregators (10+)
+            </button>
+            <button class="integration-filter-btn px-6 py-2 rounded-full font-semibold text-sm transition-all bg-white hover:bg-blue-50 text-gray-700" data-category="payment">
+                Payment Gateways (6+)
             </button>
             <button class="integration-filter-btn px-6 py-2 rounded-full font-semibold text-sm transition-all bg-white hover:bg-blue-50 text-gray-700" data-category="other">
                 Others (6+)
@@ -792,6 +795,70 @@
                         </div>
                         <h3 class="font-bold text-gray-900 mb-1">DoorDash</h3>
                         <p class="text-xs text-gray-500 mb-2">Aggregator</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Gateways Section -->
+        <div class="integration-category mb-16" data-category="payment" id="payment-gateways">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Payment Gateways</h2>
+                <p class="text-gray-600">PCI-DSS compliant payment processing for secure transactions</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-blue-500" data-category="payment">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/paypal.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="PayPal" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='PayPal'" />
+                        <h3 class="font-bold text-gray-900 mb-1">PayPal</h3>
+                        <p class="text-xs text-gray-500 mb-2">Payment Gateway</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-indigo-500" data-category="payment">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/razorpay.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Razorpay" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Razorpay'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Razorpay</h3>
+                        <p class="text-xs text-gray-500 mb-2">Payment Gateway</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-purple-500" data-category="payment">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">i</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">iPay88</h3>
+                        <p class="text-xs text-gray-500 mb-2">Payment Gateway</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-green-500" data-category="payment">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">A</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">Airpay</h3>
+                        <p class="text-xs text-gray-500 mb-2">Payment Gateway</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-orange-500" data-category="payment">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <span class="text-xl font-bold text-gray-600">P</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-1">PaySwiff</h3>
+                        <p class="text-xs text-gray-500 mb-2">Payment Gateway</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                    </div>
+                </div>
+                <div class="integration-item bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-200 border-l-4 border-l-red-500" data-category="payment">
+                    <div class="text-center">
+                        <img src="https://img.logo.dev/name/ingenico.com?token=pk_AO7avMFcSOqchldooAwo-A" alt="Ingenico" class="h-16 w-auto mx-auto mb-3" onerror="this.onerror=null; this.src='/static/icons/default.svg'; this.alt='Ingenico'" />
+                        <h3 class="font-bold text-gray-900 mb-1">Ingenico</h3>
+                        <p class="text-xs text-gray-500 mb-2">Payment Gateway</p>
+                        <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
                     </div>
                 </div>
             </div>

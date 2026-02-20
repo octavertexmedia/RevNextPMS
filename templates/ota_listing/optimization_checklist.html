@@ -1,0 +1,28 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Optimization Checklist - {{ project.property.name }}{% endblock %}
+{% block page_title %}Optimization Checklist{% endblock %}
+{% block page_description %}{{ project.property.name }} → {{ project.platform.display_name }}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <a href="{% url 'ota_listing:project_detail' project.id %}" class="btn-secondary">← Back to Project</a>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h2 class="text-lg font-semibold mb-4">Listing Optimization Checklist</h2>
+        <p class="text-gray-600 mb-6">Complete these items to improve your OTA listing visibility and conversion.</p>
+        <div class="space-y-4">
+            {% for item in checklist %}
+            <div class="flex items-start gap-4 p-4 rounded-lg border border-gray-200">
+                <input type="checkbox" class="mt-1 h-4 w-4 text-indigo-600 rounded" disabled>
+                <div>
+                    <p class="font-medium">{{ item.title }}</p>
+                    <p class="text-sm text-gray-500">{{ item.desc }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

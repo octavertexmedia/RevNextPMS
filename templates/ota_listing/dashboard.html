@@ -1,0 +1,29 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}OTA Listing Service - RevNext{% endblock %}
+{% block page_title %}OTA Listing Service{% endblock %}
+{% block page_description %}Professional setup & optimization on major OTAs{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-end">
+        <a href="{% url 'ota_listing:project_create' %}" class="btn-primary">+ New Project</a>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h2 class="text-lg font-semibold mb-4">Listing Projects</h2>
+        <div class="space-y-2">
+            {% for p in projects %}
+            <div class="flex justify-between items-center p-4 rounded-lg border">
+                <div>
+                    <p class="font-medium"><a href="{% url 'ota_listing:project_detail' p.id %}" class="text-indigo-600 hover:underline">{{ p.property.name }} → {{ p.platform.display_name }}</a></p>
+                    <p class="text-sm text-gray-500">{{ p.get_status_display }}{% if p.listing_score %} • Score: {{ p.listing_score }}{% endif %}</p>
+                </div>
+                <span class="px-2 py-1 text-xs rounded-full bg-blue-100">{{ p.get_status_display }}</span>
+            </div>
+            {% empty %}
+            <p class="text-gray-500">No listing projects. Connect OTAs in Integrations to get started.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

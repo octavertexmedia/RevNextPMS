@@ -75,6 +75,16 @@ urlpatterns = [
     path('', include('core.urls')),  # Landing page and core URLs
     path('tenants/', include('tenants.urls')),  # Tenant registration and login
     
+    # Solution apps (require login, tenant context)
+    path('pms/', include('cloud_pms.urls')),
+    path('pos/', include('cloud_pos.urls')),
+    path('booking/', include('booking_engine.urls')),
+    path('website-builder/', include('website_builder.urls')),
+    path('b2b/', include('b2b_network.urls')),
+    path('ota-listing/', include('ota_listing.urls')),
+    path('google-hotel-ads/', include('google_hotel_ads.urls')),
+    path('payment-gateways/', include('payment_gateways.urls')),
+    
     # Health check
     path('health/', include(('core.urls', 'core'), namespace='health')),
     

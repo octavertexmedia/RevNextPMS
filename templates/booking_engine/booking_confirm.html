@@ -1,0 +1,27 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Confirm Booking - Booking Engine{% endblock %}
+{% block page_title %}Confirm Booking{% endblock %}
+{% block page_description %}Review and confirm your reservation{% endblock %}
+
+{% block content %}
+<div class="max-w-xl">
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <div class="space-y-4 mb-6">
+            <p><strong>Property:</strong> {{ property.name }}</p>
+            <p><strong>Room:</strong> {{ room_type.name }} · {{ rate_plan.name }}</p>
+            <p><strong>Dates:</strong> {{ check_in|date:"M d, Y" }} – {{ check_out|date:"M d, Y" }} ({{ nights }} night{{ nights|pluralize }})</p>
+            <p><strong>Guests:</strong> {{ adults }} adult{{ adults|pluralize }}{% if children %}, {{ children }} child{{ children|pluralize }}{% endif %}</p>
+            <p><strong>Guest:</strong> {{ guest_name }} · {{ guest_email }}{% if guest_phone %} · {{ guest_phone }}{% endif %}</p>
+            <p class="text-xl font-bold pt-4">{{ currency }} {{ total|floatformat:0 }} total</p>
+        </div>
+        <form method="post" action="{% url 'booking_engine:booking_create' %}">
+            {% csrf_token %}
+            <div class="flex gap-4">
+                <button type="submit" class="btn-primary">Confirm & Book</button>
+                <a href="{% url 'booking_engine:guest_form' %}" class="btn-secondary">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

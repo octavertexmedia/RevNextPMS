@@ -1,0 +1,19 @@
+{% extends 'landing/base.html' %}
+
+{% block title %}{{ website.meta_title|default:property.name }}{% endblock %}
+{% block meta_description %}{{ website.meta_description|default:property.name }}{% endblock %}
+
+{% block content %}
+<section class="pt-24 pb-20">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <h1 class="text-3xl font-bold mb-6">{{ property.name }}</h1>
+        {% if website.meta_description %}
+        <p class="text-gray-600 mb-8">{{ website.meta_description }}</p>
+        {% endif %}
+        <div class="bg-white rounded-xl shadow-lg border p-8">
+            <p class="text-gray-600 mb-4">Property website preview. Template: {% if website.template %}{{ website.template.name }}{% else %}Default{% endif %}</p>
+            <a href="{% url 'booking_engine:widget' property.id %}" class="btn-primary">Book Now</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

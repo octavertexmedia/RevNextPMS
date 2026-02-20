@@ -1,0 +1,90 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Cloud PMS - RevNext Channel Manager{% endblock %}
+{% block page_title %}Cloud PMS Dashboard{% endblock %}
+{% block page_description %}Front desk, housekeeping, billing & Linked Room management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-500">Open Folios</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ open_folios }}</p>
+                </div>
+            </div>
+            <a href="{% url 'cloud_pms:folios' %}" class="mt-4 block text-sm font-medium text-indigo-600 hover:text-indigo-500">View all folios →</a>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="p-3 bg-amber-100 rounded-lg">
+                    <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-500">Pending Housekeeping</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ pending_tasks }}</p>
+                </div>
+            </div>
+            <a href="{% url 'cloud_pms:housekeeping' %}" class="mt-4 block text-sm font-medium text-indigo-600 hover:text-indigo-500">View tasks →</a>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-500">Linked Room Units</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ linked_units }}</p>
+                </div>
+            </div>
+            <a href="{% url 'cloud_pms:linked_rooms' %}" class="mt-4 block text-sm font-medium text-indigo-600 hover:text-indigo-500">Manage villas →</a>
+        </div>
+    </div>
+
+    <!-- Properties -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Properties</h2>
+            <p class="text-sm text-gray-500">Select a property to view its PMS dashboard</p>
+        </div>
+        <div class="p-6">
+            {% if properties %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for prop in properties %}
+                <a href="{% url 'cloud_pms:dashboard_property' prop.id %}" class="block p-4 rounded-lg border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-colors">
+                    <h3 class="font-semibold text-gray-900">{{ prop.name }}</h3>
+                    <p class="text-sm text-gray-500">{{ prop.city }}, {{ prop.country }}</p>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500">No properties yet. <a href="{% url 'tenants:property_add' %}" class="text-indigo-600 hover:underline">Add a property</a></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Cloud PMS Modules</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <a href="{% url 'cloud_pms:folios' %}" class="flex items-center p-4 rounded-lg bg-gray-50 hover:bg-indigo-50 transition-colors">
+                <span class="font-medium text-gray-700">Folios & Billing</span>
+            </a>
+            <a href="{% url 'cloud_pms:housekeeping' %}" class="flex items-center p-4 rounded-lg bg-gray-50 hover:bg-indigo-50 transition-colors">
+                <span class="font-medium text-gray-700">Housekeeping</span>
+            </a>
+            <a href="{% url 'cloud_pms:linked_rooms' %}" class="flex items-center p-4 rounded-lg bg-gray-50 hover:bg-indigo-50 transition-colors">
+                <span class="font-medium text-gray-700">Linked Rooms</span>
+            </a>
+            <a href="{% url 'cloud_pos:dashboard' %}" class="flex items-center p-4 rounded-lg bg-gray-50 hover:bg-indigo-50 transition-colors">
+                <span class="font-medium text-gray-700">Cloud POS →</span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

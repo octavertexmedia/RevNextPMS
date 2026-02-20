@@ -1,0 +1,25 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Stay B2B Network - RevNext{% endblock %}
+{% block page_title %}Stay B2B Network{% endblock %}
+{% block page_description %}Corporate & agent portals • Special rate management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-xl shadow-sm border p-6">
+            <p class="text-sm font-medium text-gray-500">B2B Agents</p>
+            <p class="text-2xl font-bold text-gray-900">{{ agents|length }}</p>
+            <a href="{% url 'b2b_network:agents' %}" class="mt-4 block text-sm font-medium text-indigo-600">Manage agents →</a>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border p-6">
+            <p class="text-sm font-medium text-gray-500">Properties</p>
+            <p class="text-2xl font-bold text-gray-900">{{ properties|length }}</p>
+        </div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h2 class="text-lg font-semibold mb-4">Corporate & Travel Agent Access</h2>
+        <p class="text-gray-600">Manage special rates for corporate partners and travel agents. Provide secure login portals with role-based access.</p>
+    </div>
+</div>
+{% endblock %}

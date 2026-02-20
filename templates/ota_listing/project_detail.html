@@ -1,0 +1,41 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}{{ project.property.name }} - {{ project.platform.display_name }}{% endblock %}
+{% block page_title %}{{ project.property.name }} → {{ project.platform.display_name }}{% endblock %}
+{% block page_description %}{{ project.get_status_display }}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div></div>
+        <div class="flex gap-2">
+            <a href="{% url 'ota_listing:project_optimization_checklist' project.id %}" class="btn-secondary">Optimization Checklist</a>
+            <a href="{% url 'ota_listing:project_edit' project.id %}" class="btn-secondary">Edit</a>
+        </div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <p><strong>Status:</strong> <span class="px-2 py-1 text-xs rounded-full bg-blue-100">{{ project.get_status_display }}</span></p>
+        <p><strong>Provider ID:</strong> {{ project.provider_property_id|default:"—" }}</p>
+        <p><strong>Listing Score:</strong> {{ project.listing_score|default:"—" }}/100</p>
+        {% if project.optimization_notes %}
+        <p class="mt-4"><strong>Notes:</strong></p>
+        <p class="text-gray-600">{{ project.optimization_notes }}</p>
+        {% endif %}
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h2 class="text-lg font-semibold mb-4">Update Status</h2>
+        <div class="flex gap-2 flex-wrap">
+            {% for s in project.STATUS %}
+            <form method="post" action="{% url 'ota_listing:project_status_update' project.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="{{ s.0 }}">
+                <button type="submit" class="px-4 py-2 rounded-lg {% if project.status == s.0 %}bg-indigo-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} text-sm">
+                    {{ s.1 }}
+                </button>
+            </form>
+            {% endfor %}
+        </div>
+    </div>
+    <a href="{% url 'ota_listing:dashboard' %}" class="btn-secondary">← Back to Dashboard</a>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Housekeeping - RevNext{% endblock %}
+{% block page_title %}Housekeeping{% endblock %}
+{% block page_description %}Manage room cleaning and maintenance tasks{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div></div>
+        <a href="{% url 'cloud_pms:housekeeping_task_create' %}" class="btn-primary">+ New Task</a>
+    </div>
+    {% if properties %}
+    <div class="flex gap-4">
+        <a href="{% url 'cloud_pms:housekeeping' %}" class="px-4 py-2 rounded-lg {% if not request.GET.property %}bg-indigo-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %}">All Properties</a>
+        {% for p in properties %}
+        <a href="?property={{ p.id }}" class="px-4 py-2 rounded-lg {% if request.GET.property == p.id|stringformat:'d' %}bg-indigo-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %}">{{ p.name }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Room</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Task</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Assigned</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for task in tasks %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4">{{ task.room_number }}</td>
+                    <td class="px-6 py-4">{{ task.task_type }}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 text-xs rounded-full {% if task.status == 'PENDING' %}bg-amber-100{% elif task.status == 'COMPLETED' %}bg-green-100{% else %}bg-blue-100{% endif %}">{{ task.get_status_display }}</span></td>
+                    <td class="px-6 py-4">{{ task.get_priority_display }}</td>
+                    <td class="px-6 py-4">{{ task.assigned_to|default:"—" }}</td>
+                    <td class="px-6 py-4">
+                        <a href="{% url 'cloud_pms:housekeeping_task_edit' task.id %}" class="text-indigo-600 text-sm mr-2">Edit</a>
+                        <form method="post" action="{% url 'cloud_pms:housekeeping_task_status_update' task.id %}" class="inline">
+                            {% csrf_token %}
+                            <select name="status" onchange="this.form.submit()" class="text-sm border rounded px-2 py-1">
+                                {% for s in task_status_choices %}
+                                <option value="{{ s.0 }}" {% if task.status == s.0 %}selected{% endif %}>{{ s.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="px-6 py-12 text-center text-gray-500">No housekeeping tasks</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

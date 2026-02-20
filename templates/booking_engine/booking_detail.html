@@ -1,0 +1,21 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Booking {{ booking.confirmation_code }} - Booking Engine{% endblock %}
+{% block page_title %}Booking {{ booking.confirmation_code }}{% endblock %}
+{% block page_description %}{{ booking.get_status_display }}{% endblock %}
+
+{% block content %}
+<div class="max-w-xl">
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <div class="space-y-4">
+            <p><strong>Confirmation:</strong> {{ booking.confirmation_code }}</p>
+            <p><strong>Property:</strong> {{ booking.property.name }}</p>
+            <p><strong>Room:</strong> {{ booking.room_type.name }}{% if booking.rate_plan %} · {{ booking.rate_plan.name }}{% endif %}</p>
+            <p><strong>Dates:</strong> {{ booking.check_in|date:"M d, Y" }} – {{ booking.check_out|date:"M d, Y" }}</p>
+            <p><strong>Guest:</strong> {{ booking.guest_name }} · {{ booking.guest_email }}</p>
+            <p><strong>Total:</strong> {{ booking.currency }} {{ booking.total_amount.amount|floatformat:0 }}</p>
+        </div>
+        <a href="{% url 'booking_engine:dashboard' %}" class="mt-6 inline-block btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

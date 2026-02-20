@@ -1,0 +1,35 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Website Builder - RevNext{% endblock %}
+{% block page_title %}Website Builder{% endblock %}
+{% block page_description %}No-code templates • SEO • SSL included{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h2 class="text-lg font-semibold mb-4">Choose a Template</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {% for t in templates %}
+            <div class="border rounded-lg p-4 hover:border-indigo-300 cursor-pointer">
+                <div class="h-24 bg-gray-100 rounded mb-2"></div>
+                <p class="font-medium">{{ t.name }}</p>
+            </div>
+            {% empty %}
+            <p class="col-span-4 text-gray-500">No templates. Add via admin.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h2 class="text-lg font-semibold mb-4">Property Websites</h2>
+        <div class="space-y-2">
+            {% for prop in properties %}
+            <a href="{% url 'website_builder:editor' prop.id %}" class="block p-4 rounded-lg border hover:bg-gray-50">
+                {{ prop.name }} - {% if prop.built_website %}{% if prop.built_website.is_published %}Published{% else %}Draft{% endif %}{% else %}Not created{% endif %}
+            </a>
+            {% empty %}
+            <p class="text-gray-500">No properties. Add a property first.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

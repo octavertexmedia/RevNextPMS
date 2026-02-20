@@ -1,0 +1,15 @@
+{% extends 'landing/base.html' %}
+
+{% block title %}Book - {{ property.name|default:"Hotel" }}{% endblock %}
+
+{% block content %}
+<section class="pt-24 pb-20">
+    <div class="container mx-auto px-4 max-w-2xl">
+        <h1 class="text-2xl font-bold mb-6">{% if property %}{{ property.name }}{% else %}Book Your Stay{% endif %}</h1>
+        <div class="bg-white rounded-xl shadow-lg border p-8">
+            <p class="text-gray-600">One-page booking widget. Select dates, room type, and complete your reservation.</p>
+            <p class="mt-4 text-sm text-gray-500">Configure room types and rates in the dashboard to enable booking.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

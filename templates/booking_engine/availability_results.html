@@ -1,0 +1,41 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Available Rooms - Booking Engine{% endblock %}
+{% block page_title %}Available Rooms{% endblock %}
+{% block page_description %}{{ property.name }} · {{ check_in|date:"M d" }} – {{ check_out|date:"M d" }} ({{ nights }} night{{ nights|pluralize }}) · Display: {{ display_currency }}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <a href="{% url 'booking_engine:availability_check' %}" class="btn-secondary">← Change dates</a>
+    </div>
+    {% if results %}
+    <div class="space-y-4">
+        {% for r in results %}
+        <div class="bg-white rounded-xl shadow-sm border p-6 flex justify-between items-center">
+            <div>
+                <h3 class="font-semibold text-lg">{{ r.room_type.name }}</h3>
+                <p class="text-sm text-gray-500">{{ r.rate_plan.name }}{% if r.rate_plan.meal_plan %} · {{ r.rate_plan.meal_plan.name }}{% endif %}</p>
+                <p class="mt-2 font-medium">{{ r.currency }} {{ r.per_night|floatformat:0 }} / night</p>
+                {% load booking_tags %}
+                {% if display_currency != r.currency %}
+                <p class="text-sm text-gray-500">≈ {{ display_currency|currency_symbol }}{% convert_currency_tag r.total r.currency display_currency %} total</p>
+                {% endif %}
+            </div>
+            <div class="text-right">
+                <p class="font-bold text-lg">{{ r.currency }} {{ r.total|floatformat:0 }} total</p>
+                <form method="post" action="{% url 'booking_engine:booking_select_rate' %}" class="mt-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="room_type_id" value="{{ r.room_type.id }}">
+                    <input type="hidden" name="rate_plan_id" value="{{ r.rate_plan.id }}">
+                    <button type="submit" class="btn-primary">Select</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-gray-500">No rooms available for these dates. Try different dates or check inventory.</p>
+    {% endif %}
+</div>
+{% endblock %}

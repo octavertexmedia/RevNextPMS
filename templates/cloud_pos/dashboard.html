@@ -1,0 +1,44 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Cloud POS - RevNext{% endblock %}
+{% block page_title %}Cloud POS Dashboard{% endblock %}
+{% block page_description %}F&B management • Bill to Room • Touch-friendly{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <p class="text-sm font-medium text-gray-500">Open Orders</p>
+            <p class="text-2xl font-bold text-gray-900">{{ open_orders }}</p>
+            <a href="{% url 'cloud_pos:orders' %}" class="mt-4 block text-sm font-medium text-indigo-600">View orders →</a>
+            <a href="{% url 'cloud_pos:order_create' %}" class="mt-2 block text-sm font-medium text-indigo-600">+ New Order</a>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <p class="text-sm font-medium text-gray-500">Properties</p>
+            <p class="text-2xl font-bold text-gray-900">{{ properties|length }}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <a href="{% url 'cloud_pos:menu' %}" class="text-indigo-600 font-medium block">Manage Menu →</a>
+            <a href="{% url 'cloud_pos:tables' %}" class="text-indigo-600 font-medium block mt-2">Tables →</a>
+        </div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold">Recent Orders</h2>
+        </div>
+        <div class="divide-y divide-gray-200">
+            {% for order in orders %}
+            <div class="px-6 py-4 flex justify-between">
+                <div>
+                    <p class="font-medium">Order #{{ order.id }}</p>
+                    <p class="text-sm text-gray-500">{% if order.bill_to_room %}Bill to Room {{ order.room_number }}{% else %}Table {{ order.table.name|default:"—" }}{% endif %} • {{ order.get_status_display }}</p>
+                </div>
+                <span class="font-semibold">{{ order.total_amount.currency }} {{ order.total_amount.amount }}</span>
+            </div>
+            {% empty %}
+            <p class="px-6 py-12 text-center text-gray-500">No orders yet</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

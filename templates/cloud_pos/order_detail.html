@@ -1,0 +1,79 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Order #{{ order.id }} - Cloud POS{% endblock %}
+{% block page_title %}Order #{{ order.id }}{% endblock %}
+{% block page_description %}{{ order.get_status_display }}{% if order.bill_to_room %} · Bill to Room {{ order.room_number }}{% else %} · Table {{ order.table.name|default:"—" }}{% endif %}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <span class="inline-block px-3 py-1 rounded-full text-sm font-medium
+                {% if order.status == 'OPEN' %}bg-blue-100 text-blue-800
+                {% elif order.status == 'SENT' %}bg-amber-100 text-amber-800
+                {% elif order.status == 'SERVED' %}bg-purple-100 text-purple-800
+                {% elif order.status == 'BILLED' %}bg-gray-100 text-gray-800
+                {% else %}bg-green-100 text-green-800{% endif %}">
+                {{ order.get_status_display }}
+            </span>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+            {% if order.status in 'OPEN,SENT,SERVED' %}
+            <a href="{% url 'cloud_pos:order_add_item' order.id %}" class="btn-primary">+ Add Item</a>
+            {% endif %}
+            {% if order.status == 'OPEN' %}
+            <form method="post" action="{% url 'cloud_pos:order_status_update' order.id %}" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="SENT">
+                <button type="submit" class="btn-secondary">Send to Kitchen</button>
+            </form>
+            {% elif order.status == 'SENT' %}
+            <form method="post" action="{% url 'cloud_pos:order_status_update' order.id %}" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="SERVED">
+                <button type="submit" class="btn-secondary">Mark Served</button>
+            </form>
+            {% elif order.status == 'SERVED' %}
+            <form method="post" action="{% url 'cloud_pos:order_status_update' order.id %}" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="BILLED">
+                <button type="submit" class="btn-primary">Bill Order</button>
+            </form>
+            {% elif order.status == 'BILLED' %}
+            <form method="post" action="{% url 'cloud_pos:order_status_update' order.id %}" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="PAID">
+                <button type="submit" class="btn-primary">Mark Paid</button>
+            </form>
+            {% endif %}
+            <a href="{% url 'cloud_pos:orders' %}" class="btn-secondary">Back to Orders</a>
+        </div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold">Items</h2>
+        </div>
+        <div class="divide-y divide-gray-200">
+            {% for oi in order.items.all %}
+            <div class="px-6 py-4 flex justify-between items-center">
+                <div>
+                    <p class="font-medium">{{ oi.menu_item.name }} × {{ oi.quantity }}</p>
+                    <p class="text-sm text-gray-500">{{ oi.unit_price.currency }} {{ oi.unit_price.amount }} each</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="font-semibold">{{ oi.line_total.currency }} {{ oi.line_total.amount }}</span>
+                    {% if order.status in 'OPEN,SENT,SERVED' %}
+                    <a href="{% url 'cloud_pos:order_item_delete' order.id oi.id %}" class="text-red-600 text-sm" onclick="return confirm('Remove this item?');">Remove</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <p class="px-6 py-12 text-center text-gray-500">No items yet. Add items to this order.</p>
+            {% endfor %}
+        </div>
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <p class="text-lg font-bold">Total: {{ order.total_amount.currency }} {{ order.total_amount.amount }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

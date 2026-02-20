@@ -1,0 +1,59 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Google Hotel Ads - RevNext{% endblock %}
+{% block page_title %}Google Hotel Ads{% endblock %}
+{% block page_description %}Pay-Per-Conversion • Real-time rates on Google Search & Maps{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-6">
+        <h2 class="text-lg font-semibold text-indigo-900 mb-2">Pay-Per-Conversion</h2>
+        <p class="text-indigo-700">Pay only for confirmed bookings. No cost for impressions or clicks. Display real-time rates on Google Search, Google Maps, and Google Business Listings.</p>
+    </div>
+    <div class="flex justify-end">
+        <a href="{% url 'google_hotel_ads:config_create' %}" class="btn-primary">+ Add Config</a>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h2 class="text-lg font-semibold mb-4">Property Configurations</h2>
+        <div class="space-y-2">
+            {% for c in configs %}
+            <div class="flex justify-between items-center p-4 rounded-lg border">
+                <div>
+                    <p class="font-medium">{{ c.property.name }}</p>
+                    <p class="text-sm text-gray-500">{% if c.is_enabled %}Enabled{% else %}Disabled{% endif %} • {{ c.commission_model }}{% if c.feed_status %} • Feed: {{ c.feed_status }}{% endif %}{% if c.last_feed_submitted %} • Last: {{ c.last_feed_submitted|date:"M d" }}{% endif %}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="{% url 'google_hotel_ads:config_edit' c.id %}" class="text-indigo-600 text-sm">Edit</a>
+                    <form method="post" action="{% url 'google_hotel_ads:feed_submit' c.id %}" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="text-indigo-600 text-sm">Submit Feed</button>
+                    </form>
+                    <span class="px-2 py-1 text-xs rounded-full {% if c.is_enabled %}bg-green-100{% else %}bg-gray-100{% endif %}">{% if c.is_enabled %}Active{% else %}Inactive{% endif %}</span>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-gray-500">No properties configured. <a href="{% url 'google_hotel_ads:config_create' %}" class="text-indigo-600">Add one</a>.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h2 class="text-lg font-semibold mb-4">Recent Feed Submissions</h2>
+        <div class="space-y-2">
+            {% for f in recent_feeds %}
+            <div class="flex justify-between items-center p-3 rounded border">
+                <div>
+                    <span class="font-medium">{{ f.property.name }}</span>
+                    <span class="text-sm text-gray-500 ml-2">Rooms: {{ f.rooms_count }} • Rates: {{ f.rates_count }}</span>
+                </div>
+                <div class="text-right">
+                    <span class="px-2 py-1 text-xs rounded-full {% if f.status == 'SUCCESS' %}bg-green-100{% elif f.status == 'FAILED' %}bg-red-100{% else %}bg-amber-100{% endif %}">{{ f.status }}</span>
+                    <p class="text-xs text-gray-500 mt-1">{{ f.submitted_at|date:"M d, Y H:i" }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-gray-500">No feed submissions yet</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

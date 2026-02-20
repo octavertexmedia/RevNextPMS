@@ -1,0 +1,46 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}{{ agent.company_name }} - B2B Network{% endblock %}
+{% block page_title %}{{ agent.company_name }}{% endblock %}
+{% block page_description %}{{ agent.get_agent_type_display }}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div></div>
+        <div class="flex gap-2">
+            <a href="{% url 'b2b_network:agent_edit' agent.id %}" class="btn-secondary">Edit</a>
+            <a href="{% url 'b2b_network:b2b_rate_create' agent.id %}" class="btn-primary">+ Add B2B Rate</a>
+        </div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <p><strong>Type:</strong> {{ agent.get_agent_type_display }}</p>
+        <p><strong>Email:</strong> {{ agent.contact_email }}</p>
+        <p><strong>Phone:</strong> {{ agent.contact_phone|default:"—" }}</p>
+        <p><strong>Commission:</strong> {{ agent.commission_percent }}%</p>
+        <p><strong>Status:</strong> {% if agent.is_active %}Active{% else %}Inactive{% endif %}</p>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold">B2B Rates</h2>
+        </div>
+        <div class="divide-y divide-gray-200">
+            {% for rp in rate_plans %}
+            <div class="px-6 py-4 flex justify-between items-center">
+                <div>
+                    <p class="font-medium">{{ rp.rate_plan.name }}</p>
+                    <p class="text-sm text-gray-500">{{ rp.rate_plan.room_type.name }}</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span>{% if rp.net_rate %}{{ rp.net_rate.currency }} {{ rp.net_rate.amount }}{% else %}{{ rp.discount_percent }}% off{% endif %}</span>
+                    <a href="{% url 'b2b_network:b2b_rate_edit' agent.id rp.id %}" class="text-indigo-600 text-sm">Edit</a>
+                </div>
+            </div>
+            {% empty %}
+            <p class="px-6 py-12 text-center text-gray-500">No B2B rates. Add one above.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <a href="{% url 'b2b_network:agents' %}" class="btn-secondary">← Back to Agents</a>
+</div>
+{% endblock %}

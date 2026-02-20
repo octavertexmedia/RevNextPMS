@@ -1,0 +1,19 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Booking Engine Settings - RevNext{% endblock %}
+{% block page_title %}Booking Engine Settings{% endblock %}
+{% block page_description %}Embed code, multi-currency, Google Hotel Ads{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-4xl">
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h2 class="text-lg font-semibold mb-4">Embed Code</h2>
+        <p class="text-gray-600 mb-4">Add this iframe to your website to show the booking widget:</p>
+        <pre class="p-4 bg-gray-100 rounded-lg text-sm overflow-x-auto">&lt;iframe src="{{ request.scheme }}://{{ request.get_host }}/booking/widget/PROPERTY_ID/" width="100%" height="600" frameborder="0"&gt;&lt;/iframe&gt;</pre>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h2 class="text-lg font-semibold mb-4">Supported Currencies</h2>
+        <p class="text-gray-600">INR, USD, EUR, GBP - Configure per property in property settings.</p>
+    </div>
+</div>
+{% endblock %}

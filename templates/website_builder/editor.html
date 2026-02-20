@@ -1,0 +1,79 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Edit Website - {{ property.name }}{% endblock %}
+{% block page_title %}Edit {{ property.name }}{% endblock %}
+{% block page_description %}Template, SEO, domain, publish{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-2xl">
+    <div class="flex justify-between items-center">
+        <div></div>
+        <a href="{% url 'website_builder:preview' property.id %}" target="_blank" class="btn-secondary">Preview</a>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <h2 class="text-lg font-semibold mb-4">Template</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="{{ form.template.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.template.label }}</label>
+                        {{ form.template }}
+                        {% if form.template.errors %}<p class="mt-1 text-sm text-red-600">{{ form.template.errors.0 }}</p>{% endif %}
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h2 class="text-lg font-semibold mb-4">SEO</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="{{ form.meta_title.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.meta_title.label }}</label>
+                        {{ form.meta_title }}
+                        {% if form.meta_title.errors %}<p class="mt-1 text-sm text-red-600">{{ form.meta_title.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.meta_description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.meta_description.label }}</label>
+                        {{ form.meta_description }}
+                        {% if form.meta_description.errors %}<p class="mt-1 text-sm text-red-600">{{ form.meta_description.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.meta_keywords.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.meta_keywords.label }}</label>
+                        {{ form.meta_keywords }}
+                        {% if form.meta_keywords.errors %}<p class="mt-1 text-sm text-red-600">{{ form.meta_keywords.errors.0 }}</p>{% endif %}
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h2 class="text-lg font-semibold mb-4">Domain</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="{{ form.custom_domain.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.custom_domain.label }}</label>
+                        {{ form.custom_domain }}
+                        {% if form.custom_domain.errors %}<p class="mt-1 text-sm text-red-600">{{ form.custom_domain.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.subdomain.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.subdomain.label }}</label>
+                        {{ form.subdomain }}
+                        <p class="mt-1 text-sm text-gray-500">e.g., myhotel → myhotel.revnext.in</p>
+                        {% if form.subdomain.errors %}<p class="mt-1 text-sm text-red-600">{{ form.subdomain.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div class="flex items-center gap-2">
+                        {{ form.ssl_enabled }}
+                        <label for="{{ form.ssl_enabled.id_for_label }}" class="text-sm font-medium text-gray-700">SSL enabled</label>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    {{ form.is_published }}
+                    <label for="{{ form.is_published.id_for_label }}" class="text-sm font-medium text-gray-700">Publish website</label>
+                </div>
+            </div>
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="btn-primary">Save</button>
+                <a href="{% url 'website_builder:dashboard' %}" class="btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

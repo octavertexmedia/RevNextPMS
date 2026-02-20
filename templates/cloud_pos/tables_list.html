@@ -1,0 +1,43 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Tables - Cloud POS{% endblock %}
+{% block page_title %}Tables{% endblock %}
+{% block page_description %}Restaurant tables for POS orders{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div>
+            {% if properties %}
+            <form method="get" class="inline">
+                <select name="property" onchange="this.form.submit()" class="form-select">
+                    <option value="">All properties</option>
+                    {% for p in properties %}
+                    <option value="{{ p.id }}" {% if request.GET.property == p.id|stringformat:"s" %}selected{% endif %}>{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            {% endif %}
+        </div>
+        <a href="{% url 'cloud_pos:table_create' %}" class="btn-primary">+ New Table</a>
+    </div>
+    {% if tables %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for t in tables %}
+        <div class="bg-white rounded-xl shadow-sm border p-4 flex justify-between items-center">
+            <div>
+                <p class="font-semibold">{{ t.name }}</p>
+                <p class="text-sm text-gray-500">{{ t.property.name }} · Capacity {{ t.capacity }}</p>
+                <span class="inline-block mt-2 px-2 py-0.5 text-xs rounded {% if t.is_occupied %}bg-amber-100 text-amber-800{% else %}bg-green-100 text-green-800{% endif %}">
+                    {{ t.is_occupied|yesno:"Occupied,Available" }}
+                </span>
+            </div>
+            <a href="{% url 'cloud_pos:table_edit' t.id %}" class="text-indigo-600 text-sm">Edit</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-gray-500">No tables. <a href="{% url 'cloud_pos:table_create' %}" class="text-indigo-600">Add one</a>.</p>
+    {% endif %}
+</div>
+{% endblock %}

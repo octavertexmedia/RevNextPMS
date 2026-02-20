@@ -1,0 +1,69 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Folio #{{ folio.id }} - Cloud PMS{% endblock %}
+{% block page_title %}Folio #{{ folio.id }} - {{ folio.guest_name }}{% endblock %}
+{% block page_description %}Guest folio with line items{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <p class="text-gray-500">Room: {{ folio.room_number|default:"—" }} | Status: <span class="px-2 py-1 text-xs rounded-full {% if folio.status == 'OPEN' %}bg-blue-100{% elif folio.status == 'PAID' %}bg-green-100{% else %}bg-gray-100{% endif %}">{{ folio.get_status_display }}</span></p>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+            {% if folio.status != 'CLOSED' %}
+            <a href="{% url 'cloud_pms:folio_line_item_add' folio.id %}" class="btn-primary">Add Charge</a>
+            <form method="post" action="{% url 'cloud_pms:folio_close' folio.id %}" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="PAID">
+                <button type="submit" class="btn-secondary">Mark Paid</button>
+            </form>
+            <form method="post" action="{% url 'cloud_pms:folio_close' folio.id %}" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="CLOSED">
+                <button type="submit" class="btn-secondary">Close Folio</button>
+            </form>
+            {% endif %}
+            <a href="{% url 'cloud_pms:folios' %}" class="btn-secondary">Back to Folios</a>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl shadow-sm border p-6">
+            <h2 class="text-lg font-semibold mb-4">Line Items</h2>
+            <div class="divide-y divide-gray-200">
+                {% for item in line_items %}
+                <div class="py-3 flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">{{ item.get_item_type_display }} - {{ item.description }}</p>
+                        <p class="text-sm text-gray-500">Qty: {{ item.quantity }}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold">{{ item.amount.currency }} {{ item.amount.amount|floatformat:2 }}</span>
+                        <a href="{% url 'cloud_pms:folio_line_item_delete' folio.id item.id %}" class="text-red-600 hover:text-red-800 text-sm" onclick="return confirm('Remove this line item?')">Remove</a>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-gray-500 py-4">No line items. <a href="{% url 'cloud_pms:folio_line_item_add' folio.id %}" class="text-indigo-600">Add charge</a></p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border p-6">
+            <h2 class="text-lg font-semibold mb-4">Totals</h2>
+            <div class="space-y-2">
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Total Charges</span>
+                    <span class="font-semibold">{{ folio.total_charges.currency }} {{ folio.total_charges.amount|floatformat:2 }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Total Payments</span>
+                    <span class="font-semibold">{{ folio.total_payments.currency }} {{ folio.total_payments.amount|floatformat:2 }}</span>
+                </div>
+                <div class="flex justify-between pt-2 border-t">
+                    <span class="font-medium">Balance</span>
+                    <span class="font-bold text-lg">{{ folio.balance.currency }} {{ folio.balance.amount|floatformat:2 }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

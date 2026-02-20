@@ -1,0 +1,79 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Payment Gateways - RevNext{% endblock %}
+{% block page_title %}Payment Gateways{% endblock %}
+{% block page_description %}PCI-DSS compliant • Razorpay, PayPal, iPay88 & more{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-green-50 border border-green-200 rounded-xl p-6">
+        <h2 class="text-lg font-semibold text-green-900 mb-2">PCI-DSS Compliant</h2>
+        <p class="text-green-700">All payment gateways are PCI-DSS compliant for secure transaction processing.</p>
+    </div>
+    <div class="flex justify-end">
+        <a href="{% url 'payment_gateways:config_create' %}" class="btn-primary">+ Add Gateway</a>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h2 class="text-lg font-semibold mb-4">Configured Gateways</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {% for c in configs %}
+            <div class="p-4 rounded-lg border flex justify-between items-start">
+                <div>
+                    <p class="font-medium">{{ c.get_gateway_name_display }}</p>
+                    <p class="text-sm text-gray-500">{{ c.property.name|default:"Default" }}</p>
+                    <span class="inline-block mt-2 px-2 py-1 text-xs rounded {% if c.is_active %}bg-green-100{% else %}bg-gray-100{% endif %}">{% if c.is_active %}Active{% else %}Inactive{% endif %}</span>
+                </div>
+                <a href="{% url 'payment_gateways:config_edit' c.id %}" class="text-indigo-600 text-sm">Edit</a>
+                <form method="post" action="{% url 'payment_gateways:test_transaction' c.id %}" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="text-indigo-600 text-sm">Test</button>
+                </form>
+            </div>
+            {% empty %}
+            <p class="col-span-3 text-gray-500">No gateways configured. <a href="{% url 'payment_gateways:config_create' %}" class="text-indigo-600">Add one</a>.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold">Recent Transactions</h2>
+            <form method="get" class="flex gap-2 flex-wrap">
+                {% if properties %}
+                <select name="property" onchange="this.form.submit()" class="form-select text-sm">
+                    <option value="">All properties</option>
+                    {% for p in properties %}
+                    <option value="{{ p.id }}" {% if request.GET.property == p.id|stringformat:'d' %}selected{% endif %}>{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+                {% if statuses %}
+                <select name="status" onchange="this.form.submit()" class="form-select text-sm">
+                    <option value="">All statuses</option>
+                    {% for s in statuses %}
+                    <option value="{{ s }}" {% if request.GET.status == s %}selected{% endif %}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+                {% if gateways %}
+                <select name="gateway" onchange="this.form.submit()" class="form-select text-sm">
+                    <option value="">All gateways</option>
+                    {% for g in gateways %}
+                    <option value="{{ g }}" {% if request.GET.gateway == g %}selected{% endif %}>{{ g }}</option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+            </form>
+        </div>
+        <div class="space-y-2">
+            {% for t in recent_txns %}
+            <div class="flex justify-between p-3 rounded border">
+                <span>{{ t.transaction_id }}</span>
+                <span>{{ t.amount }} {{ t.currency }} • {{ t.status }}</span>
+            </div>
+            {% empty %}
+            <p class="text-gray-500">No transactions yet</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

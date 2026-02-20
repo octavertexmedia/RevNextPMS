@@ -1,0 +1,43 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Menu - Cloud POS{% endblock %}
+{% block page_title %}Menu Management{% endblock %}
+{% block page_description %}F&B menu items and categories{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div></div>
+        <div class="flex gap-2">
+            <a href="{% url 'cloud_pos:menu_category_create' %}" class="btn-primary">+ Category</a>
+            <a href="{% url 'cloud_pos:menu_item_create' %}" class="btn-secondary">+ Menu Item</a>
+        </div>
+    </div>
+    {% if categories %}
+    {% for cat in categories %}
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h3 class="text-lg font-semibold mb-4 flex justify-between items-center">
+            {{ cat.name }}
+            <a href="{% url 'cloud_pos:menu_category_edit' cat.id %}" class="text-indigo-600 text-sm font-normal">Edit</a>
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for item in cat.items.all %}
+            <div class="p-4 rounded-lg border border-gray-200 flex justify-between items-start">
+                <div>
+                    <p class="font-medium">{{ item.name }}</p>
+                    <p class="text-sm text-gray-500">{{ item.description|truncatewords:10 }}</p>
+                    <p class="font-semibold mt-2">{{ item.price.currency }} {{ item.price.amount }}</p>
+                </div>
+                <a href="{% url 'cloud_pos:menu_item_edit' item.id %}" class="text-indigo-600 text-sm">Edit</a>
+            </div>
+            {% empty %}
+            <p class="text-gray-500 col-span-3">No items in this category</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="text-gray-500">No menu categories. Add via admin.</p>
+    {% endif %}
+</div>
+{% endblock %}

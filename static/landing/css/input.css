@@ -1,0 +1,290 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles that complement Tailwind */
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-6 py-2.5 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all;
+    }
+    
+    .btn-primary-large {
+        @apply inline-flex items-center justify-center px-8 py-4 bg-indigo-600 text-white rounded-xl font-semibold text-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all;
+    }
+    
+    .btn-secondary {
+        @apply inline-flex items-center justify-center px-6 py-2.5 bg-white text-indigo-600 border-2 border-indigo-600 rounded-lg font-semibold hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all;
+    }
+    
+    .btn-secondary-large {
+        @apply inline-flex items-center justify-center px-8 py-4 bg-white text-indigo-600 border-2 border-indigo-600 rounded-xl font-semibold text-lg hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all;
+    }
+    
+    .btn-white-large {
+        @apply inline-flex items-center justify-center px-8 py-4 bg-white text-indigo-600 rounded-xl font-semibold text-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition-all;
+    }
+    
+    .btn-outline-white {
+        @apply inline-flex items-center justify-center px-8 py-4 bg-transparent text-white border-2 border-white rounded-xl font-semibold text-lg hover:bg-white hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition-all;
+    }
+    
+    .nav-link {
+        @apply text-gray-600 hover:text-indigo-600 font-medium transition-colors relative;
+    }
+    
+    .nav-link::after {
+        @apply absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all;
+        content: '';
+    }
+    
+    .nav-link:hover::after {
+        @apply w-full;
+    }
+    
+    .feature-card {
+        @apply p-8 bg-white rounded-xl border border-gray-200 hover:border-indigo-500 hover:shadow-lg transition-all;
+    }
+    
+    .feature-icon {
+        @apply w-14 h-14 rounded-xl flex items-center justify-center mb-6;
+    }
+    
+    .feature-title {
+        @apply text-xl font-bold text-gray-900 mb-3;
+    }
+    
+    .feature-description {
+        @apply text-gray-600 leading-relaxed;
+    }
+    
+    .step-number {
+        @apply w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto;
+    }
+    
+    .pricing-card {
+        @apply relative p-8 bg-white border-2 border-gray-200 rounded-xl hover:border-indigo-500 hover:shadow-xl transition-all;
+    }
+    
+    .pricing-card.featured {
+        @apply border-indigo-500 shadow-xl;
+    }
+    
+    .pricing-badge {
+        @apply absolute -top-3 left-1/2 transform -translate-x-1/2 px-4 py-1.5 bg-indigo-600 text-white rounded-full text-sm font-semibold;
+    }
+    
+    .pricing-header {
+        @apply text-center mb-8 pb-8 border-b border-gray-200;
+    }
+    
+    .pricing-name {
+        @apply text-2xl font-bold text-gray-900 mb-4;
+    }
+    
+    .pricing-price {
+        @apply mb-2;
+    }
+    
+    .price-amount {
+        @apply text-5xl font-extrabold text-gray-900;
+    }
+    
+    .price-period {
+        @apply text-base text-gray-500;
+    }
+    
+    .pricing-description {
+        @apply text-gray-600 text-sm;
+    }
+    
+    .pricing-features {
+        @apply list-none mb-8 space-y-3;
+    }
+    
+    .pricing-features li {
+        @apply py-2 text-gray-700 border-b border-gray-100;
+    }
+    
+    .pricing-features li:last-child {
+        @apply border-b-0;
+    }
+    
+    .pricing-features li::before {
+        @apply inline-block w-6 text-indigo-600 font-bold mr-2;
+        content: '✓';
+    }
+    
+    .testimonial-card {
+        @apply p-8 bg-white border border-gray-200 rounded-xl hover:shadow-lg transition-all;
+    }
+    
+    .testimonial-rating {
+        @apply text-yellow-400 text-xl mb-4;
+    }
+    
+    .testimonial-text {
+        @apply text-gray-700 leading-relaxed mb-6 italic;
+    }
+    
+    .testimonial-author {
+        @apply flex items-center gap-4;
+    }
+    
+    .author-avatar {
+        @apply w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg;
+    }
+    
+    .author-name {
+        @apply font-semibold text-gray-900;
+    }
+    
+    .author-title {
+        @apply text-sm text-gray-500;
+    }
+    
+    .integration-filter {
+        @apply px-5 py-2 bg-white text-gray-600 border border-gray-300 rounded-full font-medium cursor-pointer transition-all hover:bg-gray-50;
+    }
+    
+    .integration-filter.active {
+        @apply bg-indigo-600 text-white border-indigo-600;
+    }
+    
+    .integration-card {
+        @apply transition-transform hover:-translate-y-1;
+    }
+    
+    .api-tab {
+        @apply px-6 py-3 font-semibold text-gray-700 border-b-2 transition-colors;
+    }
+    
+    .api-tab.active {
+        @apply border-indigo-600 text-indigo-600;
+    }
+}
+
+/* Form Styles - Must be OUTSIDE @layer to override Tailwind base reset styles */
+/* These styles load after all Tailwind layers, ensuring they take precedence */
+input.form-input,
+select.form-select,
+textarea.form-textarea,
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100% !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 0.5rem !important;
+    background-color: white !important;
+    border: 2px solid #9ca3af !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+    border-color: #9ca3af !important;
+    outline: none !important;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    color: #111827 !important;
+    box-sizing: border-box !important;
+}
+
+/* Focus styles with maximum specificity to override any Tailwind utilities */
+input.form-input:focus,
+select.form-select:focus,
+textarea.form-textarea:focus,
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus,
+input[type="text"].form-input:focus,
+input[type="email"].form-input:focus,
+input[type="url"].form-input:focus,
+input[type="tel"].form-input:focus,
+input[type="number"].form-input:focus,
+input[type="date"].form-input:focus,
+input[type="password"].form-input:focus,
+input.form-input:focus-visible,
+select.form-select:focus-visible,
+textarea.form-textarea:focus-visible,
+.form-input:focus-visible,
+.form-select:focus-visible,
+.form-textarea:focus-visible {
+    border: 2px solid #4f46e5 !important;
+    border-top: 2px solid #4f46e5 !important;
+    border-right: 2px solid #4f46e5 !important;
+    border-bottom: 2px solid #4f46e5 !important;
+    border-left: 2px solid #4f46e5 !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+    border-color: #4f46e5 !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+    outline: none !important;
+    outline-width: 0 !important;
+    outline-style: none !important;
+    outline-color: transparent !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+}
+
+input.form-input:hover,
+select.form-select:hover,
+textarea.form-textarea:hover,
+.form-input:hover,
+.form-select:hover,
+.form-textarea:hover {
+    border-color: #6b7280 !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+}
+
+.form-checkbox {
+    width: 1rem !important;
+    height: 1rem !important;
+    color: #4f46e5 !important;
+    border-radius: 0.25rem !important;
+    border: 2px solid #9ca3af !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+    border-color: #9ca3af !important;
+    cursor: pointer !important;
+}
+
+.form-checkbox:focus {
+    border-color: #4f46e5 !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+    outline: none !important;
+}
+
+.form-textarea {
+    resize: vertical !important;
+    min-height: 100px !important;
+}
+
+/* Ensure select dropdowns have visible borders and proper styling */
+select.form-select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-color: white !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+    background-position: right 0.5rem center !important;
+    background-repeat: no-repeat !important;
+    background-size: 1.5em 1.5em !important;
+    padding-right: 2.5rem !important;
+}
+
+/* Override any Tailwind base styles that might interfere - highest specificity */
+input[type="text"].form-input,
+input[type="email"].form-input,
+input[type="url"].form-input,
+input[type="tel"].form-input,
+input[type="number"].form-input,
+input[type="date"].form-input,
+input[type="password"].form-input {
+    border: 2px solid #9ca3af !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+    border-color: #9ca3af !important;
+    background-color: white !important;
+}

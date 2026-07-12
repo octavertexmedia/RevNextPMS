@@ -86,27 +86,34 @@ Passwordless sudo for nginx (same as Happynails):
 deploy ALL=(root) NOPASSWD: /usr/bin/mkdir, /bin/cp, /bin/ln, /usr/sbin/nginx, /bin/systemctl, /usr/sbin/service
 ```
 
-Product TLS:
+Product TLS (shared Contabo — **not** cms / Vercel apex):
 
 ```bash
 sudo mkdir -p /var/www/certbot
 sudo certbot --nginx \
   -d channel-manager.revnext.in \
   -d booking.revnext.in -d networks.revnext.in \
-  -d pms.revnext.in -d pos.revnext.in -d cms.revnext.in \
-  -d hotels.revnext.in -d tours.revnext.in \
-  -d revnext.in -d www.revnext.in
+  -d pms.revnext.in -d pos.revnext.in \
+  -d hotels.revnext.in -d tours.revnext.in
 ```
 
-Then `CHANNEL_MANAGER_NGINX_TLS=1` in `~/channel-manager/.env` and redeploy products.
+`cms.revnext.in` + `app` + `*.sites` → **`84.247.183.69`** (RevNextCMS).  
+`revnext.in` / `www.revnext.in` → **Vercel** (do not terminate on Contabo).  
+`secrets.revnext.in` → separate cert / nginx site `secrets`.
 
 ---
 
 ## 3) auth.revnext.in (SSO)
 
-Deploy an IdP (Keycloak / Authentik / Zitadel) **outside** this Django app.  
-Register RP redirect URIs from `PRODUCT_OIDC_REDIRECT_URIS` in `channel_manager/domains.py`.  
-Store client secrets in OpenBao `…/oidc`; set `OIDC_ENABLED=true` via OpenBao-loaded env.
+Deploy Keycloak **outside** this Django app (realm `revnext`).  
+Issuer: `https://auth.revnext.in/realms/revnext` (`OIDC_OP_ISSUER`).
+
+Register RP redirect URIs for ChannelManager product hosts from `PRODUCT_OIDC_REDIRECT_URIS` in `channel_manager/domains.py`.  
+**Hotel CMS** callbacks live on RevNextCMS (`https://cms.revnext.in/oidc/callback/`, `https://app.revnext.in/oidc/callback/`) — client `revnext-platform`.
+
+Store client secrets + `ENTITLEMENTS_SERVICE_TOKEN` in OpenBao `…/oidc`; set `OIDC_ENABLED=true`.
+
+Suite packaging: `cms` remains in `PRODUCT_CATALOG` / `revnext_suite` but is externally served — see `EXTERNAL_PRODUCT_RUNTIME` in `products/catalog.py` and RevNextCMS `docs/channel-manager-cms-bridge.md`.
 
 ---
 

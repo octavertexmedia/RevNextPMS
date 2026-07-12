@@ -59,6 +59,7 @@ services:
     command: gunicorn --bind 0.0.0.0:8001 --workers 4 --timeout 120 --access-logfile - --error-logfile - channel_manager.wsgi:application
     volumes:
       - ./media:/app/media
+      - ./static:/app/static:ro
       - ./staticfiles:/app/staticfiles
       - ./logs:/app/logs
     env_file:

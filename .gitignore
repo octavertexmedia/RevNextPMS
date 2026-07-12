@@ -32,7 +32,10 @@ db.sqlite3
 db.sqlite3-journal
 /media
 /staticfiles
-/static
+# Keep compiled landing assets in git (collectstatic on deploy needs them)
+/static/*
+!/static/landing/
+!/static/landing/**
 
 # IDE
 .vscode/

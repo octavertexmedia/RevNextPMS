@@ -1,13 +1,19 @@
 """
-Canonical secret key groups for bootstrap / sync commands.
+Canonical secret key groups for bootstrap / sync commands and OpenBao loader allowlist.
 """
 
 SECRET_GROUPS = {
     'django': [
         'SECRET_KEY',
+        'DEBUG',
         'SITE_URL',
         'ALLOWED_HOSTS',
+        'CSRF_TRUSTED_ORIGINS',
+        'CORS_ALLOWED_ORIGINS',
+        'SECURE_SSL_REDIRECT',
         'SENTRY_DSN',
+        'SUPERUSER_PASSWORD',
+        'ENVIRONMENT',
     ],
     'database': [
         'DB_NAME',
@@ -30,6 +36,7 @@ SECRET_GROUPS = {
         'PAYU_MODE',
     ],
     'oidc': [
+        'OIDC_ENABLED',
         'OIDC_OP_ISSUER',
         'OIDC_RP_CLIENT_ID',
         'OIDC_RP_CLIENT_SECRET',
@@ -56,4 +63,30 @@ SECRET_GROUPS = {
         'GOOGLE_MAPS_API_KEY',
         'FCM_SERVER_KEY',
     ],
+    'email': [
+        'EMAIL_HOST',
+        'EMAIL_PORT',
+        'EMAIL_HOST_USER',
+        'EMAIL_HOST_PASSWORD',
+        'EMAIL_USE_TLS',
+        'DEFAULT_FROM_EMAIL',
+    ],
+    'cloud': [
+        'AWS_ACCESS_KEY_ID',
+        'AWS_SECRET_ACCESS_KEY',
+        'AWS_STORAGE_BUCKET_NAME',
+        'AWS_S3_REGION_NAME',
+    ],
 }
+
+
+def all_managed_secret_keys() -> tuple[str, ...]:
+    """Flat allowlist derived from SECRET_GROUPS (stable order, unique)."""
+    seen: set[str] = set()
+    keys: list[str] = []
+    for group in SECRET_GROUPS.values():
+        for key in group:
+            if key not in seen:
+                seen.add(key)
+                keys.append(key)
+    return tuple(keys)

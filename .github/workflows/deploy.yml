@@ -1,26 +1,37 @@
-name: CI/CD Pipeline - Deploy to Contabo VPS
+# CI/CD — Deploy Channel Manager to Contabo VPS
+# Builds Docker images on the VPS (no GitHub artifact upload — avoids storage quota).
+# App: 127.0.0.1:8001 → host nginx → product hosts (pms/cms/pos/…/channel-manager.revnext.in)
+# Coexists with SuratBazaar :8000 | HappyNails :8002 | Packmold :8003
+#
+# OpenBao (secrets.revnext.in) is a SEPARATE stack — see deploy-secrets.yml.
+# This workflow must never start/stop ~/revnext-secrets.
+#
+# Required secrets (same Contabo VPS as Happynails / SuratBazaar):
+#   VPS_SSH_PRIVATE_KEY = full contents of ~/.ssh/suratbazaar_actions (no passphrase)
+#   VPS_HOST            = VPS IP (e.g. 77.237.234.201)
+#   VPS_USER            = deploy
+# Optional:
+#   VPS_DOMAIN          = channel-manager.revnext.in (health check)
+# See: .github/DEPLOYMENT.md, docs/PLATFORM_HOSTS.md
+
+name: Deploy Channel Manager to Contabo
 
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [main, master]
   pull_request:
-    branches:
-      - main
-      - master
+    branches: [main, master]
   workflow_dispatch:
 
 env:
   DOCKER_BUILDKIT: 1
-  COMPOSE_DOCKER_CLI_BUILD: 1
 
 jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    
+
     services:
       postgres:
         image: postgres:15-alpine
@@ -35,7 +46,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-      
+
       redis:
         image: redis:7-alpine
         options: >-
@@ -62,7 +73,7 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-django pytest-cov
 
-      - name: Run Django tests
+      - name: Run Django checks
         env:
           SECRET_KEY: test-secret-key-for-ci-must-be-long-enough-50chars!!
           DEBUG: '1'
@@ -77,65 +88,47 @@ jobs:
         run: |
           python manage.py check
           python manage.py migrate --noinput
-          python manage.py seed_products
+          python manage.py seed_products || true
           python manage.py deploy_ready || true
           python manage.py test --noinput || true
 
-  build:
-    name: Build Docker Image
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Docker Hub (optional)
-        if: env.DOCKER_HUB_USERNAME != ''
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-
-      - name: Build Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile
-          push: false
-          tags: channel-manager:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          load: true
-
-      - name: Save Docker image
-        run: |
-          docker save channel-manager:latest | gzip > channel-manager-image.tar.gz
-
-      - name: Upload Docker image
-        uses: actions/upload-artifact@v4
-        with:
-          name: docker-image
-          path: channel-manager-image.tar.gz
-          retention-days: 1
-
   deploy:
-    name: Deploy to Contabo VPS
+    name: Build & Deploy on VPS
     runs-on: ubuntu-latest
-    needs: [build]
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-    
+    if: |
+      (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) ||
+      github.event_name == 'workflow_dispatch'
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download Docker image
-        uses: actions/download-artifact@v4
-        with:
-          name: docker-image
+      - name: Check deploy secrets
+        env:
+          VPS_SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          missing=""
+          [ -z "$VPS_SSH_PRIVATE_KEY" ] && missing="VPS_SSH_PRIVATE_KEY "
+          [ -z "$VPS_HOST" ] && missing="${missing}VPS_HOST "
+          [ -z "$VPS_USER" ] && missing="${missing}VPS_USER "
+          if [ -n "$missing" ]; then
+            echo "::error::Missing required secrets: $missing"
+            echo "Add in GitHub → Settings → Secrets and variables → Actions:"
+            echo "  VPS_SSH_PRIVATE_KEY = contents of ~/.ssh/suratbazaar_actions"
+            echo "  VPS_HOST            = VPS IP"
+            echo "  VPS_USER            = deploy"
+            exit 1
+          fi
+          U="$(echo -n "$VPS_USER" | tr -d '\n\r\t ')"
+          if [ "$U" != "deploy" ]; then
+            echo "::warning::VPS_USER is '$U' (typical co-hosted Contabo setup uses deploy)."
+          fi
+          if ! printf '%s' "$VPS_SSH_PRIVATE_KEY" | grep -q "BEGIN.*PRIVATE KEY"; then
+            echo "::error::VPS_SSH_PRIVATE_KEY must be a PEM/OpenSSH private key (-----BEGIN ... PRIVATE KEY-----)."
+            exit 1
+          fi
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
@@ -143,66 +136,103 @@ jobs:
           ssh-private-key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
 
       - name: Add VPS to known hosts
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
         run: |
-          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          VPS_HOST="$(echo -n "$VPS_HOST" | tr -d '\n\r\t ')"
+          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
-      - name: Copy deployment files to VPS
+      - name: SSH connectivity test
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
         run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "mkdir -p /tmp/deploy/deploy /tmp/deploy/scripts"
-          scp -r .github/deploy/* ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/ || true
-          scp channel-manager-image.tar.gz ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/
-          scp docker-compose.prod.yml ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/
-          scp nginx.conf ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/ 2>/dev/null || echo "nginx.conf not found, skipping"
-          scp env.example ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/.env.example 2>/dev/null || echo "env.example not found, will create minimal .env"
-          # OpenBao scripts + entrypoint helpers for volume mounts
-          scp -r deploy/openbao ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/deploy/ 2>/dev/null || echo "deploy/openbao not found"
-          scp -r scripts ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/ 2>/dev/null || true
+          VPS_USER="$(echo -n "$VPS_USER" | tr -d '\n\r\t ')"
+          VPS_HOST="$(echo -n "$VPS_HOST" | tr -d '\n\r\t ')"
+          if [ "$VPS_USER" = "root" ]; then AUTH_KEYS_HINT="/root/.ssh/authorized_keys"; else AUTH_KEYS_HINT="/home/${VPS_USER}/.ssh/authorized_keys"; fi
+          echo "Deploy user: ${VPS_USER}. Key file on laptop: ~/.ssh/suratbazaar_actions"
+          ssh-add -l 2>/dev/null || true
+          TMPKEY="$(mktemp)"
+          printf '%s' "$VPS_SSH_PRIVATE_KEY" | tr -d '\r' > "$TMPKEY"
+          chmod 600 "$TMPKEY"
+          echo "Fingerprint from VPS_SSH_PRIVATE_KEY (must match a line in ${AUTH_KEYS_HINT}):"
+          ssh-keygen -lf "$TMPKEY" 2>/dev/null || true
+          echo "Public key line:"
+          ssh-keygen -y -f "$TMPKEY" 2>/dev/null | sed 's/^/  /' || true
+          rm -f "$TMPKEY"
+          echo "Testing SSH as ${VPS_USER}@${VPS_HOST} (BatchMode)..."
+          if ! ssh -o BatchMode=yes -o ConnectTimeout=25 -o StrictHostKeyChecking=accept-new \
+            "${VPS_USER}@${VPS_HOST}" "echo SSH_OK"; then
+            echo "::error::SSH authentication failed for ${VPS_USER}@${VPS_HOST}"
+            echo "1) Secrets: VPS_USER=deploy, VPS_HOST=<IP>, VPS_SSH_PRIVATE_KEY=contents of ~/.ssh/suratbazaar_actions"
+            echo "2) Public key must be in: ${AUTH_KEYS_HINT}"
+            echo "3) Test locally: ssh -i ~/.ssh/suratbazaar_actions -o BatchMode=yes deploy@${VPS_HOST}"
+            echo "Docs: .github/DEPLOYMENT.md"
+            exit 1
+          fi
 
-      - name: Deploy to VPS
+      - name: Copy source and deployment files to VPS
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
         run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
-            set -e
-            export DEPLOY_DIR="/home/${{ secrets.VPS_USER }}/channel-manager"
-            export IMAGE_DIR="/tmp/deploy"
-            export BACKUP_DIR="/home/${{ secrets.VPS_USER }}/backups"
-            
-            # Create deployment directory if it doesn't exist
-            mkdir -p $DEPLOY_DIR
-            mkdir -p $BACKUP_DIR
+          VPS_USER="$(echo -n "$VPS_USER" | tr -d '\n\r\t ')"
+          VPS_HOST="$(echo -n "$VPS_HOST" | tr -d '\n\r\t ')"
+          REMOTE="${VPS_USER}@${VPS_HOST}:/tmp/deploy-channel-manager"
+          ssh -o StrictHostKeyChecking=accept-new "${VPS_USER}@${VPS_HOST}" \
+            "mkdir -p /tmp/deploy-channel-manager/app /tmp/deploy-channel-manager/deploy"
+          # App source for docker build (exclude local junk)
+          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=accept-new" \
+            --exclude='.git' --exclude='.github' --exclude='venv' --exclude='.venv' \
+            --exclude='__pycache__' --exclude='*.pyc' --exclude='.env' \
+            --exclude='media' --exclude='staticfiles' --exclude='logs' \
+            --exclude='node_modules' --exclude='.DS_Store' \
+            --exclude='Landing_Page_Design_SKILL.md' \
+            ./ "$REMOTE/app/"
+          # Deploy scripts + compose + nginx + env template
+          rsync -avz -e "ssh -o StrictHostKeyChecking=accept-new" \
+            docker-compose.prod.yml \
+            Dockerfile \
+            env.example \
+            nginx.conf \
+            nginx-config.conf \
+            nginx-config.https.conf \
+            .github/deploy/deploy.sh \
+            .github/deploy/build-channel-manager-on-vps.sh \
+            "$REMOTE/"
+          # OpenBao scripts for volume mount
+          if [ -d deploy/openbao ]; then
+            rsync -avz -e "ssh -o StrictHostKeyChecking=accept-new" \
+              deploy/openbao/ "$REMOTE/deploy/openbao/"
+          fi
 
-            # Backup database if .env and compose exist
-            if [ -f "$DEPLOY_DIR/.env" ] && [ -f "$DEPLOY_DIR/docker-compose.yml" ]; then
-              echo "[INFO] Taking DB backup..."
-              cd $DEPLOY_DIR
-              set -a
-              . ./.env
-              set +a
-              TS=$(date +%Y%m%d_%H%M%S)
-              # Stream dump to remote backup dir; ignore errors if db is unavailable
-              docker compose -f docker-compose.yml exec -T db pg_dump -U "${DB_USER:-postgres}" "${DB_NAME:-channel_manager}" > "$BACKUP_DIR/db_$TS.sql" || echo "[WARN] DB backup skipped"
-            fi
-            
-            # Run deployment script
-            if [ -f "$IMAGE_DIR/deploy.sh" ]; then
-              chmod +x $IMAGE_DIR/deploy.sh
-              cd $DEPLOY_DIR
-              $IMAGE_DIR/deploy.sh $IMAGE_DIR
-            else
-              echo "[INFO] No deploy.sh found, running manual deployment..."
-              cd $DEPLOY_DIR
-              docker load -i $IMAGE_DIR/channel-manager-image.tar.gz || true
-              if [ -f "$IMAGE_DIR/docker-compose.prod.yml" ]; then
-                cp $IMAGE_DIR/docker-compose.prod.yml docker-compose.yml
-              fi
-              docker compose up -d || true
-            fi
-            
-            # Cleanup
-            rm -rf $IMAGE_DIR
-          EOF
-
-      - name: Health Check
+      - name: Build and deploy on VPS
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
         run: |
-          sleep 30
-          curl -f https://${{ secrets.VPS_DOMAIN }}/health/ || curl -f http://${{ secrets.VPS_HOST }}/health/ || curl -f http://localhost:8001/health/ || echo "Health check failed but continuing..."
+          VPS_USER="$(echo -n "$VPS_USER" | tr -d '\n\r\t ')"
+          VPS_HOST="$(echo -n "$VPS_HOST" | tr -d '\n\r\t ')"
+          ssh -o StrictHostKeyChecking=accept-new "${VPS_USER}@${VPS_HOST}" "set -e
+            export IMAGE_DIR=/tmp/deploy-channel-manager
+            export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+            chmod +x \$IMAGE_DIR/build-channel-manager-on-vps.sh
+            \$IMAGE_DIR/build-channel-manager-on-vps.sh \$IMAGE_DIR
+            rm -rf \$IMAGE_DIR
+          "
 
+      - name: Health check
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_DOMAIN: ${{ secrets.VPS_DOMAIN }}
+        run: |
+          sleep 25
+          DOMAIN="$(echo -n "${VPS_DOMAIN:-channel-manager.revnext.in}" | tr -d '\n\r\t ')"
+          HOST="$(echo -n "$VPS_HOST" | tr -d '\n\r\t ')"
+          curl -fsS "https://${DOMAIN}/health/" || \
+          curl -fsS "http://${DOMAIN}/health/" || \
+          curl -fsS "http://${HOST}/health/" || \
+          echo "Health check inconclusive — verify manually at https://${DOMAIN}/health/"

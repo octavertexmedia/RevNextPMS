@@ -1,94 +1,77 @@
 #!/bin/bash
+# Deploy Channel Manager to Contabo VPS (same host as Happynails / SuratBazaar / Packmold)
+# Only touches channel_manager_* containers and channel-manager images.
+# App port: 127.0.0.1:8001 → host nginx site "channel-manager"
+#
+# NEVER touch OpenBao / secrets stack:
+#   ~/revnext-secrets, revnext_secrets_*, nginx site "secrets", port 8200
+# Deploy secrets via deploy/infra/deploy-secrets.sh or workflow deploy-secrets.yml only.
+
 set -e
 
-# Deployment script for Channel Manager
-# Usage: ./deploy.sh /tmp/deploy
-
-IMAGE_DIR="${1:-/tmp/deploy}"
+IMAGE_DIR="${1:?Usage: deploy.sh <image-dir>}"
 DEPLOY_DIR="${DEPLOY_DIR:-/home/$(whoami)/channel-manager}"
-BACKUP_DIR="${BACKUP_DIR:-/home/$(whoami)/backups}"
+BACKUP_DIR="${BACKUP_DIR:-/home/$(whoami)/backups/channel-manager}"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
-echo "[INFO] Starting deployment..."
-echo "[INFO] Image directory: $IMAGE_DIR"
-echo "[INFO] Deploy directory: $DEPLOY_DIR"
-echo "[INFO] Backup directory: $BACKUP_DIR"
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
 
-# Ensure directories exist
-mkdir -p "$DEPLOY_DIR"
-mkdir -p "$BACKUP_DIR"
+print_status() { echo -e "${BLUE}[INFO]${NC} $1"; }
+print_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
+print_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
+print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
-# Create required directories with proper permissions
-echo "[INFO] Creating required directories..."
-mkdir -p "$DEPLOY_DIR/logs" "$DEPLOY_DIR/media" "$DEPLOY_DIR/staticfiles"
-chmod 777 "$DEPLOY_DIR/logs" 2>/dev/null || true
-chmod 755 "$DEPLOY_DIR/media" "$DEPLOY_DIR/staticfiles" 2>/dev/null || true
+if [ "$(whoami)" != "deploy" ] && [ "$(whoami)" != "root" ]; then
+  print_warning "Not running as deploy user, continuing anyway..."
+fi
 
-# Load Docker image
-if [ -f "$IMAGE_DIR/channel-manager-image.tar.gz" ]; then
-    echo "[INFO] Loading Docker image..."
-    if docker load -i "$IMAGE_DIR/channel-manager-image.tar.gz"; then
-        echo "[INFO] Docker image loaded successfully"
-        docker images | grep channel-manager || echo "[WARN] Image not found after load"
-    else
-        echo "[WARN] Image load failed, checking if image already exists..."
-        if docker images | grep -q channel-manager; then
-            echo "[INFO] Image already exists, continuing..."
-        else
-            echo "[ERROR] Image load failed and image doesn't exist!"
-            exit 1
-        fi
-    fi
+if ! command -v docker &>/dev/null; then
+  print_error "Docker is not installed!"
+  exit 1
+fi
+
+if command -v docker-compose &>/dev/null; then
+  DOCKER_COMPOSE_CMD="docker-compose"
+elif docker compose version &>/dev/null; then
+  DOCKER_COMPOSE_CMD="docker compose"
 else
-    echo "[WARN] Docker image file not found: $IMAGE_DIR/channel-manager-image.tar.gz"
-    echo "[INFO] Checking if image already exists..."
-    if docker images | grep -q channel-manager; then
-        echo "[INFO] Image already exists, continuing..."
-    else
-        echo "[ERROR] No image file and image doesn't exist!"
-        exit 1
-    fi
+  print_error "Docker Compose not found."
+  exit 1
 fi
 
-# Copy docker-compose + OpenBao deploy assets
-if [ -f "$IMAGE_DIR/docker-compose.prod.yml" ]; then
-    echo "[INFO] Copying docker-compose file..."
-    cp "$IMAGE_DIR/docker-compose.prod.yml" "$DEPLOY_DIR/docker-compose.yml"
-fi
-if [ -d "$IMAGE_DIR/deploy" ]; then
-    echo "[INFO] Copying deploy/ assets (OpenBao scripts)..."
-    mkdir -p "$DEPLOY_DIR/deploy"
-    cp -R "$IMAGE_DIR/deploy/." "$DEPLOY_DIR/deploy/"
+if ! docker ps &>/dev/null; then
+  print_error "Cannot run Docker. Ensure Docker is running and user is in docker group."
+  exit 1
 fi
 
-# Required production hosts (booking + networks + suite)
 REQUIRED_HOSTS="revnext.in,www.revnext.in,channel-manager.revnext.in,booking.revnext.in,networks.revnext.in,pms.revnext.in,pos.revnext.in,cms.revnext.in,hotels.revnext.in,tours.revnext.in,secrets.revnext.in,auth.revnext.in,localhost,127.0.0.1"
+REQUIRED_CSRF="https://revnext.in,https://www.revnext.in,https://channel-manager.revnext.in,https://booking.revnext.in,https://networks.revnext.in,https://pms.revnext.in,https://pos.revnext.in,https://cms.revnext.in,https://hotels.revnext.in,https://tours.revnext.in,https://secrets.revnext.in,https://auth.revnext.in"
 
 ensure_env_hosts() {
-    local envfile="$1"
-    if [ ! -f "$envfile" ]; then
-        return
-    fi
-    if grep -q '^ALLOWED_HOSTS=' "$envfile"; then
-        # Merge any missing required hosts into existing ALLOWED_HOSTS
-        local current
-        current=$(grep '^ALLOWED_HOSTS=' "$envfile" | head -1 | cut -d= -f2-)
-        local merged="$current"
-        IFS=',' read -ra PARTS <<< "$REQUIRED_HOSTS"
-        for h in "${PARTS[@]}"; do
-            case ",$merged," in
-                *",$h,"*) ;;
-                *) merged="${merged},${h}" ;;
-            esac
-        done
-        # Normalize leading comma
-        merged=$(echo "$merged" | sed 's/^,//')
-        if command -v python3 >/dev/null 2>&1; then
-            python3 - "$envfile" "$merged" <<'PY'
+  local envfile="$1"
+  [ -f "$envfile" ] || return
+  if grep -q '^ALLOWED_HOSTS=' "$envfile"; then
+    local current merged
+    current=$(grep '^ALLOWED_HOSTS=' "$envfile" | head -1 | cut -d= -f2-)
+    merged="$current"
+    IFS=',' read -ra PARTS <<< "$REQUIRED_HOSTS"
+    for h in "${PARTS[@]}"; do
+      case ",$merged," in
+        *",$h,"*) ;;
+        *) merged="${merged},${h}" ;;
+      esac
+    done
+    merged=$(echo "$merged" | sed 's/^,//')
+    if command -v python3 >/dev/null 2>&1; then
+      python3 - "$envfile" "$merged" <<'PY'
 import sys
 path, hosts = sys.argv[1], sys.argv[2]
 lines = open(path).read().splitlines()
-out = []
-replaced = False
+out, replaced = [], False
 for line in lines:
     if line.startswith('ALLOWED_HOSTS=') and not replaced:
         out.append(f'ALLOWED_HOSTS={hosts}')
@@ -99,226 +82,216 @@ if not replaced:
     out.append(f'ALLOWED_HOSTS={hosts}')
 open(path, 'w').write('\n'.join(out) + '\n')
 PY
-        else
-            echo "[WARN] Could not merge ALLOWED_HOSTS (no python3)"
-        fi
-        echo "[INFO] Ensured product hosts in ALLOWED_HOSTS"
-    else
-        echo "ALLOWED_HOSTS=$REQUIRED_HOSTS" >> "$envfile"
     fi
-    # Ensure CSRF origins for product hosts if missing
-    if ! grep -q '^CSRF_TRUSTED_ORIGINS=' "$envfile"; then
-        echo "CSRF_TRUSTED_ORIGINS=https://revnext.in,https://www.revnext.in,https://channel-manager.revnext.in,https://booking.revnext.in,https://networks.revnext.in,https://pms.revnext.in,https://pos.revnext.in,https://cms.revnext.in,https://hotels.revnext.in,https://tours.revnext.in,https://secrets.revnext.in,https://auth.revnext.in" >> "$envfile"
-        echo "[INFO] Added CSRF_TRUSTED_ORIGINS"
-    fi
+  else
+    echo "ALLOWED_HOSTS=$REQUIRED_HOSTS" >> "$envfile"
+  fi
+  if ! grep -q '^CSRF_TRUSTED_ORIGINS=' "$envfile"; then
+    echo "CSRF_TRUSTED_ORIGINS=$REQUIRED_CSRF" >> "$envfile"
+  fi
 }
 
-# Copy .env file if it doesn't exist
-if [ ! -f "$DEPLOY_DIR/.env" ]; then
-    if [ -f "$IMAGE_DIR/.env.example" ]; then
-        echo "[INFO] Creating .env file from example..."
-        cp "$IMAGE_DIR/.env.example" "$DEPLOY_DIR/.env"
-        echo "[WARN] Please update .env file with your configuration!"
-        echo "[WARN] At minimum, update SECRET_KEY and DB_PASSWORD"
-    else
-        echo "[WARN] .env file not found and .env.example not available"
-        echo "[INFO] Creating minimal .env file..."
-        # Generate secure random values
-        if command -v openssl >/dev/null 2>&1; then
-            SECRET_KEY=$(openssl rand -hex 32)
-            DB_PASSWORD=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-25)
-        elif command -v python3 >/dev/null 2>&1; then
-            SECRET_KEY=$(python3 -c "import secrets; print(secrets.token_hex(32))")
-            DB_PASSWORD=$(python3 -c "import secrets; print(secrets.token_urlsafe(25))")
-        else
-            SECRET_KEY="django-insecure-$(date +%s | sha256sum | base64 | head -c 32)"
-            DB_PASSWORD="changeme$(date +%s | sha256sum | base64 | head -c 20)"
-            echo "[WARN] Using less secure fallback password generation"
-        fi
-        
-        cat > "$DEPLOY_DIR/.env" << EOF
-# Django Configuration
-SECRET_KEY=$SECRET_KEY
-DEBUG=False
-ALLOWED_HOSTS=$REQUIRED_HOSTS
-CSRF_TRUSTED_ORIGINS=https://revnext.in,https://www.revnext.in,https://channel-manager.revnext.in,https://booking.revnext.in,https://networks.revnext.in,https://pms.revnext.in,https://pos.revnext.in,https://cms.revnext.in,https://hotels.revnext.in,https://tours.revnext.in,https://secrets.revnext.in,https://auth.revnext.in
-SITE_URL=https://channel-manager.revnext.in
-SECURE_SSL_REDIRECT=True
+print_status "Starting Channel Manager deployment (co-host safe)..."
+mkdir -p "$BACKUP_DIR" "$DEPLOY_DIR"/{media,staticfiles,logs,nginx,deploy}
 
-# Database Configuration
-DB_NAME=channel_manager
-DB_USER=postgres
-DB_PASSWORD=$DB_PASSWORD
-DB_HOST=db
-DB_PORT=5432
-
-# Celery Configuration
-CELERY_BROKER_URL=redis://redis:6379/0
-CELERY_RESULT_BACKEND=redis://redis:6379/0
-
-# OpenBao (docker network)
-OPENBAO_ENABLED=false
-OPENBAO_ADDR=http://openbao:8200
-OPENBAO_TOKEN=dev-root-token
-OPENBAO_ENVIRONMENT=production
-OPENBAO_TLS_VERIFY=false
-
-# OIDC
-OIDC_ENABLED=false
-OIDC_OP_ISSUER=https://auth.revnext.in
-
-# Environment
-ENVIRONMENT=production
-SEED_ON_START=true
-EOF
-        echo "[INFO] Minimal .env file created with auto-generated values"
-        echo "[WARN] Please review and update DB_PASSWORD in $DEPLOY_DIR/.env"
-    fi
+# Backup config (not DB volume — that is a named Docker volume)
+if [ -f "$DEPLOY_DIR/.env" ]; then
+  print_status "Creating config backup..."
+  tar -czf "$BACKUP_DIR/backup_$TIMESTAMP.tar.gz" -C "$DEPLOY_DIR" \
+    --exclude='media' --exclude='staticfiles' --exclude='logs' . 2>/dev/null || true
 fi
 
+# DB dump before recreate
+if [ -f "$DEPLOY_DIR/.env" ] && [ -f "$DEPLOY_DIR/docker-compose.yml" ]; then
+  print_status "Taking DB backup..."
+  cd "$DEPLOY_DIR"
+  set -a; [ -f .env ] && . ./.env; set +a
+  TS=$(date +%Y%m%d_%H%M%S)
+  if $DOCKER_COMPOSE_CMD -f docker-compose.yml ps 2>/dev/null | grep -q "channel_manager_db.*Up"; then
+    $DOCKER_COMPOSE_CMD -f docker-compose.yml exec -T db \
+      pg_dump -U "${DB_USER:-postgres}" "${DB_NAME:-channel_manager}" \
+      > "$BACKUP_DIR/db_$TS.sql" 2>/dev/null \
+      && print_success "DB backup: db_$TS.sql" \
+      || print_warning "DB backup skipped"
+  else
+    print_warning "DB backup skipped (db container not running)"
+  fi
+  cd - >/dev/null
+fi
+
+# Stop only Channel Manager stack — never revnext_secrets_* / OpenBao
+print_status "Stopping Channel Manager containers (leaving OpenBao / secrets stack alone)..."
+if [ -f "$DEPLOY_DIR/docker-compose.yml" ]; then
+  cd "$DEPLOY_DIR"
+  $DOCKER_COMPOSE_CMD -f docker-compose.yml down 2>/dev/null || true
+  cd - >/dev/null
+fi
+docker ps -a --filter "name=channel_manager_" --format "{{.ID}}" | xargs -r docker rm -f || true
+# Safety note: never docker rm revnext_secrets_* — those belong to ~/revnext-secrets
+if docker ps -a --format '{{.Names}}' 2>/dev/null | grep -qE 'revnext_secrets_'; then
+  print_status "OpenBao/secrets containers present — left untouched (correct)."
+fi
+
+print_status "Pruning old channel-manager images (keep latest)..."
+docker images channel-manager --format "{{.ID}}" | tail -n +3 | xargs -r docker rmi -f || true
+# Do NOT: docker volume prune / system prune -v (would risk other projects)
+
+# Verify image exists (built by build-channel-manager-on-vps.sh)
+if ! docker images channel-manager --format "{{.Repository}}:{{.Tag}}" | grep -q "channel-manager:latest"; then
+  print_error "channel-manager:latest not found. Build step must run first."
+  exit 1
+fi
+docker tag channel-manager:latest channel-manager:prod 2>/dev/null || true
+
+# Compose
+if [ -f "$IMAGE_DIR/docker-compose.prod.yml" ]; then
+  cp "$IMAGE_DIR/docker-compose.prod.yml" "$DEPLOY_DIR/docker-compose.yml"
+fi
+
+# Optional local reference scripts (OpenBao infra lives in ~/revnext-secrets, not here)
+if [ -d "$IMAGE_DIR/deploy" ]; then
+  mkdir -p "$DEPLOY_DIR/deploy"
+  cp -R "$IMAGE_DIR/deploy/." "$DEPLOY_DIR/deploy/" 2>/dev/null || true
+fi
+
+# .env — bootstrap OPENBAO_* (+ DB_* for postgres container). App secrets come from OpenBao.
+if [ ! -f "$DEPLOY_DIR/.env" ]; then
+  if [ -f "$IMAGE_DIR/env.example" ]; then
+    cp "$IMAGE_DIR/env.example" "$DEPLOY_DIR/.env"
+    print_warning "Created .env from env.example — set OPENBAO_* AppRole and DB_PASSWORD for postgres."
+  else
+    print_error "No .env or env.example. Create $DEPLOY_DIR/.env manually."
+    exit 1
+  fi
+fi
 ensure_env_hosts "$DEPLOY_DIR/.env"
-# Copy nginx config if provided and nginx is installed
-if [ -f "$IMAGE_DIR/nginx.conf" ]; then
-    if command -v nginx >/dev/null 2>&1; then
-        echo "[INFO] Copying nginx configuration..."
-        # Replace deployment directory path in nginx config
-        sed "s|/home/root/channel-manager|$DEPLOY_DIR|g" "$IMAGE_DIR/nginx.conf" > /tmp/nginx-channel-manager.conf || cp "$IMAGE_DIR/nginx.conf" /tmp/nginx-channel-manager.conf
-        
-        # Check if we can write to nginx directory
-        if [ -w /etc/nginx/sites-available ] 2>/dev/null; then
-            cp /tmp/nginx-channel-manager.conf /etc/nginx/sites-available/channel-manager || echo "[WARN] Nginx config copy failed (no write permission)"
-            ln -sf /etc/nginx/sites-available/channel-manager /etc/nginx/sites-enabled/channel-manager 2>/dev/null || echo "[WARN] Nginx symlink failed"
-            # Test and reload nginx
-            if nginx -t 2>/dev/null; then
-                nginx -s reload || systemctl reload nginx || echo "[WARN] Nginx reload failed"
-            else
-                echo "[WARN] Nginx config test failed, not reloading"
-            fi
-        elif sudo -n true 2>/dev/null; then
-            sudo cp /tmp/nginx-channel-manager.conf /etc/nginx/sites-available/channel-manager || echo "[WARN] Nginx config copy failed"
-            sudo ln -sf /etc/nginx/sites-available/channel-manager /etc/nginx/sites-enabled/channel-manager || echo "[WARN] Nginx symlink failed"
-            # Test and reload nginx
-            if sudo nginx -t 2>/dev/null; then
-                sudo nginx -s reload || sudo systemctl reload nginx || echo "[WARN] Nginx reload failed"
-            else
-                echo "[WARN] Nginx config test failed, not reloading"
-            fi
-        else
-            echo "[INFO] Nginx config found but cannot copy (no sudo access). Copy manually:"
-            echo "  sudo cp $IMAGE_DIR/nginx.conf /etc/nginx/sites-available/channel-manager"
-            echo "  sudo ln -s /etc/nginx/sites-available/channel-manager /etc/nginx/sites-enabled/"
-            echo "  sudo nginx -t && sudo nginx -s reload"
-        fi
-        rm -f /tmp/nginx-channel-manager.conf
-    else
-        echo "[INFO] Nginx not installed, skipping nginx config"
-    fi
+
+OPENBAO_ON=0
+grep -qE '^[[:space:]]*OPENBAO_ENABLED=(1|true|yes)' "$DEPLOY_DIR/.env" 2>/dev/null && OPENBAO_ON=1
+
+if ! grep -qE '^DB_PASSWORD=.' "$DEPLOY_DIR/.env"; then
+  print_error "DB_PASSWORD must be set in $DEPLOY_DIR/.env (required by Postgres container at compose up)."
+  exit 1
+fi
+if [ "$OPENBAO_ON" != 1 ] && ! grep -qE '^SECRET_KEY=.' "$DEPLOY_DIR/.env"; then
+  print_error "SECRET_KEY must be set in $DEPLOY_DIR/.env (or enable OPENBAO_ENABLED and store it in OpenBao)."
+  exit 1
+fi
+if [ "$OPENBAO_ON" = 1 ]; then
+  print_status "OPENBAO_ENABLED — Django will load app secrets from OpenBao (secrets.revnext.in / :8200)."
+  if ! grep -qE '^OPENBAO_ADDR=.' "$DEPLOY_DIR/.env"; then
+    echo "OPENBAO_ADDR=http://172.17.0.1:8200" >> "$DEPLOY_DIR/.env"
+    print_warning "Added default OPENBAO_ADDR=http://172.17.0.1:8200"
+  fi
 fi
 
-# Navigate to deploy directory
+# Nginx: product hosts only (never rewrite sites-available/secrets)
+NGINX_SRC=""
+for candidate in \
+  "$IMAGE_DIR/nginx-config.https.conf" \
+  "$IMAGE_DIR/nginx.conf" \
+  "$IMAGE_DIR/nginx-config.conf"; do
+  [ -f "$candidate" ] && NGINX_SRC="$candidate" && break
+done
+_LE="/etc/letsencrypt/live/channel-manager.revnext.in"
+if [ -f "$IMAGE_DIR/nginx-config.https.conf" ]; then
+  if [ -r "$_LE/fullchain.pem" ] 2>/dev/null || [ -r "$_LE/README" ] 2>/dev/null; then
+    NGINX_SRC="$IMAGE_DIR/nginx-config.https.conf"
+    print_status "Using nginx HTTPS template (Let's Encrypt readable)."
+  elif grep -qE '^[[:space:]]*CHANNEL_MANAGER_NGINX_TLS=(1|true|yes)' "$DEPLOY_DIR/.env" 2>/dev/null; then
+    NGINX_SRC="$IMAGE_DIR/nginx-config.https.conf"
+    print_status "Using nginx HTTPS template (CHANNEL_MANAGER_NGINX_TLS in .env)."
+  elif [ -f "$IMAGE_DIR/nginx-config.conf" ]; then
+    NGINX_SRC="$IMAGE_DIR/nginx-config.conf"
+    print_warning "Using HTTP-only nginx. After certbot, set CHANNEL_MANAGER_NGINX_TLS=1 and redeploy."
+  fi
+fi
+if [ -n "$NGINX_SRC" ]; then
+  sed "s|/home/root/channel-manager|$DEPLOY_DIR|g; s|/home/deploy/channel-manager|$DEPLOY_DIR|g" \
+    "$NGINX_SRC" > "$DEPLOY_DIR/nginx/channel-manager.conf"
+fi
+
+chmod 755 "$DEPLOY_DIR/media" "$DEPLOY_DIR/staticfiles" 2>/dev/null || true
+chmod 777 "$DEPLOY_DIR/logs" 2>/dev/null || true
+
+# Start
+print_status "Starting containers..."
 cd "$DEPLOY_DIR"
+$DOCKER_COMPOSE_CMD -f docker-compose.yml up -d
 
-# Pull latest images (if using registry)
-echo "[INFO] Pulling latest images..."
-docker compose pull || echo "[WARN] Image pull failed, using local images"
+print_status "Waiting for services..."
+sleep 20
 
-# Check if .env exists before running commands that need it
-if [ ! -f "$DEPLOY_DIR/.env" ]; then
-    echo "[ERROR] .env file is required but not found!"
-    echo "[ERROR] Please create .env file manually or ensure .env.example is available"
-    exit 1
+print_status "Running migrations..."
+MIGRATE_OK=0
+for i in 1 2 3 4 5; do
+  if $DOCKER_COMPOSE_CMD -f docker-compose.yml exec -T web \
+    python manage.py migrate --noinput 2>&1; then
+    print_success "Migrations applied"
+    MIGRATE_OK=1
+    break
+  fi
+  print_warning "Migration attempt $i failed, retrying in 5s..."
+  sleep 5
+done
+if [ "$MIGRATE_OK" != 1 ]; then
+  print_error "Migrations failed — check: $DOCKER_COMPOSE_CMD -f $DEPLOY_DIR/docker-compose.yml logs web"
+  exit 1
 fi
 
-# Verify .env file has required variables
-echo "[INFO] Verifying .env file..."
-if ! grep -q "SECRET_KEY" "$DEPLOY_DIR/.env"; then
-    echo "[WARN] SECRET_KEY not found in .env file"
-fi
-if ! grep -q "DB_PASSWORD" "$DEPLOY_DIR/.env"; then
-    echo "[WARN] DB_PASSWORD not found in .env file"
-fi
+print_status "Seeding product catalog..."
+$DOCKER_COMPOSE_CMD -f docker-compose.yml exec -T web \
+  python manage.py seed_products || print_warning "seed_products failed"
 
-# Run migrations + seed product catalog (also runs via web entrypoint)
-echo "[INFO] Running database migrations..."
-docker compose run --rm -e SKIP_MIGRATE=false -e SEED_ON_START=true web \
-  python manage.py migrate --noinput || {
-    echo "[WARN] Migrations failed - this is normal on first deployment if database doesn't exist yet"
-    echo "[INFO] Database will be initialized when services start"
-}
+print_status "Collecting static files..."
+$DOCKER_COMPOSE_CMD -f docker-compose.yml exec -T --user root web \
+  sh -c "mkdir -p /app/staticfiles && chmod -R 777 /app/staticfiles" 2>/dev/null || true
+$DOCKER_COMPOSE_CMD -f docker-compose.yml exec -T web \
+  python manage.py collectstatic --noinput || print_warning "collectstatic failed"
 
-echo "[INFO] Seeding product catalog (booking + networks + suite)..."
-docker compose run --rm -e SKIP_MIGRATE=true -e SEED_ON_START=false web \
-  python manage.py seed_products || echo "[WARN] seed_products failed"
-
-echo "[INFO] Seeding RBAC catalog (optional)..."
-docker compose run --rm -e SKIP_MIGRATE=true -e SEED_ON_START=false web \
-  python manage.py seed_rbac || echo "[WARN] seed_rbac failed (ok if first boot)"
-
-# Collect static files
-echo "[INFO] Collecting static files..."
-docker compose run --rm -e SKIP_MIGRATE=true -e SEED_ON_START=false web \
-  python manage.py collectstatic --noinput || echo "[WARN] Static files collection failed"
-
-# Start/restart services
-echo "[INFO] Starting services..."
-docker compose down || true
-
-echo "[INFO] Starting services with docker compose..."
-if docker compose up -d; then
-    echo "[INFO] Services started, waiting for them to be ready..."
-else
-    echo "[ERROR] Failed to start services"
-    echo "[INFO] Docker compose logs:"
-    docker compose logs --tail=50 || true
-    echo "[INFO] Check logs with: docker compose logs"
-    exit 1
+# Nginx (passwordless sudo — same pattern as Happynails)
+print_status "Updating Nginx site channel-manager..."
+if [ -f "$DEPLOY_DIR/nginx/channel-manager.conf" ] && command -v nginx &>/dev/null; then
+  if sudo -n mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled 2>/dev/null \
+    && sudo -n cp "$DEPLOY_DIR/nginx/channel-manager.conf" /etc/nginx/sites-available/channel-manager 2>/dev/null \
+    && sudo -n ln -sf /etc/nginx/sites-available/channel-manager /etc/nginx/sites-enabled/channel-manager 2>/dev/null \
+    && sudo -n nginx -t 2>/dev/null \
+    && (sudo -n systemctl reload nginx 2>/dev/null || sudo -n service nginx reload 2>/dev/null); then
+    print_success "Nginx updated"
+  else
+    print_warning "Nginx update skipped (needs passwordless sudo for deploy)."
+    print_warning "  sudo cp $DEPLOY_DIR/nginx/channel-manager.conf /etc/nginx/sites-available/channel-manager"
+    print_warning "  sudo ln -sf /etc/nginx/sites-available/channel-manager /etc/nginx/sites-enabled/channel-manager"
+    print_warning "  sudo nginx -t && sudo systemctl reload nginx"
+  fi
 fi
 
-# Wait for services to be healthy
-echo "[INFO] Waiting for services to be healthy..."
-sleep 15
+print_status "Service status..."
+$DOCKER_COMPOSE_CMD -f docker-compose.yml ps
 
-# Check service status
-echo "[INFO] Checking service status..."
-docker compose ps
-
-# Check if web container is running
-if ! docker compose ps | grep -q "channel_manager_web.*Up"; then
-    echo "[ERROR] Web container is not running!"
-    echo "[INFO] Web container logs:"
-    docker compose logs web --tail=50 || true
-    echo "[INFO] All container logs:"
-    docker compose logs --tail=50 || true
-    exit 1
+if ! $DOCKER_COMPOSE_CMD -f docker-compose.yml ps | grep -q "channel_manager_web.*Up"; then
+  print_error "Web container is not running!"
+  $DOCKER_COMPOSE_CMD -f docker-compose.yml logs web --tail=50 || true
+  exit 1
 fi
 
-# Check if port 8001 is listening
-echo "[INFO] Checking if port 8001 is listening..."
-if command -v netstat >/dev/null 2>&1; then
-    netstat -tlnp | grep 8001 || echo "[WARN] Port 8001 not found in netstat"
-elif command -v ss >/dev/null 2>&1; then
-    ss -tlnp | grep 8001 || echo "[WARN] Port 8001 not found in ss"
-fi
-
-# Run health check
-echo "[INFO] Running health check..."
+print_status "Health check on :8001..."
 sleep 5
-if curl -f http://localhost:8001/health/; then
-    echo "[INFO] Health check passed!"
+if curl -fsS -H "Host: channel-manager.revnext.in" http://127.0.0.1:8001/health/; then
+  print_success "Health check passed"
 else
-    echo "[WARN] Health check failed"
-    echo "[INFO] Web container logs:"
-    docker compose logs web --tail=30 || true
-    echo "[INFO] Trying to check container status..."
-    docker compose ps || true
+  print_warning "Health check failed — see logs"
+  $DOCKER_COMPOSE_CMD -f docker-compose.yml logs web --tail=30 || true
 fi
 
-echo "[INFO] Running deploy_ready checks..."
-docker compose exec -T web python manage.py deploy_ready || echo "[WARN] deploy_ready reported issues"
+$DOCKER_COMPOSE_CMD -f docker-compose.yml exec -T web \
+  python manage.py deploy_ready || print_warning "deploy_ready reported issues"
 
-echo "[INFO] Deployment completed!"
-echo "[INFO] Product hosts: booking.revnext.in · networks.revnext.in · channel-manager.revnext.in · …"
-echo "[INFO] Services are running. Check logs with: docker compose logs -f"
-echo "[INFO] Expand TLS SANs if needed:"
-echo "  certbot --nginx -d channel-manager.revnext.in -d booking.revnext.in -d networks.revnext.in -d pms.revnext.in -d pos.revnext.in -d cms.revnext.in -d hotels.revnext.in -d tours.revnext.in -d revnext.in -d www.revnext.in"
+ls -t "$BACKUP_DIR"/backup_*.tar.gz 2>/dev/null | tail -n +6 | xargs -r rm -f || true
+docker builder prune -f 2>/dev/null || true
 
+print_success "Channel Manager deployment completed."
+print_status "Hosts: channel-manager · pms · pos · cms · booking · hotels · networks · tours · apex"
+print_status "Upstream: 127.0.0.1:8001  |  Logs: cd $DEPLOY_DIR && $DOCKER_COMPOSE_CMD logs -f"
+print_status "OpenBao (independent): ~/revnext-secrets — deploy via .github/workflows/deploy-secrets.yml"
+print_status "TLS products: certbot --nginx -d channel-manager.revnext.in -d booking.revnext.in -d networks.revnext.in -d pms.revnext.in -d pos.revnext.in -d cms.revnext.in -d hotels.revnext.in -d tours.revnext.in -d revnext.in -d www.revnext.in"

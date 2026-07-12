@@ -1,3 +1,12 @@
+# Channel Manager (RevNext) — production Docker Compose
+# Contabo VPS co-host safe:
+#   SuratBazaar :8000 | ChannelManager :8001 | HappyNails :8002 | Packmold :8003
+# Postgres / Redis stay on the internal Docker network (no host 5432/6379 clash).
+#
+# OpenBao lives in a SEPARATE stack: ~/revnext-secrets (secrets.revnext.in).
+# ChannelManager CI must never start/stop that stack. Point OPENBAO_ADDR at
+# http://172.17.0.1:8200 (Docker bridge → host) or https://secrets.revnext.in.
+
 services:
   db:
     image: postgres:15-alpine
@@ -6,16 +15,22 @@ services:
     environment:
       POSTGRES_DB: ${DB_NAME:-channel_manager}
       POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env next to docker-compose.yml (or load via OpenBao)}
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "127.0.0.1:5432:5432"
+    networks:
+      - channel-manager-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-channel_manager}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   redis:
     image: redis:7-alpine
@@ -24,72 +39,64 @@ services:
     command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
-    ports:
-      - "127.0.0.1:6379:6379"
+    networks:
+      - channel-manager-network
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
-
-  openbao:
-    image: openbao/openbao:latest
-    container_name: channel_manager_openbao
-    restart: unless-stopped
-    cap_add:
-      - IPC_LOCK
-    environment:
-      BAO_DEV_ROOT_TOKEN_ID: ${OPENBAO_TOKEN:-dev-root-token}
-      BAO_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
-      # For non-dev file mode, comment command below and mount deploy/openbao/config.hcl
-    command: server -dev -dev-root-token-id=${OPENBAO_TOKEN:-dev-root-token} -dev-listen-address=0.0.0.0:8200
-    volumes:
-      - openbao_data:/openbao/file
-      - ./deploy/openbao:/openbao/scripts:ro
-    ports:
-      - "127.0.0.1:8200:8200"
-    healthcheck:
-      test: ["CMD", "bao", "status"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-      start_period: 5s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   web:
     image: channel-manager:latest
     container_name: channel_manager_web
     restart: unless-stopped
-    # entrypoint (in image) runs migrate + seed_products before gunicorn
     command: gunicorn --bind 0.0.0.0:8001 --workers 4 --timeout 120 --access-logfile - --error-logfile - channel_manager.wsgi:application
     volumes:
       - ./media:/app/media
       - ./staticfiles:/app/staticfiles
       - ./logs:/app/logs
-      - ./deploy/openbao:/openbao/scripts:ro
     env_file:
       - .env
     environment:
-      - DB_HOST=db
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - OPENBAO_ADDR=http://openbao:8200
+      - DB_HOST=${DB_HOST:-db}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL:-redis://redis:6379/0}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND:-redis://redis:6379/0}
+      # Host-published OpenBao from ~/revnext-secrets (override in .env)
+      - OPENBAO_ADDR=${OPENBAO_ADDR:-http://172.17.0.1:8200}
       - SEED_ON_START=true
       - COLLECTSTATIC_ON_START=false
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
-      openbao:
-        condition: service_healthy
     ports:
       - "127.0.0.1:8001:8001"
+    networks:
+      - channel-manager-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8001/health/"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -fsS -o /dev/null -H 'Host: channel-manager.revnext.in' http://127.0.0.1:8001/health/",
+        ]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 90s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   celery:
     image: channel-manager:latest
@@ -103,17 +110,25 @@ services:
     env_file:
       - .env
     environment:
-      - DB_HOST=db
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - OPENBAO_ADDR=http://openbao:8200
+      - DB_HOST=${DB_HOST:-db}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL:-redis://redis:6379/0}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND:-redis://redis:6379/0}
+      - OPENBAO_ADDR=${OPENBAO_ADDR:-http://172.17.0.1:8200}
       - SKIP_MIGRATE=true
       - SEED_ON_START=false
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - db
       - redis
       - web
-      - openbao
+    networks:
+      - channel-manager-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   celery-beat:
     image: channel-manager:latest
@@ -127,23 +142,32 @@ services:
     env_file:
       - .env
     environment:
-      - DB_HOST=db
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - OPENBAO_ADDR=http://openbao:8200
+      - DB_HOST=${DB_HOST:-db}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL:-redis://redis:6379/0}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND:-redis://redis:6379/0}
+      - OPENBAO_ADDR=${OPENBAO_ADDR:-http://172.17.0.1:8200}
       - SKIP_MIGRATE=true
       - SEED_ON_START=false
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - db
       - redis
       - web
-      - openbao
+    networks:
+      - channel-manager-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   postgres_data:
     driver: local
   redis_data:
     driver: local
-  openbao_data:
-    driver: local
 
+networks:
+  channel-manager-network:
+    driver: bridge

@@ -12,6 +12,8 @@ Optional nested paths (also merged when present):
   revnext/channel-manager/{environment}/database
   revnext/channel-manager/{environment}/billing
   revnext/channel-manager/{environment}/integrations
+  revnext/channel-manager/{environment}/oidc
+  …
 """
 from __future__ import annotations
 
@@ -19,32 +21,15 @@ import logging
 import os
 from typing import Any, Optional
 
+from .catalog import all_managed_secret_keys
 from .client import OpenBaoClient, OpenBaoError
 
 logger = logging.getLogger(__name__)
 
-# Keys that may be loaded from OpenBao (allowlist — never overwrite OPENBAO_* bootstrap)
-MANAGED_SECRET_KEYS = (
-    'SECRET_KEY',
-    'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'DB_HOST', 'DB_PORT',
-    'CELERY_BROKER_URL', 'CELERY_RESULT_BACKEND',
-    'BILLING_GATEWAY',
-    'RAZORPAY_KEY_ID', 'RAZORPAY_KEY_SECRET', 'RAZORPAY_WEBHOOK_SECRET',
-    'PAYU_MERCHANT_KEY', 'PAYU_MERCHANT_SALT', 'PAYU_MODE',
-    'SITE_URL',
-    'GOOGLE_MAPS_API_KEY',
-    'FCM_SERVER_KEY',
-    'SENTRY_DSN',
-    'EMAIL_HOST_PASSWORD', 'EMAIL_HOST_USER',
-    'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_STORAGE_BUCKET_NAME',
-    'SUPERUSER_PASSWORD',
-    'OIDC_OP_ISSUER', 'OIDC_RP_CLIENT_ID', 'OIDC_RP_CLIENT_SECRET',
-    'OIDC_RP_CALLBACK_URL', 'OIDC_RP_SCOPES', 'OIDC_ENABLED',
-    'OIDC_CLIENT_BOOKING_ID', 'OIDC_CLIENT_BOOKING_SECRET',
-    'OIDC_CLIENT_NETWORKS_ID', 'OIDC_CLIENT_NETWORKS_SECRET',
-)
+# Allowlist derived from SECRET_GROUPS — never overwrite OPENBAO_* bootstrap
+MANAGED_SECRET_KEYS = all_managed_secret_keys()
 
-NESTED_SUFFIXES = ('django', 'database', 'billing', 'integrations', 'email', 'cloud', 'oidc')
+NESTED_SUFFIXES = ('django', 'database', 'billing', 'integrations', 'email', 'cloud', 'oidc', 'celery')
 
 _CACHE: dict[str, Any] = {}
 _LOADED = False

@@ -75,3 +75,6 @@ class OpenBaoLoaderTests(SimpleTestCase):
         self.assertIn('RAZORPAY_KEY_SECRET', MANAGED_SECRET_KEYS)
         self.assertIn('PAYU_MERCHANT_SALT', MANAGED_SECRET_KEYS)
         self.assertIn('DB_PASSWORD', MANAGED_SECRET_KEYS)
+        self.assertIn('OIDC_CLIENT_PMS_SECRET', MANAGED_SECRET_KEYS)
+        self.assertIn('ALLOWED_HOSTS', MANAGED_SECRET_KEYS)
+        self.assertIn('CSRF_TRUSTED_ORIGINS', MANAGED_SECRET_KEYS)

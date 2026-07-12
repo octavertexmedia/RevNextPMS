@@ -3042,7 +3042,7 @@ body.dawn-product-host {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.25rem, 3vw, 2.25rem) clamp(1.5rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
   z-index: 0;
 }
 
@@ -3055,36 +3055,6 @@ body.dawn-product-host {
     linear-gradient(90deg, rgba(22, 27, 34, 0.055) 1px, transparent 1px);
   background-size: 36px 36px;
   pointer-events: none;
-}
-
-.dawn-split-bridge {
-  position: absolute;
-  left: 0;
-  top: 46%;
-  transform: translate(-42%, -50%);
-  z-index: 4;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.55rem;
-  pointer-events: none;
-}
-
-.dawn-split-badge,
-.dawn-split-compass {
-  display: grid;
-  place-items: center;
-  width: 3.35rem;
-  height: 3.35rem;
-  border-radius: 0.9rem;
-  background: #fff;
-  box-shadow: 0 12px 28px rgba(14, 36, 56, 0.16);
-  border: 1px solid rgba(18, 22, 31, 0.08);
-}
-
-.dawn-split-compass {
-  border-radius: 50%;
-  margin-left: 1rem;
 }
 
 .dawn-split-hero-stage-inner {
@@ -3139,10 +3109,6 @@ body.dawn-product-host {
 
   .dawn-split-h1 {
     max-width: 16ch;
-  }
-
-  .dawn-split-bridge {
-    display: none;
   }
 
   .dawn-split-hero-stage {

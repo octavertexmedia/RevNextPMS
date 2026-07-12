@@ -21,7 +21,7 @@
 
     {% block extra_css %}{% endblock %}
 </head>
-<body class="dawn-body">
+<body class="dawn-body{% if product_host_mode %} dawn-product-host{% endif %}">
     {% include 'landing/partials/header.html' %}
 
     <main>

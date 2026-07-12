@@ -81,7 +81,7 @@ INSTALLED_APPS = [
     'cloud_pms',
     'cloud_pos',
     'booking_engine',
-    'website_builder',
+    # website_builder retired — Hotel CMS is RevNextCMS (cms.revnext.in / app.revnext.in)
     'b2b_network',
     'ota_listing',
     'google_hotel_ads',
@@ -126,6 +126,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'products.context_processors.product_launch',
             ],
         },
     },
@@ -247,18 +248,22 @@ OPENBAO_REQUIRED = os.getenv('OPENBAO_REQUIRED', 'false').lower() in ('1', 'true
 
 # OIDC relying party → auth.revnext.in (IdP). Client secrets live in OpenBao.
 OIDC_ENABLED = os.getenv('OIDC_ENABLED', 'false').lower() in ('1', 'true', 'yes')
-OIDC_OP_ISSUER = os.getenv('OIDC_OP_ISSUER', 'https://auth.revnext.in')
+OIDC_OP_ISSUER = os.getenv('OIDC_OP_ISSUER', 'https://auth.revnext.in/realms/revnext')
 OIDC_RP_CLIENT_ID = os.getenv('OIDC_RP_CLIENT_ID', '')
 OIDC_RP_CLIENT_SECRET = os.getenv('OIDC_RP_CLIENT_SECRET', '')
 OIDC_RP_SIGN_ALGO = os.getenv('OIDC_RP_SIGN_ALGO', 'RS256')
 OIDC_RP_SCOPES = os.getenv('OIDC_RP_SCOPES', 'openid profile email')
 LOGIN_REDIRECT_URL = os.getenv('LOGIN_REDIRECT_URL', '/tenants/dashboard/')
+LOGIN_URL = os.getenv('LOGIN_URL', '/tenants/login/')
 LOGOUT_REDIRECT_URL = os.getenv('LOGOUT_REDIRECT_URL', '/')
 # Absolute callback used by the IdP (per product host in production)
 OIDC_RP_CALLBACK_URL = os.getenv(
     'OIDC_RP_CALLBACK_URL',
     'https://channel-manager.revnext.in/oidc/callback/',
 )
+
+# S2S token for RevNextCMS (and other external runtimes) to query entitlements
+ENTITLEMENTS_SERVICE_TOKEN = os.getenv('ENTITLEMENTS_SERVICE_TOKEN', '')
 
 # Celery Configuration
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')

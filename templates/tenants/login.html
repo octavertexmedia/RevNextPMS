@@ -1,20 +1,30 @@
 {% extends 'tenants/base_auth.html' %}
 
-{% block title %}Login - RevNext Channel Manager{% endblock %}
+{% block title %}{{ welcome_title|default:"Login" }} — {{ product_name|default:"RevNext" }}{% endblock %}
+{% block meta_description %}{{ auth_lead|default:meta_description }}{% endblock %}
 
 {% block content %}
 <div class="dawn-auth">
     <aside class="dawn-auth-side">
         <div class="dawn-auth-side-inner">
             <div class="dawn-auth-side-copy-block">
-                <p class="dawn-eyebrow">Front desk · open for business</p>
-                <h2>Walk into the shift already in control</h2>
-                <p>Rates, inventory, and reservations stay in lockstep across 75+ OTAs — before the first check-in.</p>
+                <p class="dawn-eyebrow">{{ auth_eyebrow|default:"RevNext" }}</p>
+                <h2>{{ auth_title|default:"Welcome back" }}</h2>
+                <p>{{ auth_lead|default:"Sign in to manage your properties." }}</p>
+                {% if auth_stats %}
                 <div class="dawn-auth-stats">
-                    <div><b>500+</b><span>Hotels</span></div>
-                    <div><b>75+</b><span>OTAs</span></div>
-                    <div><b>99.9%</b><span>Uptime</span></div>
+                    {% for s in auth_stats %}
+                    <div><b>{{ s.value }}</b><span>{{ s.label }}</span></div>
+                    {% endfor %}
                 </div>
+                {% endif %}
+                {% if auth_bullets %}
+                <ul class="dawn-check-list dawn-auth-side-checks">
+                    {% for item in auth_bullets %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
             </div>
             {% include 'landing/partials/auth_side_meta.html' %}
         </div>
@@ -24,10 +34,10 @@
         <div class="dawn-auth-card">
             <a href="/" class="dawn-auth-brand">
                 <img src="https://www.revnext.in/logo.png" alt="RevNext">
-                <span>Channel Manager</span>
+                <span>{{ product_name|default:"Channel Manager" }}</span>
             </a>
-            <h1 class="dawn-h2" style="font-size:1.75rem;text-align:center;margin-bottom:.35rem;">Welcome back</h1>
-            <p style="text-align:center;color:var(--muted);margin:0 0 1.5rem;">Sign in to manage your properties</p>
+            <h1 class="dawn-h2" style="font-size:1.75rem;text-align:center;margin-bottom:.35rem;">{{ welcome_title|default:"Welcome back" }}</h1>
+            <p style="text-align:center;color:var(--muted);margin:0 0 1.5rem;">{{ welcome_lead|default:"Sign in to continue" }}</p>
 
             {% if messages %}
                 {% for message in messages %}
@@ -39,6 +49,7 @@
 
             <form method="post" class="dawn-form" id="loginForm">
                 {% csrf_token %}
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
                 <div class="dawn-field">
                     <label for="{{ form.username.id_for_label }}">Username</label>
                     <input
@@ -73,15 +84,21 @@
                     </label>
                     <a href="#" class="dawn-link">Forgot password?</a>
                 </div>
-                <button type="submit" class="dawn-btn dawn-btn-primary dawn-btn-block">Sign in</button>
+                <button type="submit" class="dawn-btn dawn-btn-primary dawn-btn-block">{{ login_label|default:"Sign in" }}</button>
             </form>
 
+            {% if oidc_login_url %}
+            <p style="text-align:center;margin:1rem 0 0;">
+                <a href="{{ oidc_login_url }}" class="dawn-link" style="font-weight:600;font-size:.9rem;">Sign in with RevNext SSO →</a>
+            </p>
+            {% endif %}
+
             <p style="text-align:center;margin:1.5rem 0 0;color:var(--muted);font-size:.95rem;">
-                New to RevNext?
-                <a href="{% url 'tenants:register' %}" class="dawn-link">Start free trial</a>
+                New to {{ product_name|default:"RevNext" }}?
+                <a href="{{ register_url|default:'/tenants/register/' }}" class="dawn-link">{{ cta_label|default:"Start free trial" }}</a>
             </p>
             <p style="text-align:center;margin:.75rem 0 0;">
-                <a href="/" class="dawn-link" style="font-weight:600;font-size:.9rem;">← Back to home</a>
+                <a href="/" class="dawn-link" style="font-weight:600;font-size:.9rem;">← Back to {{ product_name|default:"home" }}</a>
             </p>
         </div>
 

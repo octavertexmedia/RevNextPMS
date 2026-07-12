@@ -1,6 +1,7 @@
 {% extends 'tenants/base_auth.html' %}
 
-{% block title %}Register - RevNext Channel Manager{% endblock %}
+{% block title %}{{ register_title|default:"Register" }} — {{ product_name|default:"RevNext" }}{% endblock %}
+{% block meta_description %}{{ register_lead|default:auth_lead }}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -33,10 +34,10 @@
         <div class="dawn-auth-card is-wide">
             <a href="/" class="dawn-auth-brand">
                 <img src="https://www.revnext.in/logo.png" alt="RevNext">
-                <span>Channel Manager</span>
+                <span>{{ product_name|default:"Channel Manager" }}</span>
             </a>
-            <h1 class="dawn-h2" style="font-size:1.75rem;text-align:center;margin-bottom:.35rem;">Create your account</h1>
-            <p style="text-align:center;color:var(--muted);margin:0 0 1.25rem;">Start managing properties across 75+ platforms</p>
+            <h1 class="dawn-h2" style="font-size:1.75rem;text-align:center;margin-bottom:.35rem;">{{ register_title|default:"Create your account" }}</h1>
+            <p style="text-align:center;color:var(--muted);margin:0 0 1.25rem;">{{ register_lead|default:"Start your 14-day free trial" }}</p>
 
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.35rem;">
                 <span class="dawn-meta">Progress</span>
@@ -65,6 +66,8 @@
 
             <form method="post" id="registerForm" class="dawn-form">
                 {% csrf_token %}
+                {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
+                {% if product_code %}<input type="hidden" name="product" value="{{ product_code }}">{% endif %}
 
                 <div class="step active" id="step1">
                     <h3 style="font-family:var(--font-display);margin:0 0 1rem;">Account information</h3>
@@ -188,7 +191,7 @@
 
             <p style="text-align:center;margin:1.5rem 0 0;padding-top:1.25rem;border-top:1px solid var(--line);color:var(--muted);">
                 Already have an account?
-                <a href="{% url 'tenants:login' %}" class="dawn-link">Sign in</a>
+                <a href="{{ login_url|default:'/tenants/login/' }}" class="dawn-link">{{ login_label|default:"Sign in" }}</a>
             </p>
         </div>
 
@@ -200,13 +203,17 @@
     <aside class="dawn-auth-side">
         <div class="dawn-auth-side-inner">
             <div class="dawn-auth-side-copy-block">
-                <p class="dawn-eyebrow">14-day free trial</p>
-                <h2>Open your desk with RevNext</h2>
-                <p>No card required. Sync inventory and rates before the morning rush — GST-ready for India.</p>
+                <p class="dawn-eyebrow">{{ auth_eyebrow|default:"14-day free trial" }}</p>
+                <h2>{{ auth_title|default:"Open your desk with RevNext" }}</h2>
+                <p>{{ auth_lead|default:"No card required. GST-ready for India." }}</p>
                 <ul class="dawn-check-list dawn-auth-side-checks">
+                    {% for item in auth_bullets %}
+                    <li>{{ item }}</li>
+                    {% empty %}
                     <li>Multi-property from one login</li>
                     <li>75+ OTA connections</li>
                     <li>Setup in minutes</li>
+                    {% endfor %}
                 </ul>
             </div>
             {% include 'landing/partials/auth_side_meta.html' %}

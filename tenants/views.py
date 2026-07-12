@@ -32,7 +32,39 @@ class TenantRegistrationView(CreateView):
     form_class = TenantRegistrationForm
     template_name = 'tenants/register.html'
     success_url = reverse_lazy('tenants:dashboard')
-    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        from products.host_context import product_host_context
+        host_ctx = product_host_context(self.request)
+        context.update(host_ctx)
+        if not host_ctx.get('product_host_mode'):
+            context.update({
+                'product_name': 'Channel Manager',
+                'auth_eyebrow': 'Channel Manager',
+                'auth_title': 'Open your desk with RevNext',
+                'auth_lead': 'No card required. Sync inventory and rates before the morning rush.',
+                'register_title': 'Create your account',
+                'register_lead': 'Start managing properties across 75+ platforms',
+                'auth_bullets': [
+                    'Multi-property from one login',
+                    '75+ OTA connections',
+                    'Setup in minutes',
+                ],
+                'login_url': '/tenants/login/',
+            })
+        return context
+
+    def get_success_url(self):
+        from products.host_context import product_host_context
+        nxt = self.request.GET.get('next') or self.request.POST.get('next')
+        if nxt and nxt.startswith('/'):
+            return nxt
+        host_ctx = product_host_context(self.request)
+        if host_ctx.get('app_home'):
+            return host_ctx['app_home']
+        return str(self.success_url)
+
     @transaction.atomic
     def form_valid(self, form):
         """Create tenant and initial user account"""
@@ -40,13 +72,13 @@ class TenantRegistrationView(CreateView):
         tenant = form.save(commit=False)
         if not tenant.slug:
             tenant.slug = slugify(tenant.name)
-        
+
         # Start 14-day trial
         tenant.subscription_status = 'trial'
         tenant.trial_end_date = timezone.now().date() + timedelta(days=14)
-        
+
         tenant.save()
-        
+
         # Create owner user account
         user = TenantUser.objects.create_user(
             username=form.cleaned_data['username'],
@@ -58,16 +90,16 @@ class TenantRegistrationView(CreateView):
             last_name=form.cleaned_data.get('last_name', ''),
             is_staff=True,  # Allow access to admin
         )
-        
+
         # Log in the user
         login(self.request, user)
-        
+
         messages.success(
             self.request,
             f'Welcome! Your account for {tenant.name} has been created successfully.'
         )
-        
-        return redirect(self.success_url)
+
+        return redirect(self.get_success_url())
 
 
 class TenantLoginView(FormView):
@@ -75,23 +107,56 @@ class TenantLoginView(FormView):
     form_class = TenantLoginForm
     template_name = 'tenants/login.html'
     success_url = reverse_lazy('tenants:dashboard')
-    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        from products.host_context import product_host_context
+        host_ctx = product_host_context(self.request)
+        context.update(host_ctx)
+        if not host_ctx.get('product_host_mode'):
+            context.update({
+                'product_name': 'Channel Manager',
+                'auth_eyebrow': 'Front desk · open for business',
+                'auth_title': 'Walk into the shift already in control',
+                'auth_lead': 'Rates, inventory, and reservations stay in lockstep across 75+ OTAs.',
+                'welcome_title': 'Welcome back',
+                'welcome_lead': 'Sign in to manage your properties',
+                'auth_stats': [
+                    {'value': '500+', 'label': 'Hotels'},
+                    {'value': '75+', 'label': 'OTAs'},
+                    {'value': '99.9%', 'label': 'Uptime'},
+                ],
+                'register_url': '/tenants/register/',
+            })
+        context['next'] = self.request.GET.get('next') or host_ctx.get('app_home', '')
+        return context
+
+    def get_success_url(self):
+        from products.host_context import product_host_context
+        nxt = self.request.GET.get('next') or self.request.POST.get('next')
+        if nxt and nxt.startswith('/'):
+            return nxt
+        host_ctx = product_host_context(self.request)
+        if host_ctx.get('app_home'):
+            return host_ctx['app_home']
+        return str(self.success_url)
+
     def form_valid(self, form):
         """Authenticate and log in user"""
         username = form.cleaned_data['username']
         password = form.cleaned_data['password']
         user = authenticate(self.request, username=username, password=password)
-        
+
         if user is not None:
             if user.is_active:
                 login(self.request, user)
                 messages.success(self.request, f'Welcome back, {user.get_full_name() or user.username}!')
-                return redirect(self.success_url)
+                return redirect(self.get_success_url())
             else:
                 messages.error(self.request, 'Your account is inactive.')
         else:
             messages.error(self.request, 'Invalid username or password.')
-        
+
         return self.form_invalid(form)
 
 

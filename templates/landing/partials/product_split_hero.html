@@ -1,0 +1,32 @@
+{# Split narrative hero — Variant 1 (product hosts). Expects product_host_mode context. #}
+<section class="dawn-split-hero" aria-label="{{ product_name }} hero">
+    <div class="dawn-split-hero-copy">
+        <div class="dawn-split-hero-copy-inner">
+            <p class="dawn-split-eyebrow">{{ solution.eyebrow }}</p>
+            <h1 class="dawn-split-h1">{{ solution.title }}</h1>
+            <p class="dawn-split-lead">{{ solution.lead }}</p>
+            <div class="dawn-split-actions">
+                <a href="{{ login_url }}" class="dawn-btn dawn-btn-primary dawn-btn-hero">{{ login_label }}</a>
+                <a href="{{ register_url }}" class="dawn-btn dawn-btn-ghost dawn-btn-hero-ghost">{{ cta_label }}</a>
+                {% if guest_cta %}
+                <a href="{{ guest_cta.url }}" class="dawn-btn dawn-btn-ghost dawn-btn-hero-ghost">{{ guest_cta.label }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="dawn-split-hero-stage">
+        <div class="dawn-split-hero-stage-inner">
+            <div class="dawn-split-float dawn-split-float-a" aria-hidden="true"></div>
+            <div class="dawn-split-float dawn-split-float-b" aria-hidden="true"></div>
+            <div class="dawn-split-preview">
+                <div class="dawn-sol-preview-bar">
+                    <span>{{ solution.preview_caption }}</span>
+                    <span class="ui-chip">{{ product_name }}</span>
+                </div>
+                <div class="dawn-sol-preview-body">
+                    {% include 'pages/partials/solution_ui_preview.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

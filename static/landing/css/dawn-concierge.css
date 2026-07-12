@@ -2914,3 +2914,188 @@ body.dawn-auth-body {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   Product-host split hero (Variant 1 — integrated narrative)
+   ========================================================= */
+
+.dawn-product-host .dawn-header {
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid rgba(18, 22, 31, 0.06);
+}
+
+.dawn-split-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr);
+  min-height: min(92vh, 52rem);
+  padding-top: 4.25rem;
+  overflow: hidden;
+}
+
+.dawn-split-hero-copy {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(201, 123, 46, 0.22), transparent 55%),
+    linear-gradient(165deg, #0b1220 0%, #14283f 48%, #1a3a5c 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.dawn-split-hero-copy-inner {
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 4vw, 3.25rem);
+  max-width: 34rem;
+}
+
+.dawn-split-eyebrow {
+  margin: 0 0 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  font-weight: 500;
+}
+
+.dawn-split-h1 {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.1rem, 4.2vw, 3.35rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: #fff;
+  max-width: 14ch;
+}
+
+.dawn-split-lead {
+  margin: 0 0 1.75rem;
+  font-size: clamp(0.98rem, 1.4vw, 1.12rem);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 36ch;
+}
+
+.dawn-split-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.dawn-split-hero .dawn-btn-hero {
+  min-height: 3rem;
+  padding-inline: 1.35rem;
+}
+
+.dawn-split-hero .dawn-btn-hero-ghost,
+.dawn-split-hero a.dawn-btn-hero-ghost {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: transparent;
+}
+
+.dawn-split-hero .dawn-btn-hero-ghost:hover,
+.dawn-split-hero a.dawn-btn-hero-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+  color: #fff;
+}
+
+.dawn-split-hero-stage {
+  background:
+    linear-gradient(180deg, #eef2f6 0%, #e4ebf2 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+}
+
+.dawn-split-hero-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(26, 58, 92, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 58, 92, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+
+.dawn-split-hero-stage-inner {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 40rem);
+}
+
+.dawn-split-preview {
+  background: var(--surface);
+  border-radius: 18px;
+  box-shadow:
+    0 24px 60px rgba(14, 36, 56, 0.16),
+    0 2px 0 rgba(255, 255, 255, 0.8) inset;
+  border: 1px solid rgba(18, 22, 31, 0.08);
+  overflow: hidden;
+  transform: perspective(1200px) rotateY(-2deg) rotateX(1deg);
+}
+
+.dawn-split-preview .dawn-sol-preview-bar {
+  margin: 0;
+  border-radius: 0;
+}
+
+.dawn-split-preview .dawn-sol-preview-body {
+  padding: 0.75rem;
+  max-height: min(58vh, 28rem);
+  overflow: auto;
+}
+
+.dawn-split-float {
+  position: absolute;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 12px 28px rgba(14, 36, 56, 0.14);
+  border: 1px solid rgba(18, 22, 31, 0.08);
+  z-index: 2;
+}
+
+.dawn-split-float-a {
+  top: 12%;
+  right: 8%;
+  background:
+    radial-gradient(circle at 35% 35%, #fff 0 28%, transparent 30%),
+    linear-gradient(145deg, #f3e2c8, #c97b2e);
+}
+
+.dawn-split-float-b {
+  bottom: 16%;
+  left: 6%;
+  background:
+    conic-gradient(from 210deg, #1a3a5c, #c97b2e, #e9eef3, #1a3a5c);
+}
+
+@media (max-width: 960px) {
+  .dawn-split-hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .dawn-split-hero-copy-inner {
+    max-width: none;
+    padding-block: 2.5rem 2rem;
+  }
+
+  .dawn-split-h1 {
+    max-width: 18ch;
+  }
+
+  .dawn-split-preview {
+    transform: none;
+  }
+
+  .dawn-split-float {
+    display: none;
+  }
+}

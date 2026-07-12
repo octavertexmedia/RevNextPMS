@@ -3,22 +3,17 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
+{% if product_host_mode %}
+{% include 'landing/partials/product_split_hero.html' %}
+{% else %}
 <section class="dawn-page-hero is-compact">
     <div class="dawn-container">
         <p class="dawn-eyebrow">{{ solution.eyebrow }}</p>
         <h1 class="dawn-h1">{{ solution.title }}</h1>
         <p class="dawn-lead">{{ solution.lead }}</p>
         <div class="dawn-page-hero-actions">
-            {% if product_host_mode %}
-            <a href="{{ login_url }}" class="dawn-btn dawn-btn-primary">{{ login_label }}</a>
-            <a href="{{ register_url }}" class="dawn-btn dawn-btn-ghost">{{ cta_label }}</a>
-            {% if guest_cta %}
-            <a href="{{ guest_cta.url }}" class="dawn-btn dawn-btn-ghost">{{ guest_cta.label }}</a>
-            {% endif %}
-            {% else %}
             <a href="{% url 'tenants:register' %}" class="dawn-btn dawn-btn-primary">Start free trial</a>
             <a href="{% url 'core:contact' %}" class="dawn-btn dawn-btn-ghost">Talk to sales</a>
-            {% endif %}
         </div>
     </div>
 </section>
@@ -36,8 +31,9 @@
         </div>
     </div>
 </section>
+{% endif %}
 
-<section class="dawn-section dawn-section-alt">
+<section class="dawn-section dawn-section-alt" id="why">
     <div class="dawn-container">
         <div class="dawn-section-head dawn-reveal">
             <p class="dawn-eyebrow" style="color:var(--navy);">Why it matters</p>

@@ -2627,6 +2627,211 @@ body.dawn-auth-body {
   font-weight: 600;
 }
 
+/* Interactive POS hero demo */
+.ui-pos-demo {
+  position: relative;
+}
+
+.ui-pos-demo > .ui-app-main {
+  position: relative;
+}
+
+.ui-pos-demo .ui-pos-modes {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.ui-pos-demo .ui-pos-mode {
+  cursor: pointer;
+  border: 0;
+  opacity: 0.42;
+  transform: scale(0.97);
+  transition: opacity 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.ui-pos-demo .ui-pos-mode.is-active {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 4px 12px rgba(14, 36, 56, 0.16);
+}
+
+.ui-pos-demo .ui-pos-hint {
+  margin: 0 0 0.65rem;
+  padding: 0 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ui-pos-demo .ui-menu-light button {
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+
+.ui-pos-demo .ui-menu-light button:hover {
+  border-color: rgba(43, 107, 255, 0.35);
+  background: #fff;
+}
+
+.ui-pos-demo .ui-menu-light button:active,
+.ui-pos-demo .ui-menu-light button.is-pulse {
+  transform: scale(0.96);
+  box-shadow: inset 0 0 0 1px rgba(43, 107, 255, 0.35);
+  background: rgba(43, 107, 255, 0.06);
+}
+
+.ui-pos-demo .ui-pos-ticket {
+  position: relative;
+}
+
+.ui-pos-demo .ui-pos-empty {
+  margin: 0;
+  padding: 1.1rem 1rem 0.85rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.ui-pos-demo .ui-pos-empty[hidden],
+.ui-pos-demo .ui-pos-toast[hidden],
+.ui-pos-demo .ui-pos-success[hidden] {
+  display: none;
+}
+
+.ui-pos-demo .ui-pos-totals {
+  padding-top: 0;
+}
+
+.ui-pos-demo .ui-pos-totals li:first-child {
+  border-top: 1px dashed var(--line);
+  margin-top: 0.15rem;
+  padding-top: 0.7rem;
+}
+
+.ui-pos-demo .ui-lines [data-pos-line] {
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.ui-pos-demo .ui-lines [data-pos-line]:hover {
+  background: rgba(201, 60, 60, 0.05);
+}
+
+.ui-pos-demo .ui-lines [data-pos-line] .ui-pos-qty {
+  color: var(--muted);
+  font-weight: 600;
+  margin-right: 0.35rem;
+}
+
+.ui-pos-demo .ui-card-actions button {
+  cursor: pointer;
+  font: inherit;
+}
+
+.ui-pos-demo .ui-btn-ghost {
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ui-pos-demo .ui-btn-ghost:hover {
+  background: var(--paper);
+  border-color: rgba(14, 36, 56, 0.18);
+}
+
+.ui-pos-demo .ui-pos-pay {
+  background: #16a34a;
+  border: 0;
+  color: #fff;
+  min-width: 5.5rem;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.ui-pos-demo .ui-pos-pay:hover {
+  filter: brightness(1.05);
+}
+
+.ui-pos-demo .ui-pos-pay:disabled,
+.ui-pos-demo .ui-btn-ghost:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: none;
+  transform: none;
+}
+
+.ui-pos-demo .ui-pos-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 4.25rem;
+  transform: translateX(-50%);
+  z-index: 3;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(14, 36, 56, 0.2);
+  animation: ui-pos-toast-in 0.22s ease;
+}
+
+.ui-pos-demo .ui-pos-success {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  background: rgba(248, 250, 252, 0.92);
+  backdrop-filter: blur(4px);
+  border-radius: inherit;
+  animation: ui-pos-success-in 0.28s ease;
+}
+
+.ui-pos-demo .ui-pos-success-card {
+  text-align: center;
+  padding: 1.25rem 1.5rem;
+  max-width: 16rem;
+}
+
+.ui-pos-demo .ui-pos-success-check {
+  margin: 0 auto 0.65rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #16a34a;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.ui-pos-demo .ui-pos-success-title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.ui-pos-demo .ui-pos-success-meta {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+@keyframes ui-pos-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes ui-pos-success-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .ui-book-light,
 .ui-gha-light {
   max-width: 32rem;

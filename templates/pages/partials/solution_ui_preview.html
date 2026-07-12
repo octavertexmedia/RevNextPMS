@@ -66,43 +66,53 @@
 </div>
 
 {% elif solution_slug == 'cloud-pos' %}
-<div class="ui-app ui-app-compact">
+<div class="ui-app ui-app-compact ui-pos-demo" data-pos-demo aria-label="Interactive POS terminal demo">
     <div class="ui-app-main" style="width:100%;">
         <header class="ui-app-toolbar">
             <div>
                 <p class="ui-kicker">Billing POS</p>
                 <h3>Outlet terminal</h3>
             </div>
-            <div class="ui-toolbar-actions" style="display:flex;gap:.35rem;flex-wrap:wrap;">
-                <span class="ui-chip" style="background:#3b82f6;color:#fff;">Dine In</span>
-                <span class="ui-chip" style="background:#eab308;color:#111;">Takeaway</span>
-                <span class="ui-chip" style="background:#f97316;color:#fff;">Delivery</span>
+            <div class="ui-toolbar-actions ui-pos-modes" role="group" aria-label="Order mode">
+                <button type="button" class="ui-chip ui-pos-mode is-active" data-mode="dine" data-label="Table 3" style="background:#3b82f6;color:#fff;">Dine In</button>
+                <button type="button" class="ui-chip ui-pos-mode" data-mode="takeaway" data-label="Counter" style="background:#eab308;color:#111;">Takeaway</button>
+                <button type="button" class="ui-chip ui-pos-mode" data-mode="delivery" data-label="Delivery #12" style="background:#f97316;color:#fff;">Delivery</button>
             </div>
         </header>
+        <p class="ui-pos-hint">Tap items to build a ticket · Hold or Pay to finish</p>
         <div class="ui-split-panels">
             <div class="ui-card">
                 <div class="ui-card-head">Burgers · Pizza · Drinks</div>
-                <div class="ui-menu-light">
-                    <button type="button">Veg Burger<em>₹149</em></button>
-                    <button type="button">Margherita<em>₹299</em></button>
-                    <button type="button">Cold Coffee<em>₹99</em></button>
-                    <button type="button">Pasta Alfredo<em>₹249</em></button>
-                    <button type="button">Brownie<em>₹129</em></button>
-                    <button type="button">Combo Meal<em>₹399</em></button>
+                <div class="ui-menu-light" data-pos-menu>
+                    <button type="button" data-name="Veg Burger" data-price="149">Veg Burger<em>₹149</em></button>
+                    <button type="button" data-name="Margherita" data-price="299">Margherita<em>₹299</em></button>
+                    <button type="button" data-name="Cold Coffee" data-price="99">Cold Coffee<em>₹99</em></button>
+                    <button type="button" data-name="Pasta Alfredo" data-price="249">Pasta Alfredo<em>₹249</em></button>
+                    <button type="button" data-name="Brownie" data-price="129">Brownie<em>₹129</em></button>
+                    <button type="button" data-name="Combo Meal" data-price="399">Combo Meal<em>₹399</em></button>
                 </div>
             </div>
-            <div class="ui-card">
-                <div class="ui-card-head">Current order · Table 3</div>
-                <ul class="ui-lines">
-                    <li><span>Margherita Pizza</span><strong>₹299</strong></li>
-                    <li><span>Veg Burger</span><strong>₹149</strong></li>
-                    <li><span>Subtotal + tax</span><strong>₹470</strong></li>
-                    <li class="total"><span>Total</span><strong>₹470</strong></li>
+            <div class="ui-card ui-pos-ticket">
+                <div class="ui-card-head" data-pos-ticket-head>Current order · Table 3</div>
+                <ul class="ui-lines" data-pos-lines aria-live="polite"></ul>
+                <p class="ui-pos-empty" data-pos-empty hidden>Tap a menu item to start</p>
+                <ul class="ui-lines ui-pos-totals">
+                    <li><span>Subtotal + tax</span><strong data-pos-subtotal>₹0</strong></li>
+                    <li class="total"><span>Total</span><strong data-pos-total>₹0</strong></li>
                 </ul>
                 <div class="ui-card-actions">
-                    <span class="ui-btn-ghost">Hold</span>
-                    <span class="ui-btn-sm" style="background:#16a34a;">Pay</span>
+                    <button type="button" class="ui-btn-ghost" data-pos-hold>Hold</button>
+                    <button type="button" class="ui-btn-sm ui-pos-pay" data-pos-pay>Pay</button>
                 </div>
+                <div class="ui-pos-toast" data-pos-toast hidden></div>
+            </div>
+        </div>
+        <div class="ui-pos-success" data-pos-success hidden>
+            <div class="ui-pos-success-card">
+                <p class="ui-pos-success-check" aria-hidden="true">✓</p>
+                <p class="ui-pos-success-title">Payment successful</p>
+                <p class="ui-pos-success-meta" data-pos-success-meta>Ticket closed · ₹0</p>
+                <button type="button" class="ui-btn-sm" data-pos-reset>New ticket</button>
             </div>
         </div>
     </div>

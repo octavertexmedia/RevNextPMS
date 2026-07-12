@@ -3,243 +3,228 @@
 {% block title %}OTA Integration Guide - RevNext Channel Manager{% endblock %}
 
 {% block content %}
-<section class="pt-32 pb-20 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto">
-            <!-- Header -->
-            <div class="mb-12">
-                <a href="{% url 'core:documentation' %}" class="text-indigo-600 hover:text-indigo-700 mb-4 inline-flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Back to Documentation
-                </a>
-                <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">OTA Integration</h1>
-                <p class="text-xl text-gray-600">Connect with Booking.com, Expedia, Agoda, and 75+ other platforms</p>
+<section class="dawn-page-hero is-compact">
+    <div class="dawn-container">
+        <a href="{% url 'core:documentation' %}" class="dawn-link" style="color:rgba(255,255,255,.75);display:inline-flex;align-items:center;gap:.4rem;margin-bottom:1rem;">
+            <svg style="width:1.1rem;height:1.1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Documentation
+        </a>
+        <p class="dawn-eyebrow">Guide</p>
+        <h1 class="dawn-h1">OTA Integration</h1>
+        <p class="dawn-lead">Connect with Booking.com, Expedia, Agoda, and 75+ other platforms.</p>
+    </div>
+</section>
+
+<section class="dawn-section">
+    <div class="dawn-container dawn-prose">
+        <div class="dawn-panel-accent" style="margin-bottom:2rem;">
+            <p style="margin:0;">
+                <strong>OTA Integration</strong> allows you to connect your property to multiple online travel agencies, enabling real-time synchronization of availability, rates, and reservations across all platforms.
+            </p>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Supported Platforms</h2>
+            <p>RevNext Channel Manager supports integration with 75+ OTA platforms, including:</p>
+            <div class="dawn-grid-3" style="margin-bottom:1rem;">
+                <div class="dawn-card">
+                    <h3 style="margin-top:0;">Major OTAs</h3>
+                    <ul style="margin:0;padding-left:1.1rem;font-size:.9rem;">
+                        <li>Booking.com</li>
+                        <li>Expedia</li>
+                        <li>Agoda</li>
+                        <li>MakeMyTrip</li>
+                        <li>Goibibo</li>
+                    </ul>
+                </div>
+                <div class="dawn-card">
+                    <h3 style="margin-top:0;">Regional Platforms</h3>
+                    <ul style="margin:0;padding-left:1.1rem;font-size:.9rem;">
+                        <li>OYO</li>
+                        <li>FabHotels</li>
+                        <li>Treebo</li>
+                        <li>Yatra</li>
+                        <li>Cleartrip</li>
+                    </ul>
+                </div>
+                <div class="dawn-card">
+                    <h3 style="margin-top:0;">Global Platforms</h3>
+                    <ul style="margin:0;padding-left:1.1rem;font-size:.9rem;">
+                        <li>Airbnb</li>
+                        <li>Hotels.com</li>
+                        <li>TripAdvisor</li>
+                        <li>Travelocity</li>
+                        <li>And 60+ more</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Integration Process</h2>
+
+            <h3>Step 1: Get API Credentials</h3>
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <p>Before connecting, you'll need API credentials from the OTA platform:</p>
+                <ol style="margin:0;">
+                    <li>Log in to your OTA partner portal (e.g., Booking.com Extranet)</li>
+                    <li>Navigate to the API/Integration section</li>
+                    <li>Request API access or credentials</li>
+                    <li>Copy your API key, secret, and any other required credentials</li>
+                    <li>Note the API endpoint URL if provided</li>
+                </ol>
             </div>
 
-            <!-- Content -->
-            <div class="prose prose-lg max-w-none">
-                <!-- Overview -->
-                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 mb-8 rounded-r-lg">
-                    <p class="text-gray-700 mb-0">
-                        <strong>OTA Integration</strong> allows you to connect your property to multiple online travel agencies, enabling real-time synchronization of availability, rates, and reservations across all platforms.
-                    </p>
-                </div>
+            <div class="dawn-panel-accent" style="margin-bottom:1.5rem;">
+                <p style="margin:0;"><strong>Note:</strong> API access approval may take 24-48 hours for some platforms. Contact the OTA's support team if you need assistance.</p>
+            </div>
 
-                <!-- Supported Platforms -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Supported Platforms</h2>
-                    <p class="text-gray-700 mb-6">RevNext Channel Manager supports integration with 75+ OTA platforms, including:</p>
-                    <div class="grid md:grid-cols-3 gap-4 mb-6">
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
-                            <h4 class="font-semibold text-gray-900 mb-2">Major OTAs</h4>
-                            <ul class="text-sm text-gray-600 space-y-1">
-                                <li>• Booking.com</li>
-                                <li>• Expedia</li>
-                                <li>• Agoda</li>
-                                <li>• MakeMyTrip</li>
-                                <li>• Goibibo</li>
-                            </ul>
-                        </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
-                            <h4 class="font-semibold text-gray-900 mb-2">Regional Platforms</h4>
-                            <ul class="text-sm text-gray-600 space-y-1">
-                                <li>• OYO</li>
-                                <li>• FabHotels</li>
-                                <li>• Treebo</li>
-                                <li>• Yatra</li>
-                                <li>• Cleartrip</li>
-                            </ul>
-                        </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
-                            <h4 class="font-semibold text-gray-900 mb-2">Global Platforms</h4>
-                            <ul class="text-sm text-gray-600 space-y-1">
-                                <li>• Airbnb</li>
-                                <li>• Hotels.com</li>
-                                <li>• TripAdvisor</li>
-                                <li>• Travelocity</li>
-                                <li>• And 60+ more</li>
-                            </ul>
-                        </div>
+            <h3>Step 2: Add Integration</h3>
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <ol style="margin:0;">
+                    <li>Go to <strong>Integrations</strong> in your dashboard</li>
+                    <li>Click <strong>"Add New Integration"</strong></li>
+                    <li>Select the OTA platform from the list</li>
+                    <li>Enter your API credentials:
+                        <ul>
+                            <li>API Key</li>
+                            <li>API Secret</li>
+                            <li>Property ID (if required)</li>
+                            <li>API Endpoint URL</li>
+                        </ul>
+                    </li>
+                    <li>Test the connection</li>
+                    <li>Save the integration</li>
+                </ol>
+            </div>
+
+            <h3>Step 3: Map Room Types and Rates</h3>
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <p>After connecting, map your internal room types and rate plans to the OTA's format:</p>
+                <ol style="margin:0;">
+                    <li>Go to the integration details page</li>
+                    <li>Click <strong>"Map Room Types"</strong></li>
+                    <li>Match each of your room types to the OTA's room categories</li>
+                    <li>Map your rate plans to the OTA's rate codes</li>
+                    <li>Verify the mappings are correct</li>
+                    <li>Save the mappings</li>
+                </ol>
+            </div>
+
+            <h3>Step 4: Configure Synchronization</h3>
+            <div class="dawn-panel">
+                <p>Set up automatic synchronization settings:</p>
+                <ul style="margin:0;">
+                    <li><strong>Sync Frequency:</strong> How often to sync (recommended: every 5-15 minutes)</li>
+                    <li><strong>Sync Types:</strong> Availability, rates, reservations, or all</li>
+                    <li><strong>Rate Update Rules:</strong> When to push rate changes</li>
+                    <li><strong>Inventory Sync:</strong> Real-time or scheduled</li>
+                    <li><strong>Reservation Pull:</strong> Automatic or manual</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Real-Time Synchronization</h2>
+            <p>RevNext Channel Manager provides real-time synchronization to prevent overbookings and rate discrepancies:</p>
+            <div class="dawn-panel">
+                <h3 style="margin-top:0;">What Gets Synced</h3>
+                <div class="dawn-grid-4" style="grid-template-columns:repeat(2,1fr);">
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .35rem;">Availability (ARI)</h4>
+                        <ul style="margin:0;padding-left:1.1rem;font-size:.9rem;">
+                            <li>Room availability</li>
+                            <li>Blocked dates</li>
+                            <li>Inventory updates</li>
+                        </ul>
                     </div>
-                </div>
-
-                <!-- Integration Process -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Integration Process</h2>
-                    
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Step 1: Get API Credentials</h3>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <p class="text-gray-700 mb-4">Before connecting, you'll need API credentials from the OTA platform:</p>
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Log in to your OTA partner portal (e.g., Booking.com Extranet)</li>
-                            <li>Navigate to the API/Integration section</li>
-                            <li>Request API access or credentials</li>
-                            <li>Copy your API key, secret, and any other required credentials</li>
-                            <li>Note the API endpoint URL if provided</li>
-                        </ol>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .35rem;">Rates</h4>
+                        <ul style="margin:0;padding-left:1.1rem;font-size:.9rem;">
+                            <li>Base rates</li>
+                            <li>Seasonal pricing</li>
+                            <li>Promotional rates</li>
+                        </ul>
                     </div>
-
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                        <p class="text-sm text-yellow-800">
-                            <strong>Note:</strong> API access approval may take 24-48 hours for some platforms. Contact the OTA's support team if you need assistance.
-                        </p>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .35rem;">Reservations</h4>
+                        <ul style="margin:0;padding-left:1.1rem;font-size:.9rem;">
+                            <li>New bookings</li>
+                            <li>Modifications</li>
+                            <li>Cancellations</li>
+                        </ul>
                     </div>
-
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Step 2: Add Integration</h3>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Go to <strong>Integrations</strong> in your dashboard</li>
-                            <li>Click <strong>"Add New Integration"</strong></li>
-                            <li>Select the OTA platform from the list</li>
-                            <li>Enter your API credentials:
-                                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
-                                    <li>API Key</li>
-                                    <li>API Secret</li>
-                                    <li>Property ID (if required)</li>
-                                    <li>API Endpoint URL</li>
-                                </ul>
-                            </li>
-                            <li>Test the connection</li>
-                            <li>Save the integration</li>
-                        </ol>
-                    </div>
-
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Step 3: Map Room Types and Rates</h3>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <p class="text-gray-700 mb-4">After connecting, map your internal room types and rate plans to the OTA's format:</p>
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Go to the integration details page</li>
-                            <li>Click <strong>"Map Room Types"</strong></li>
-                            <li>Match each of your room types to the OTA's room categories</li>
-                            <li>Map your rate plans to the OTA's rate codes</li>
-                            <li>Verify the mappings are correct</li>
-                            <li>Save the mappings</li>
-                        </ol>
-                    </div>
-
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Step 4: Configure Synchronization</h3>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <p class="text-gray-700 mb-4">Set up automatic synchronization settings:</p>
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Sync Frequency:</strong> How often to sync (recommended: every 5-15 minutes)</li>
-                            <li><strong>Sync Types:</strong> Availability, rates, reservations, or all</li>
-                            <li><strong>Rate Update Rules:</strong> When to push rate changes</li>
-                            <li><strong>Inventory Sync:</strong> Real-time or scheduled</li>
-                            <li><strong>Reservation Pull:</strong> Automatic or manual</li>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .35rem;">Restrictions</h4>
+                        <ul style="margin:0;padding-left:1.1rem;font-size:.9rem;">
+                            <li>Minimum stay</li>
+                            <li>Maximum stay</li>
+                            <li>Closed dates</li>
                         </ul>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Real-Time Synchronization -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Real-Time Synchronization</h2>
-                    <p class="text-gray-700 mb-6">RevNext Channel Manager provides real-time synchronization to prevent overbookings and rate discrepancies:</p>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">What Gets Synced</h3>
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Availability (ARI)</h4>
-                                <ul class="text-sm text-gray-600 space-y-1">
-                                    <li>• Room availability</li>
-                                    <li>• Blocked dates</li>
-                                    <li>• Inventory updates</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Rates</h4>
-                                <ul class="text-sm text-gray-600 space-y-1">
-                                    <li>• Base rates</li>
-                                    <li>• Seasonal pricing</li>
-                                    <li>• Promotional rates</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Reservations</h4>
-                                <ul class="text-sm text-gray-600 space-y-1">
-                                    <li>• New bookings</li>
-                                    <li>• Modifications</li>
-                                    <li>• Cancellations</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Restrictions</h4>
-                                <ul class="text-sm text-gray-600 space-y-1">
-                                    <li>• Minimum stay</li>
-                                    <li>• Maximum stay</li>
-                                    <li>• Closed dates</li>
-                                </ul>
-                            </div>
-                        </div>
+        <div style="margin-bottom:2.5rem;">
+            <h2>Troubleshooting</h2>
+            <div class="dawn-panel">
+                <h3 style="margin-top:0;">Common Issues</h3>
+                <div style="display:grid;gap:1rem;">
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .35rem;">Connection Failed</h4>
+                        <ul style="margin:0;padding-left:1.1rem;font-size:.9rem;">
+                            <li>Verify API credentials are correct</li>
+                            <li>Check if API access is enabled on the OTA platform</li>
+                            <li>Ensure your IP address is whitelisted (if required)</li>
+                        </ul>
                     </div>
-                </div>
-
-                <!-- Troubleshooting -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Troubleshooting</h2>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Common Issues</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Connection Failed</h4>
-                                <ul class="text-sm text-gray-600 space-y-1 ml-4">
-                                    <li>• Verify API credentials are correct</li>
-                                    <li>• Check if API access is enabled on the OTA platform</li>
-                                    <li>• Ensure your IP address is whitelisted (if required)</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Sync Errors</h4>
-                                <ul class="text-sm text-gray-600 space-y-1 ml-4">
-                                    <li>• Check sync logs for error details</li>
-                                    <li>• Verify room type and rate mappings</li>
-                                    <li>• Ensure inventory is set up correctly</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Rate Mismatches</h4>
-                                <ul class="text-sm text-gray-600 space-y-1 ml-4">
-                                    <li>• Verify rate plan mappings</li>
-                                    <li>• Check currency settings</li>
-                                    <li>• Review rate update rules</li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .35rem;">Sync Errors</h4>
+                        <ul style="margin:0;padding-left:1.1rem;font-size:.9rem;">
+                            <li>Check sync logs for error details</li>
+                            <li>Verify room type and rate mappings</li>
+                            <li>Ensure inventory is set up correctly</li>
+                        </ul>
                     </div>
-                </div>
-
-                <!-- Best Practices -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Best Practices</h2>
-                    <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-6 border border-green-200">
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li>Test integrations in a sandbox environment first (if available)</li>
-                            <li>Start with one OTA platform and expand gradually</li>
-                            <li>Monitor sync logs regularly for any issues</li>
-                            <li>Keep API credentials secure and rotate them periodically</li>
-                            <li>Set up alerts for sync failures</li>
-                            <li>Regularly verify that rates and availability match across platforms</li>
-                            <li>Use consistent naming conventions for room types across all OTAs</li>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .35rem;">Rate Mismatches</h4>
+                        <ul style="margin:0;padding-left:1.1rem;font-size:.9rem;">
+                            <li>Verify rate plan mappings</li>
+                            <li>Check currency settings</li>
+                            <li>Review rate update rules</li>
                         </ul>
                     </div>
                 </div>
-
-                <!-- Related Guides -->
-                <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Related Guides</h3>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <a href="{% url 'core:guide_getting_started' %}" class="block p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all">
-                            <h4 class="font-semibold text-gray-900 mb-2">Getting Started →</h4>
-                            <p class="text-sm text-gray-600">Learn the basics of RevNext Channel Manager</p>
-                        </a>
-                        <a href="{% url 'core:guide_inventory_management' %}" class="block p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all">
-                            <h4 class="font-semibold text-gray-900 mb-2">Inventory Management →</h4>
-                            <p class="text-sm text-gray-600">Manage room availability and blocks</p>
-                        </a>
-                    </div>
-                </div>
             </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Best Practices</h2>
+            <div class="dawn-panel-soft">
+                <ul style="margin:0;">
+                    <li>Test integrations in a sandbox environment first (if available)</li>
+                    <li>Start with one OTA platform and expand gradually</li>
+                    <li>Monitor sync logs regularly for any issues</li>
+                    <li>Keep API credentials secure and rotate them periodically</li>
+                    <li>Set up alerts for sync failures</li>
+                    <li>Regularly verify that rates and availability match across platforms</li>
+                    <li>Use consistent naming conventions for room types across all OTAs</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="dawn-guide-nav" style="display:grid;gap:1rem;grid-template-columns:repeat(2,1fr);">
+            <a href="{% url 'core:guide_getting_started' %}">
+                <strong>Getting Started →</strong>
+                <span>Learn the basics of RevNext Channel Manager</span>
+            </a>
+            <a href="{% url 'core:guide_inventory_management' %}">
+                <strong>Inventory Management →</strong>
+                <span>Manage room availability and blocks</span>
+            </a>
         </div>
     </div>
 </section>

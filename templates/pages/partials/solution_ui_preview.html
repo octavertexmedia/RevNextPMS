@@ -1,0 +1,234 @@
+{% if solution_slug == 'cloud-pms' %}
+<div class="ui-app">
+    <aside class="ui-app-nav">
+        <div class="ui-app-brand">RevNext PMS</div>
+        <nav>
+            <span class="on">Dashboard</span>
+            <span>Arrivals</span>
+            <span>Housekeeping</span>
+            <span>Folios</span>
+            <span>Linked rooms</span>
+        </nav>
+        <div class="ui-app-property">Harbour View · Mumbai</div>
+    </aside>
+    <div class="ui-app-main">
+        <header class="ui-app-toolbar">
+            <div>
+                <p class="ui-kicker">Today · 11 Jul</p>
+                <h3>Front desk board</h3>
+            </div>
+            <div class="ui-toolbar-actions">
+                <span class="ui-chip">Live sync</span>
+                <span class="ui-btn-sm">New reservation</span>
+            </div>
+        </header>
+        <div class="ui-stat-row">
+            <div class="ui-stat"><b>12</b><span>Arrivals</span></div>
+            <div class="ui-stat"><b>8</b><span>Departures</span></div>
+            <div class="ui-stat"><b>41</b><span>In-house</span></div>
+            <div class="ui-stat"><b>6</b><span>HK pending</span></div>
+        </div>
+        <div class="ui-split-panels">
+            <div class="ui-card">
+                <div class="ui-card-head">Arrivals</div>
+                <table class="ui-table-light">
+                    <thead><tr><th>Guest</th><th>Room</th><th>Channel</th><th>Status</th></tr></thead>
+                    <tbody>
+                        <tr><td>Rajesh Kumar</td><td>Deluxe 204</td><td>Booking.com</td><td><span class="ui-badge warn">Due 14:00</span></td></tr>
+                        <tr><td>Priya Sharma</td><td>Suite 501</td><td>Direct</td><td><span class="ui-badge ok">Checked in</span></td></tr>
+                        <tr><td>Amit Patel</td><td>Twin 118</td><td>MakeMyTrip</td><td><span class="ui-badge info">Synced</span></td></tr>
+                        <tr><td>Neha Gupta</td><td>Deluxe 210</td><td>Expedia</td><td><span class="ui-badge warn">Pending</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="ui-stack">
+                <div class="ui-card">
+                    <div class="ui-card-head">Open folio · Suite 501</div>
+                    <ul class="ui-lines">
+                        <li><span>Room · 2 nights</span><strong>₹18,000</strong></li>
+                        <li><span>POS · Room service</span><strong>₹1,240</strong></li>
+                        <li><span>GST</span><strong>₹2,309</strong></li>
+                        <li class="total"><span>Balance</span><strong>₹21,549</strong></li>
+                    </ul>
+                </div>
+                <div class="ui-card">
+                    <div class="ui-card-head">Housekeeping</div>
+                    <div class="ui-hk-light">
+                        <div><span>204</span><i class="dirty">Dirty</i></div>
+                        <div><span>210</span><i class="clean">Clean</i></div>
+                        <div><span>118</span><i class="insp">Inspect</i></div>
+                        <div><span>501</span><i class="occ">Occupied</i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% elif solution_slug == 'cloud-pos' %}
+<div class="ui-app ui-app-compact">
+    <div class="ui-app-main" style="width:100%;">
+        <header class="ui-app-toolbar">
+            <div>
+                <p class="ui-kicker">Outlet · All-day dining</p>
+                <h3>Point of sale</h3>
+            </div>
+            <div class="ui-toolbar-actions">
+                <span class="ui-chip">Table 3 · Room 501</span>
+            </div>
+        </header>
+        <div class="ui-pos-tables-light">
+            <span class="free">T1</span><span class="busy">T2</span><span class="busy on">T3</span><span class="free">T4</span><span class="free">T5</span><span class="busy">T6</span>
+        </div>
+        <div class="ui-split-panels">
+            <div class="ui-card">
+                <div class="ui-card-head">Menu</div>
+                <div class="ui-menu-light">
+                    <button type="button">Masala Dosa<em>₹280</em></button>
+                    <button type="button">Club Sandwich<em>₹420</em></button>
+                    <button type="button">Filter Coffee<em>₹120</em></button>
+                    <button type="button">Thali<em>₹450</em></button>
+                    <button type="button">Fresh Lime<em>₹140</em></button>
+                    <button type="button">Biryani<em>₹520</em></button>
+                </div>
+            </div>
+            <div class="ui-card">
+                <div class="ui-card-head">Ticket · Table 3</div>
+                <ul class="ui-lines">
+                    <li><span>2× Club Sandwich</span><strong>₹840</strong></li>
+                    <li><span>1× Filter Coffee</span><strong>₹120</strong></li>
+                    <li><span>1× Fresh Lime</span><strong>₹140</strong></li>
+                    <li class="total"><span>Total incl. tax</span><strong>₹1,240</strong></li>
+                </ul>
+                <div class="ui-card-actions">
+                    <span class="ui-btn-ghost">Print KOT</span>
+                    <span class="ui-btn-sm">Bill to room</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% elif solution_slug == 'booking-engine' %}
+<div class="ui-book-light">
+    <div class="ui-book-light-head">
+        <img src="https://www.revnext.in/favicon.ico" alt="" width="20" height="20">
+        <div>
+            <strong>Harbour View Boutique</strong>
+            <span>Mumbai · Direct booking</span>
+        </div>
+    </div>
+    <div class="ui-book-fields">
+        <div><label>Check-in</label><div class="ui-field">12 Jul 2026</div></div>
+        <div><label>Check-out</label><div class="ui-field">14 Jul 2026</div></div>
+        <div><label>Guests</label><div class="ui-field">2 adults</div></div>
+    </div>
+    <div class="ui-rate-list">
+        <div class="ui-rate on">
+            <div><strong>Deluxe King</strong><span>Breakfast · Free cancellation</span></div>
+            <div class="amt">₹8,999<em>/night</em></div>
+        </div>
+        <div class="ui-rate">
+            <div><strong>Sea View Suite</strong><span>Breakfast · Late checkout</span></div>
+            <div class="amt">₹14,500<em>/night</em></div>
+        </div>
+    </div>
+    <div class="ui-book-foot">
+        <span class="ui-btn-sm">Continue · ₹17,998</span>
+        <span class="ui-note">Commission-free · Razorpay ready</span>
+    </div>
+</div>
+
+{% elif solution_slug == 'website-builder' %}
+<div class="ui-site-light">
+    <div class="ui-browser">
+        <div class="ui-browser-bar"><i></i><i></i><i></i><span>harbourview.revnext.site</span></div>
+        <div class="ui-browser-hero">
+            <p class="ui-kicker" style="color:var(--amber);">Harbour View Boutique</p>
+            <h3>Wake up to the harbour</h3>
+            <p>Boutique stays in Colaba — book direct and save.</p>
+            <span class="ui-btn-sm">Book now</span>
+        </div>
+        <div class="ui-browser-grid">
+            <div><strong>Deluxe King</strong><span>from ₹8,999</span></div>
+            <div><strong>Sea View Suite</strong><span>from ₹14,500</span></div>
+            <div><strong>Stay offer</strong><span>Stay 3, pay 2</span></div>
+        </div>
+    </div>
+</div>
+
+{% elif solution_slug == 'mobile-apps' %}
+<div class="ui-phones-light">
+    <div class="ui-device">
+        <div class="ui-device-bar"></div>
+        <p class="ui-kicker">RevNext PMS</p>
+        <h4>Arrivals</h4>
+        <div class="ui-device-row"><strong>Rajesh · 204</strong><span class="ui-badge warn">Due</span></div>
+        <div class="ui-device-row"><strong>Priya · 501</strong><span class="ui-badge ok">In-house</span></div>
+        <div class="ui-device-row"><strong>Amit · 118</strong><span class="ui-badge info">Synced</span></div>
+    </div>
+    <div class="ui-device">
+        <div class="ui-device-bar"></div>
+        <p class="ui-kicker">Housekeeping</p>
+        <h4>My rooms</h4>
+        <div class="ui-hk-light">
+            <div><span>204</span><i class="dirty">Dirty</i></div>
+            <div><span>210</span><i class="clean">Clean</i></div>
+            <div><span>118</span><i class="insp">Inspect</i></div>
+            <div><span>312</span><i class="dirty">Dirty</i></div>
+        </div>
+    </div>
+</div>
+
+{% elif solution_slug == 'b2b-network' %}
+<div class="ui-app ui-app-compact">
+    <div class="ui-app-main" style="width:100%;">
+        <header class="ui-app-toolbar">
+            <div>
+                <p class="ui-kicker">Stay B2B</p>
+                <h3>Agent portal · Trails &amp; Tours</h3>
+            </div>
+            <span class="ui-badge ok">Portal active</span>
+        </header>
+        <div class="ui-card">
+            <table class="ui-table-light">
+                <thead><tr><th>Room</th><th>Contract</th><th>Allotment</th><th>Rate</th></tr></thead>
+                <tbody>
+                    <tr><td>Deluxe King</td><td>CORP-2026</td><td>4</td><td>₹7,200</td></tr>
+                    <tr><td>Twin Deluxe</td><td>CORP-2026</td><td>6</td><td>₹6,800</td></tr>
+                    <tr><td>Suite</td><td>AGT-GOLD</td><td>2</td><td>₹11,500</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% elif solution_slug == 'ota-listing' %}
+<div class="ui-card ui-checklist-card">
+    <div class="ui-card-head">Listing project · Harbour View</div>
+    <ul class="ui-check-light">
+        <li class="done"><span>Property profile &amp; GST</span><strong>Done</strong></li>
+        <li class="done"><span>Photo set (24 images)</span><strong>Done</strong></li>
+        <li class="done"><span>Booking.com listing</span><strong>Live</strong></li>
+        <li class="active"><span>MakeMyTrip content</span><strong>In review</strong></li>
+        <li><span>Agoda amenities map</span><strong>Queued</strong></li>
+        <li><span>Channel Manager mapping</span><strong>Next</strong></li>
+    </ul>
+</div>
+
+{% elif solution_slug == 'google-hotel-ads' %}
+<div class="ui-gha-light">
+    <div class="ui-field">hotels in mumbai colaba</div>
+    <div class="ui-serp">
+        <p class="ui-kicker" style="color:var(--success);">Sponsored · Hotel</p>
+        <h3>Harbour View Boutique Hotel</h3>
+        <p class="ui-serp-rate">₹8,999 <em>nightly · Free cancellation</em></p>
+        <p class="ui-serp-meta">Colaba · 4.6 ★ · Book on hotel site</p>
+        <div class="ui-serp-actions">
+            <span class="ui-btn-sm">View deal</span>
+            <span class="ui-note">Pay per conversion</span>
+        </div>
+    </div>
+    <p class="ui-note" style="text-align:center;margin-top:.75rem;">Clicks land on your Booking Engine — not an OTA.</p>
+</div>
+{% endif %}

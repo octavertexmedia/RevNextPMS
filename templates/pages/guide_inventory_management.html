@@ -3,198 +3,180 @@
 {% block title %}Inventory Management Guide - RevNext Channel Manager{% endblock %}
 
 {% block content %}
-<section class="pt-32 pb-20 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto">
-            <!-- Header -->
-            <div class="mb-12">
-                <a href="{% url 'core:documentation' %}" class="text-indigo-600 hover:text-indigo-700 mb-4 inline-flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Back to Documentation
-                </a>
-                <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Inventory Management</h1>
-                <p class="text-xl text-gray-600">Manage room availability, blocks, and restrictions across all channels</p>
-            </div>
+<section class="dawn-page-hero is-compact">
+    <div class="dawn-container">
+        <a href="{% url 'core:documentation' %}" class="dawn-link" style="color:rgba(255,255,255,.75);display:inline-flex;align-items:center;gap:.4rem;margin-bottom:1rem;">
+            <svg style="width:1.1rem;height:1.1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Documentation
+        </a>
+        <p class="dawn-eyebrow">Guide</p>
+        <h1 class="dawn-h1">Inventory Management</h1>
+        <p class="dawn-lead">Manage room availability, blocks, and restrictions across all channels.</p>
+    </div>
+</section>
 
-            <!-- Content -->
-            <div class="prose prose-lg max-w-none">
-                <!-- Overview -->
-                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 mb-8 rounded-r-lg">
-                    <p class="text-gray-700 mb-0">
-                        <strong>Inventory Management</strong> is crucial for preventing overbookings and ensuring accurate availability across all your connected OTA platforms. This guide covers everything you need to know.
-                    </p>
-                </div>
+<section class="dawn-section">
+    <div class="dawn-container dawn-prose">
+        <div class="dawn-panel-accent" style="margin-bottom:2rem;">
+            <p style="margin:0;">
+                <strong>Inventory Management</strong> is crucial for preventing overbookings and ensuring accurate availability across all your connected OTA platforms. This guide covers everything you need to know.
+            </p>
+        </div>
 
-                <!-- Understanding Inventory -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Understanding Inventory</h2>
-                    <p class="text-gray-700 mb-6">Inventory in RevNext Channel Manager represents the number of rooms available for booking on a specific date:</p>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Inventory Components</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Total Rooms</h4>
-                                <p class="text-gray-600 text-sm">The total number of rooms of this type at your property</p>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Available Rooms</h4>
-                                <p class="text-gray-600 text-sm">Rooms available for booking (Total - Occupied - Blocked)</p>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Blocked Rooms</h4>
-                                <p class="text-gray-600 text-sm">Rooms temporarily unavailable (maintenance, events, etc.)</p>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Occupied Rooms</h4>
-                                <p class="text-gray-600 text-sm">Rooms with confirmed reservations</p>
-                            </div>
-                        </div>
+        <div style="margin-bottom:2.5rem;">
+            <h2>Understanding Inventory</h2>
+            <p>Inventory in RevNext Channel Manager represents the number of rooms available for booking on a specific date:</p>
+            <div class="dawn-panel">
+                <h3 style="margin-top:0;">Inventory Components</h3>
+                <div style="display:grid;gap:1rem;">
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .3rem;">Total Rooms</h4>
+                        <p style="margin:0;font-size:.9rem;">The total number of rooms of this type at your property</p>
                     </div>
-                </div>
-
-                <!-- Setting Up Inventory -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Setting Up Inventory</h2>
-                    
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Initial Inventory Setup</h3>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Navigate to <strong>Inventory</strong> in your dashboard</li>
-                            <li>Select your property and room type</li>
-                            <li>Choose a date range (recommended: next 365 days)</li>
-                            <li>Set the total number of rooms for each date</li>
-                            <li>Configure any blocked rooms for maintenance or events</li>
-                            <li>Save the inventory</li>
-                        </ol>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .3rem;">Available Rooms</h4>
+                        <p style="margin:0;font-size:.9rem;">Rooms available for booking (Total − Occupied − Blocked)</p>
                     </div>
-
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Bulk Inventory Updates</h3>
-                    <p class="text-gray-700 mb-4">You can update inventory for multiple dates at once:</p>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Select a date range in the inventory view</li>
-                            <li>Use the bulk update feature</li>
-                            <li>Set the same inventory value for all selected dates</li>
-                            <li>Or use patterns (e.g., different values for weekdays vs weekends)</li>
-                            <li>Apply the changes</li>
-                        </ol>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .3rem;">Blocked Rooms</h4>
+                        <p style="margin:0;font-size:.9rem;">Rooms temporarily unavailable (maintenance, events, etc.)</p>
                     </div>
-                </div>
-
-                <!-- Blocking Rooms -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Blocking Rooms</h2>
-                    <p class="text-gray-700 mb-6">Block rooms when they're unavailable due to maintenance, events, or other reasons:</p>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">When to Block Rooms</h3>
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Maintenance:</strong> Rooms under renovation or repair</li>
-                            <li><strong>Events:</strong> Rooms reserved for special events or groups</li>
-                            <li><strong>Seasonal Closures:</strong> Property closed during off-season</li>
-                            <li><strong>Overbooking Protection:</strong> Reserve rooms for direct bookings</li>
-                        </ul>
-                    </div>
-
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">How to Block Rooms</h3>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Go to the Inventory page</li>
-                            <li>Select the property and room type</li>
-                            <li>Choose the date(s) to block</li>
-                            <li>Enter the number of rooms to block</li>
-                            <li>Add a reason/note (optional, for your records)</li>
-                            <li>Save the block</li>
-                        </ol>
-                    </div>
-
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <p class="text-sm text-blue-800">
-                            <strong>Tip:</strong> Blocked rooms are automatically excluded from availability calculations and won't be shown as available on any connected OTA platforms.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Restrictions -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Setting Restrictions</h2>
-                    <p class="text-gray-700 mb-6">Restrictions help you control booking behavior:</p>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Types of Restrictions</h3>
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Minimum Stay</h4>
-                                <p class="text-sm text-gray-600">Require guests to book a minimum number of nights</p>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Maximum Stay</h4>
-                                <p class="text-sm text-gray-600">Limit the maximum number of nights per booking</p>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Closed to Arrival</h4>
-                                <p class="text-sm text-gray-600">Prevent check-ins on specific dates</p>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">Closed to Departure</h4>
-                                <p class="text-sm text-gray-600">Prevent check-outs on specific dates</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Real-Time Sync -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Real-Time Synchronization</h2>
-                    <p class="text-gray-700 mb-6">Inventory changes are automatically synced to all connected OTA platforms:</p>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Automatic Sync</h3>
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li>Inventory updates sync every 5-15 minutes (configurable)</li>
-                            <li>Immediate sync for critical changes (blocks, restrictions)</li>
-                            <li>Automatic adjustment when reservations are made</li>
-                            <li>Real-time updates across all connected platforms</li>
-                        </ul>
-                    </div>
-
-                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                        <p class="text-sm text-green-800">
-                            <strong>Benefit:</strong> Real-time sync prevents overbookings and ensures accurate availability across all channels, improving guest satisfaction and reducing manual work.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Best Practices -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Best Practices</h2>
-                    <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-6 border border-green-200">
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li>Set up inventory for at least 365 days in advance</li>
-                            <li>Review and update inventory regularly</li>
-                            <li>Block rooms immediately when maintenance is scheduled</li>
-                            <li>Use restrictions to optimize revenue (e.g., minimum stay during peak season)</li>
-                            <li>Monitor occupancy rates to adjust inventory as needed</li>
-                            <li>Keep an eye on sync logs to ensure updates are successful</li>
-                            <li>Set up alerts for low inventory or sync failures</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Related Guides -->
-                <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Related Guides</h3>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <a href="{% url 'core:guide_property_management' %}" class="block p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all">
-                            <h4 class="font-semibold text-gray-900 mb-2">Property Management →</h4>
-                            <p class="text-sm text-gray-600">Manage properties, rooms, and rate plans</p>
-                        </a>
-                        <a href="{% url 'core:guide_ota_integration' %}" class="block p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all">
-                            <h4 class="font-semibold text-gray-900 mb-2">OTA Integration →</h4>
-                            <p class="text-sm text-gray-600">Connect with booking platforms</p>
-                        </a>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .3rem;">Occupied Rooms</h4>
+                        <p style="margin:0;font-size:.9rem;">Rooms with confirmed reservations</p>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Setting Up Inventory</h2>
+
+            <h3>Initial Inventory Setup</h3>
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <ol style="margin:0;">
+                    <li>Navigate to <strong>Inventory</strong> in your dashboard</li>
+                    <li>Select your property and room type</li>
+                    <li>Choose a date range (recommended: next 365 days)</li>
+                    <li>Set the total number of rooms for each date</li>
+                    <li>Configure any blocked rooms for maintenance or events</li>
+                    <li>Save the inventory</li>
+                </ol>
+            </div>
+
+            <h3>Bulk Inventory Updates</h3>
+            <p>You can update inventory for multiple dates at once:</p>
+            <div class="dawn-panel">
+                <ol style="margin:0;">
+                    <li>Select a date range in the inventory view</li>
+                    <li>Use the bulk update feature</li>
+                    <li>Set the same inventory value for all selected dates</li>
+                    <li>Or use patterns (e.g., different values for weekdays vs weekends)</li>
+                    <li>Apply the changes</li>
+                </ol>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Blocking Rooms</h2>
+            <p>Block rooms when they're unavailable due to maintenance, events, or other reasons:</p>
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <h3 style="margin-top:0;">When to Block Rooms</h3>
+                <ul style="margin:0;">
+                    <li><strong>Maintenance:</strong> Rooms under renovation or repair</li>
+                    <li><strong>Events:</strong> Rooms reserved for special events or groups</li>
+                    <li><strong>Seasonal Closures:</strong> Property closed during off-season</li>
+                    <li><strong>Overbooking Protection:</strong> Reserve rooms for direct bookings</li>
+                </ul>
+            </div>
+
+            <h3>How to Block Rooms</h3>
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <ol style="margin:0;">
+                    <li>Go to the Inventory page</li>
+                    <li>Select the property and room type</li>
+                    <li>Choose the date(s) to block</li>
+                    <li>Enter the number of rooms to block</li>
+                    <li>Add a reason/note (optional, for your records)</li>
+                    <li>Save the block</li>
+                </ol>
+            </div>
+
+            <div class="dawn-panel-accent">
+                <p style="margin:0;"><strong>Tip:</strong> Blocked rooms are automatically excluded from availability calculations and won't be shown as available on any connected OTA platforms.</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Setting Restrictions</h2>
+            <p>Restrictions help you control booking behavior:</p>
+            <div class="dawn-panel">
+                <h3 style="margin-top:0;">Types of Restrictions</h3>
+                <div class="dawn-grid-4" style="grid-template-columns:repeat(2,1fr);">
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .3rem;">Minimum Stay</h4>
+                        <p style="margin:0;font-size:.9rem;">Require guests to book a minimum number of nights</p>
+                    </div>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .3rem;">Maximum Stay</h4>
+                        <p style="margin:0;font-size:.9rem;">Limit the maximum number of nights per booking</p>
+                    </div>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .3rem;">Closed to Arrival</h4>
+                        <p style="margin:0;font-size:.9rem;">Prevent check-ins on specific dates</p>
+                    </div>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .3rem;">Closed to Departure</h4>
+                        <p style="margin:0;font-size:.9rem;">Prevent check-outs on specific dates</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Real-Time Synchronization</h2>
+            <p>Inventory changes are automatically synced to all connected OTA platforms:</p>
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <h3 style="margin-top:0;">Automatic Sync</h3>
+                <ul style="margin:0;">
+                    <li>Inventory updates sync every 5-15 minutes (configurable)</li>
+                    <li>Immediate sync for critical changes (blocks, restrictions)</li>
+                    <li>Automatic adjustment when reservations are made</li>
+                    <li>Real-time updates across all connected platforms</li>
+                </ul>
+            </div>
+
+            <div class="dawn-panel-accent">
+                <p style="margin:0;"><strong>Benefit:</strong> Real-time sync prevents overbookings and ensures accurate availability across all channels, improving guest satisfaction and reducing manual work.</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Best Practices</h2>
+            <div class="dawn-panel-soft">
+                <ul style="margin:0;">
+                    <li>Set up inventory for at least 365 days in advance</li>
+                    <li>Review and update inventory regularly</li>
+                    <li>Block rooms immediately when maintenance is scheduled</li>
+                    <li>Use restrictions to optimize revenue (e.g., minimum stay during peak season)</li>
+                    <li>Monitor occupancy rates to adjust inventory as needed</li>
+                    <li>Keep an eye on sync logs to ensure updates are successful</li>
+                    <li>Set up alerts for low inventory or sync failures</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="dawn-guide-nav" style="display:grid;gap:1rem;grid-template-columns:repeat(2,1fr);">
+            <a href="{% url 'core:guide_property_management' %}">
+                <strong>Property Management →</strong>
+                <span>Manage properties, rooms, and rate plans</span>
+            </a>
+            <a href="{% url 'core:guide_ota_integration' %}">
+                <strong>OTA Integration →</strong>
+                <span>Connect with booking platforms</span>
+            </a>
         </div>
     </div>
 </section>

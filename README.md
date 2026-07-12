@@ -248,6 +248,41 @@ coverage run --source='.' manage.py test
 coverage report
 ```
 
+## Mobile PMS API
+
+The Flutter front-desk app lives in the sibling repo `../revnext_pms_app`.
+
+### Auth
+- `POST /api/auth/login/` — body: `{ "email"|"username", "password" }` → `{ token, user }`
+- `POST /api/auth/logout/` — deletes token (requires `Authorization: Token …`)
+- `GET /api/auth/me/`
+
+### PMS
+- `GET /api/pms/dashboard/?property=`
+- `GET|POST /api/pms/housekeeping/` + `POST …/set_status/`
+- `GET /api/pms/folios/` (read-only Phase 1)
+- `GET /api/pms/linked-rooms/`
+
+### Front-desk reservation actions
+- `POST /api/bookings/reservations/{id}/check_in/`
+- `POST /api/bookings/reservations/{id}/check_out/`
+- `GET /api/bookings/reservations/departures/`
+- `GET /api/bookings/reservations/in_house/`
+
+After pulling these changes:
+
+```bash
+cd ChannelManager
+source venv/bin/activate          # activate existing virtualenv
+pip install -r requirements.txt
+python manage.py migrate          # adds authtoken tables
+python manage.py runserver 0.0.0.0:8000
+```
+
+`django-cors-headers` is included in `requirements.txt` for browser clients; Flutter uses Token auth directly.
+
+See `../revnext_pms_app/README.md` for run instructions and smoke tests.
+
 ## Production Deployment
 
 1. **Set DEBUG = False** in settings

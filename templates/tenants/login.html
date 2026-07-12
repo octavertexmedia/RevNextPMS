@@ -2,268 +2,92 @@
 
 {% block title %}Login - RevNext Channel Manager{% endblock %}
 
-{% block extra_css %}
-<style>
-    .carousel-slide {
-        opacity: 0;
-        transform: translateX(20px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .carousel-slide.active {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    .carousel-indicator {
-        transition: all 0.3s ease;
-    }
-    .carousel-indicator.active {
-        width: 2rem;
-        background-color: rgba(255, 255, 255, 1);
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="min-h-screen flex">
-    <!-- Left Side - Carousel -->
-    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 relative overflow-hidden">
-        <div class="absolute inset-0 bg-black opacity-20"></div>
-        
-        <!-- Carousel Container -->
-        <div class="relative z-10 flex flex-col justify-center items-center w-full h-full p-12 text-white">
-            <div class="max-w-md w-full">
-                <!-- Carousel Slides -->
-                <div class="relative h-96 mb-8">
-                    <div class="carousel-slide active absolute inset-0 flex flex-col justify-center items-center text-center">
-                        <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-6 backdrop-blur-sm">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-3xl font-bold mb-4">Real-Time Sync</h3>
-                        <p class="text-lg text-indigo-100">Keep your inventory and rates synchronized across 75+ platforms in real-time</p>
-                    </div>
-                    
-                    <div class="carousel-slide absolute inset-0 flex flex-col justify-center items-center text-center">
-                        <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-6 backdrop-blur-sm">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-3xl font-bold mb-4">Boost Revenue</h3>
-                        <p class="text-lg text-indigo-100">Increase bookings by 30% with intelligent rate management and distribution</p>
-                    </div>
-                    
-                    <div class="carousel-slide absolute inset-0 flex flex-col justify-center items-center text-center">
-                        <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-6 backdrop-blur-sm">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-3xl font-bold mb-4">GST Compliant</h3>
-                        <p class="text-lg text-indigo-100">Built for Indian hotels with automatic GST calculation and invoicing</p>
-                    </div>
-                    
-                    <div class="carousel-slide absolute inset-0 flex flex-col justify-center items-center text-center">
-                        <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-6 backdrop-blur-sm">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-3xl font-bold mb-4">24/7 Support</h3>
-                        <p class="text-lg text-indigo-100">Get dedicated support from our team whenever you need it</p>
-                    </div>
-                </div>
-                
-                <!-- Carousel Indicators -->
-                <div class="flex justify-center space-x-2 mb-8">
-                    <button class="carousel-indicator active w-2 h-2 rounded-full bg-white bg-opacity-50" data-slide="0"></button>
-                    <button class="carousel-indicator w-2 h-2 rounded-full bg-white bg-opacity-50" data-slide="1"></button>
-                    <button class="carousel-indicator w-2 h-2 rounded-full bg-white bg-opacity-50" data-slide="2"></button>
-                    <button class="carousel-indicator w-2 h-2 rounded-full bg-white bg-opacity-50" data-slide="3"></button>
-                </div>
-                
-                <!-- Stats -->
-                <div class="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                        <div class="text-3xl font-bold">500+</div>
-                        <div class="text-sm text-indigo-200">Hotels</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl font-bold">75+</div>
-                        <div class="text-sm text-indigo-200">Platforms</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl font-bold">99.9%</div>
-                        <div class="text-sm text-indigo-200">Uptime</div>
-                    </div>
+<div class="dawn-auth">
+    <aside class="dawn-auth-side">
+        <div class="dawn-auth-side-inner">
+            <div class="dawn-auth-side-copy-block">
+                <p class="dawn-eyebrow">Front desk · open for business</p>
+                <h2>Walk into the shift already in control</h2>
+                <p>Rates, inventory, and reservations stay in lockstep across 75+ OTAs — before the first check-in.</p>
+                <div class="dawn-auth-stats">
+                    <div><b>500+</b><span>Hotels</span></div>
+                    <div><b>75+</b><span>OTAs</span></div>
+                    <div><b>99.9%</b><span>Uptime</span></div>
                 </div>
             </div>
+            {% include 'landing/partials/auth_side_meta.html' %}
         </div>
-        
-        <!-- Decorative Elements -->
-        <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-32 -mt-32"></div>
-        <div class="absolute bottom-0 left-0 w-96 h-96 bg-white opacity-10 rounded-full -ml-48 -mb-48"></div>
-    </div>
-    
-    <!-- Right Side - Login Form -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center bg-gradient-to-br from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md w-full">
-            <!-- Logo and Title -->
-            <div class="text-center mb-8">
-                <div class="brand-container mb-6">
-                    <img src="https://www.revnext.in/logo.png" alt="RevNext Logo" class="brand-logo">
-                    <div class="brand-text">Channel Manager</div>
-                </div>
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-                <p class="text-gray-600">Sign in to your account to continue managing your properties</p>
-            </div>
+    </aside>
 
-            <!-- Login Form -->
-            <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
-                {% if messages %}
-                    <div class="mb-6">
-                        {% for message in messages %}
-                            <div class="p-4 rounded-lg mb-4 {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% elif message.tags == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
+    <div class="dawn-auth-panel">
+        <div class="dawn-auth-card">
+            <a href="/" class="dawn-auth-brand">
+                <img src="https://www.revnext.in/logo.png" alt="RevNext">
+                <span>Channel Manager</span>
+            </a>
+            <h1 class="dawn-h2" style="font-size:1.75rem;text-align:center;margin-bottom:.35rem;">Welcome back</h1>
+            <p style="text-align:center;color:var(--muted);margin:0 0 1.5rem;">Sign in to manage your properties</p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="dawn-alert {% if message.tags == 'error' %}dawn-alert-error{% elif message.tags == 'success' %}dawn-alert-success{% else %}dawn-alert-info{% endif %}">
+                        {{ message }}
                     </div>
-                {% endif %}
+                {% endfor %}
+            {% endif %}
 
-                <form method="post" class="space-y-6" id="loginForm">
-                    {% csrf_token %}
-                    
-                    <!-- Username Field -->
-                    <div>
-                        <label for="{{ form.username.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Username
-                        </label>
-                        <input 
-                            type="text" 
-                            name="{{ form.username.name }}" 
-                            id="{{ form.username.id_for_label }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                            placeholder="Enter your username"
-                            required
-                            autofocus
-                        >
-                        {% if form.username.errors %}
-                            <p class="mt-2 text-sm text-red-600">{{ form.username.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-
-                    <!-- Password Field -->
-                    <div>
-                        <label for="{{ form.password.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Password
-                        </label>
-                        <input 
-                            type="password" 
-                            name="{{ form.password.name }}" 
-                            id="{{ form.password.id_for_label }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                            placeholder="Enter your password"
-                            required
-                        >
-                        {% if form.password.errors %}
-                            <p class="mt-2 text-sm text-red-600">{{ form.password.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-
-                    <!-- Remember Me & Forgot Password -->
-                    <div class="flex items-center justify-between">
-                        <label class="flex items-center cursor-pointer group">
-                            <input type="checkbox" name="remember" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 transition-all">
-                            <span class="ml-2 text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Remember me</span>
-                        </label>
-                        <a href="#" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium transition-colors">Forgot password?</a>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button 
-                        type="submit" 
-                        class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+            <form method="post" class="dawn-form" id="loginForm">
+                {% csrf_token %}
+                <div class="dawn-field">
+                    <label for="{{ form.username.id_for_label }}">Username</label>
+                    <input
+                        type="text"
+                        name="{{ form.username.name }}"
+                        id="{{ form.username.id_for_label }}"
+                        placeholder="Enter your username"
+                        required
+                        autofocus
                     >
-                        Sign In
-                    </button>
-                </form>
-
-                <!-- Divider -->
-                <div class="mt-6 mb-6">
-                    <div class="relative">
-                        <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-gray-300"></div>
-                        </div>
-                        <div class="relative flex justify-center text-sm">
-                            <span class="px-4 bg-white text-gray-500">New to RevNext?</span>
-                        </div>
-                    </div>
+                    {% if form.username.errors %}
+                        <p style="color:#8a1f1f;font-size:.85rem;margin:.4rem 0 0;">{{ form.username.errors.0 }}</p>
+                    {% endif %}
                 </div>
-
-                <!-- Sign Up Link -->
-                <div class="text-center">
-                    <p class="text-gray-600 mb-4">
-                        Don't have an account?
-                        <a href="{% url 'tenants:register' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold transition-colors">
-                            Sign up for free
-                        </a>
-                    </p>
-                    <a href="/" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">
-                        ← Back to home
-                    </a>
+                <div class="dawn-field">
+                    <label for="{{ form.password.id_for_label }}">Password</label>
+                    <input
+                        type="password"
+                        name="{{ form.password.name }}"
+                        id="{{ form.password.id_for_label }}"
+                        placeholder="Enter your password"
+                        required
+                    >
+                    {% if form.password.errors %}
+                        <p style="color:#8a1f1f;font-size:.85rem;margin:.4rem 0 0;">{{ form.password.errors.0 }}</p>
+                    {% endif %}
                 </div>
-            </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin:1rem 0 1.25rem;font-size:.9rem;">
+                    <label style="display:flex;align-items:center;gap:.45rem;color:var(--muted);font-weight:600;cursor:pointer;">
+                        <input type="checkbox" name="remember" style="width:auto;min-height:auto;">
+                        Remember me
+                    </label>
+                    <a href="#" class="dawn-link">Forgot password?</a>
+                </div>
+                <button type="submit" class="dawn-btn dawn-btn-primary dawn-btn-block">Sign in</button>
+            </form>
+
+            <p style="text-align:center;margin:1.5rem 0 0;color:var(--muted);font-size:.95rem;">
+                New to RevNext?
+                <a href="{% url 'tenants:register' %}" class="dawn-link">Start free trial</a>
+            </p>
+            <p style="text-align:center;margin:.75rem 0 0;">
+                <a href="/" class="dawn-link" style="font-weight:600;font-size:.9rem;">← Back to home</a>
+            </p>
+        </div>
+
+        <div class="dawn-auth-mobile-meta">
+            {% include 'landing/partials/auth_side_meta.html' %}
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    // Carousel functionality
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.carousel-slide');
-    const indicators = document.querySelectorAll('.carousel-indicator');
-    const totalSlides = slides.length;
-
-    function showSlide(index) {
-        // Remove active class from all slides and indicators
-        slides.forEach(slide => slide.classList.remove('active'));
-        indicators.forEach(indicator => indicator.classList.remove('active'));
-        
-        // Add active class to current slide and indicator
-        slides[index].classList.add('active');
-        indicators[index].classList.add('active');
-    }
-
-    function nextSlide() {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        showSlide(currentSlide);
-    }
-
-    // Auto-advance carousel
-    setInterval(nextSlide, 5000);
-
-    // Indicator click handlers
-    indicators.forEach((indicator, index) => {
-        indicator.addEventListener('click', () => {
-            currentSlide = index;
-            showSlide(currentSlide);
-        });
-    });
-
-    // Initialize
-    showSlide(0);
-
-    // Form input animations
-    document.querySelectorAll('input').forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentElement.classList.add('scale-105');
-        });
-        input.addEventListener('blur', function() {
-            this.parentElement.classList.remove('scale-105');
-        });
-    });
-</script>
 {% endblock %}

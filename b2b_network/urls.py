@@ -5,6 +5,7 @@ app_name = 'b2b_network'
 
 urlpatterns = [
     path('', views.b2b_dashboard, name='dashboard'),
+    path('portal/', views.agent_portal_home, name='portal'),
     path('agents/', views.b2b_agents, name='agents'),
     path('agents/add/', views.agent_create, name='agent_create'),
     path('agents/<int:agent_id>/', views.agent_detail, name='agent_detail'),

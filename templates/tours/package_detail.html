@@ -1,0 +1,36 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}{{ package.name }} — Tours{% endblock %}
+{% block page_title %}{{ package.name }}{% endblock %}
+{% block page_description %}{{ package.get_category_display }} · {{ package.duration_days }} days{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-4xl">
+  <div class="bg-white rounded-xl border p-6">
+    <p class="text-gray-600">{{ package.description }}</p>
+    <p class="mt-3 text-sm">Slug: <code class="bg-gray-100 px-1 rounded">{{ package.slug }}</code>
+      · Published: {{ package.is_published }} · From {{ package.base_price }}</p>
+  </div>
+  <div class="bg-white rounded-xl border p-6">
+    <h2 class="text-lg font-semibold mb-3">Itinerary</h2>
+    {% for d in itinerary %}
+    <div class="border-b py-3"><strong>Day {{ d.day_number }} — {{ d.title }}</strong>
+      <p class="text-sm text-gray-600">{{ d.description }}</p>
+      {% if d.location %}<p class="text-xs text-gray-500">{{ d.location }}{% if d.meals %} · {{ d.meals }}{% endif %}</p>{% endif %}
+    </div>
+    {% empty %}<p class="text-gray-500">No itinerary days.</p>{% endfor %}
+  </div>
+  <div class="bg-white rounded-xl border p-6">
+    <h2 class="text-lg font-semibold mb-3">Departures</h2>
+    <table class="min-w-full text-sm">
+      <thead><tr class="text-left text-gray-500 border-b"><th class="py-2">Dates</th><th>Seats</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for dep in departures %}
+        <tr class="border-b"><td class="py-2">{{ dep.start_date }} → {{ dep.end_date }}</td>
+          <td>{{ dep.seats_remaining }}/{{ dep.capacity }}</td><td>{{ dep.status }}</td></tr>
+        {% empty %}<tr><td colspan="3" class="py-3 text-gray-500">No departures.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

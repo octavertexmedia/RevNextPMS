@@ -49,6 +49,7 @@ django-extensions>=3.2.3
 djangorestframework>=3.14.0
 drf-yasg>=1.21.7
 django-filter>=23.5
+django-cors-headers>=4.3.0
 djangorestframework-simplejwt>=5.3.0
 
 # Reporting
@@ -57,3 +58,5 @@ openpyxl>=3.1.0
 
 # System Monitoring
 psutil>=5.9.0
+# Secrets (OpenBao / Vault-compatible API)
+hvac>=2.3.0

@@ -3,126 +3,115 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
-<section class="pt-32 pb-20 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Hero Section -->
-        <div class="max-w-4xl mx-auto text-center mb-16">
-            <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">API Reference</h1>
-            <p class="text-xl text-gray-600">
-                Complete REST API documentation for RevNext Channel Manager
-            </p>
+<style>.hidden{display:none!important;}</style>
+<section class="dawn-page-hero is-compact">
+    <div class="dawn-container">
+        <p class="dawn-eyebrow">Developers</p>
+        <h1 class="dawn-h1">API Reference</h1>
+        <p class="dawn-lead">Complete REST API documentation for RevNext Channel Manager.</p>
+    </div>
+</section>
+
+<section class="dawn-section">
+    <div class="dawn-container">
+        <div style="margin-bottom:2rem;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;border-bottom:1px solid var(--line);padding-bottom:1rem;">
+            <button onclick="showSwagger()" class="api-tab dawn-btn dawn-btn-dark" style="min-height:2.5rem;padding:.5rem 1.1rem;">Swagger UI</button>
+            <button onclick="showRedoc()" class="api-tab dawn-btn dawn-btn-outline" style="min-height:2.5rem;padding:.5rem 1.1rem;">Redoc</button>
+            <button onclick="showPostman()" class="api-tab dawn-btn dawn-btn-outline" style="min-height:2.5rem;padding:.5rem 1.1rem;">Postman Collection</button>
         </div>
 
-        <!-- API Documentation Options -->
-        <div class="max-w-6xl mx-auto">
-            <!-- Documentation Tabs -->
-            <div class="mb-8">
-                <div class="flex flex-wrap justify-center gap-4 border-b border-gray-200">
-                    <button onclick="showSwagger()" class="api-tab active px-6 py-3 font-semibold text-gray-700 border-b-2 border-indigo-600">
-                        Swagger UI
-                    </button>
-                    <button onclick="showRedoc()" class="api-tab px-6 py-3 font-semibold text-gray-700 border-b-2 border-transparent hover:border-gray-300">
-                        Redoc
-                    </button>
-                    <button onclick="showPostman()" class="api-tab px-6 py-3 font-semibold text-gray-700 border-b-2 border-transparent hover:border-gray-300">
-                        Postman Collection
-                    </button>
+        <!-- Swagger UI -->
+        <div id="swagger-section" class="api-doc-section">
+            <div class="dawn-panel" style="margin-bottom:2rem;">
+                <h2 class="dawn-h2" style="font-size:1.6rem;">Swagger UI</h2>
+                <p style="color:var(--muted);margin-bottom:1.5rem;">
+                    Interactive API documentation with Swagger UI. Test endpoints directly from your browser.
+                </p>
+                <div class="dawn-panel-soft" style="margin-bottom:1.25rem;">
+                    <h3 style="font-family:var(--font-display);font-size:1.05rem;margin:0 0 .6rem;">Base URL</h3>
+                    <code class="dawn-code">https://api.channel-manager.revnext.in/api/v1/</code>
+                </div>
+                <div class="dawn-panel-soft" style="margin-bottom:1.25rem;">
+                    <h3 style="font-family:var(--font-display);font-size:1.05rem;margin:0 0 .6rem;">Authentication</h3>
+                    <p style="color:var(--muted);font-size:.9rem;margin-bottom:.5rem;">All API requests require authentication using Bearer tokens:</p>
+                    <code class="dawn-code">Authorization: Bearer YOUR_API_TOKEN</code>
+                </div>
+                <iframe
+                    id="swagger-iframe"
+                    src="https://petstore.swagger.io/?url=https://api.channel-manager.revnext.in/api/v1/swagger.json"
+                    style="width: 100%; height: 800px; border: 1px solid var(--line); border-radius: 12px;"
+                    class="hidden"
+                ></iframe>
+                <div id="swagger-placeholder" style="text-align:center;padding:3rem 1rem;background:var(--marble);border-radius:12px;">
+                    <svg style="width:3rem;height:3rem;color:var(--muted);margin:0 auto 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <p style="color:var(--muted);margin-bottom:1rem;">Swagger UI will be available after API endpoints are configured</p>
+                    <a href="#" class="dawn-btn dawn-btn-outline">View API Schema</a>
                 </div>
             </div>
+        </div>
 
-            <!-- Swagger UI -->
-            <div id="swagger-section" class="api-doc-section">
-                <div class="bg-white border border-gray-200 rounded-xl p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Swagger UI</h2>
-                    <p class="text-gray-600 mb-6">
-                        Interactive API documentation with Swagger UI. Test endpoints directly from your browser.
-                    </p>
-                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                        <h3 class="font-semibold text-gray-900 mb-3">Base URL</h3>
-                        <code class="text-sm bg-white px-4 py-2 rounded border border-gray-300 block">https://api.channel-manager.revnext.in/api/v1/</code>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                        <h3 class="font-semibold text-gray-900 mb-3">Authentication</h3>
-                        <p class="text-gray-700 text-sm mb-2">All API requests require authentication using Bearer tokens:</p>
-                        <code class="text-sm bg-white px-4 py-2 rounded border border-gray-300 block">Authorization: Bearer YOUR_API_TOKEN</code>
-                    </div>
-                    <iframe 
-                        id="swagger-iframe" 
-                        src="https://petstore.swagger.io/?url=https://api.channel-manager.revnext.in/api/v1/swagger.json" 
-                        style="width: 100%; height: 800px; border: 1px solid #e5e7eb; border-radius: 0.5rem;"
-                        class="hidden"
-                    ></iframe>
-                    <div id="swagger-placeholder" class="text-center py-12 bg-gray-50 rounded-lg">
-                        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <p class="text-gray-600 mb-4">Swagger UI will be available after API endpoints are configured</p>
-                        <a href="#" class="btn-secondary">View API Schema</a>
-                    </div>
+        <!-- Redoc -->
+        <div id="redoc-section" class="api-doc-section hidden">
+            <div class="dawn-panel" style="margin-bottom:2rem;">
+                <h2 class="dawn-h2" style="font-size:1.6rem;">Redoc</h2>
+                <p style="color:var(--muted);margin-bottom:1.5rem;">
+                    Beautiful, responsive API documentation with Redoc. Perfect for developer reference.
+                </p>
+                <div id="redoc-container" style="min-height:60vh;"></div>
+            </div>
+        </div>
+
+        <!-- Postman Collection -->
+        <div id="postman-section" class="api-doc-section hidden">
+            <div class="dawn-panel" style="margin-bottom:2rem;">
+                <h2 class="dawn-h2" style="font-size:1.6rem;">Postman Collection</h2>
+                <p style="color:var(--muted);margin-bottom:1.5rem;">
+                    Import our Postman collection to test API endpoints quickly.
+                </p>
+                <div class="dawn-panel-soft" style="margin-bottom:1.25rem;">
+                    <h3 style="font-family:var(--font-display);font-size:1.05rem;margin:0 0 .75rem;">Download Collection</h3>
+                    <a href="#" class="dawn-btn dawn-btn-dark" style="margin-bottom:1rem;display:inline-block;">Download Postman Collection</a>
+                    <p style="color:var(--muted);font-size:.9rem;margin-bottom:.75rem;">Or import directly in Postman:</p>
+                    <code class="dawn-code">https://api.channel-manager.revnext.in/api/v1/postman.json</code>
+                </div>
+                <div class="dawn-panel-accent">
+                    <h3 style="font-family:var(--font-display);font-size:1.05rem;margin:0 0 .5rem;">How to Import</h3>
+                    <ol style="margin:0;padding-left:1.2rem;font-size:.9rem;">
+                        <li>Open Postman</li>
+                        <li>Click <strong>Import</strong> button</li>
+                        <li>Paste the collection URL or upload the JSON file</li>
+                        <li>Set your API token in the collection variables</li>
+                        <li>Start testing endpoints!</li>
+                    </ol>
                 </div>
             </div>
+        </div>
 
-            <!-- Redoc -->
-            <div id="redoc-section" class="api-doc-section hidden">
-                <div class="bg-white border border-gray-200 rounded-xl p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Redoc</h2>
-                    <p class="text-gray-600 mb-6">
-                        Beautiful, responsive API documentation with Redoc. Perfect for developer reference.
-                    </p>
-                    <div id="redoc-container" class="min-h-screen"></div>
+        <!-- API Endpoints Overview -->
+        <div class="dawn-panel">
+            <h2 class="dawn-h2" style="font-size:1.6rem;">API Endpoints Overview</h2>
+            <div style="display:grid;gap:1.25rem;">
+                <div style="border-left:3px solid var(--amber);padding-left:1rem;">
+                    <h3 style="font-family:var(--font-display);font-size:1.05rem;margin:0 0 .5rem;">Properties</h3>
+                    <code class="dawn-code" style="display:block;margin-bottom:.35rem;">GET /api/v1/properties/</code>
+                    <code class="dawn-code" style="display:block;margin-bottom:.35rem;">POST /api/v1/properties/</code>
+                    <code class="dawn-code" style="display:block;margin-bottom:.35rem;">GET /api/v1/properties/{id}/</code>
+                    <code class="dawn-code" style="display:block;">PUT /api/v1/properties/{id}/</code>
                 </div>
-            </div>
-
-            <!-- Postman Collection -->
-            <div id="postman-section" class="api-doc-section hidden">
-                <div class="bg-white border border-gray-200 rounded-xl p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Postman Collection</h2>
-                    <p class="text-gray-600 mb-6">
-                        Import our Postman collection to test API endpoints quickly.
-                    </p>
-                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                        <h3 class="font-semibold text-gray-900 mb-3">Download Collection</h3>
-                        <a href="#" class="btn-primary inline-block mb-4">Download Postman Collection</a>
-                        <p class="text-sm text-gray-600 mb-4">Or import directly in Postman:</p>
-                        <code class="text-sm bg-white px-4 py-2 rounded border border-gray-300 block">https://api.channel-manager.revnext.in/api/v1/postman.json</code>
-                    </div>
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                        <h3 class="font-semibold text-blue-900 mb-2">How to Import</h3>
-                        <ol class="list-decimal list-inside space-y-2 text-blue-800 text-sm">
-                            <li>Open Postman</li>
-                            <li>Click <strong>Import</strong> button</li>
-                            <li>Paste the collection URL or upload the JSON file</li>
-                            <li>Set your API token in the collection variables</li>
-                            <li>Start testing endpoints!</li>
-                        </ol>
-                    </div>
+                <div style="border-left:3px solid var(--navy);padding-left:1rem;">
+                    <h3 style="font-family:var(--font-display);font-size:1.05rem;margin:0 0 .5rem;">Reservations</h3>
+                    <code class="dawn-code" style="display:block;margin-bottom:.35rem;">GET /api/v1/reservations/</code>
+                    <code class="dawn-code" style="display:block;margin-bottom:.35rem;">POST /api/v1/reservations/</code>
+                    <code class="dawn-code" style="display:block;margin-bottom:.35rem;">GET /api/v1/reservations/{id}/</code>
+                    <code class="dawn-code" style="display:block;">PATCH /api/v1/reservations/{id}/</code>
                 </div>
-            </div>
-
-            <!-- API Endpoints Overview -->
-            <div class="bg-white border border-gray-200 rounded-xl p-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">API Endpoints Overview</h2>
-                <div class="space-y-4">
-                    <div class="border-l-4 border-indigo-500 pl-4">
-                        <h3 class="font-semibold text-gray-900 mb-2">Properties</h3>
-                        <code class="text-sm text-gray-600">GET /api/v1/properties/</code> - List all properties<br>
-                        <code class="text-sm text-gray-600">POST /api/v1/properties/</code> - Create property<br>
-                        <code class="text-sm text-gray-600">GET /api/v1/properties/{id}/</code> - Get property details<br>
-                        <code class="text-sm text-gray-600">PUT /api/v1/properties/{id}/</code> - Update property
-                    </div>
-                    <div class="border-l-4 border-purple-500 pl-4">
-                        <h3 class="font-semibold text-gray-900 mb-2">Reservations</h3>
-                        <code class="text-sm text-gray-600">GET /api/v1/reservations/</code> - List reservations<br>
-                        <code class="text-sm text-gray-600">POST /api/v1/reservations/</code> - Create reservation<br>
-                        <code class="text-sm text-gray-600">GET /api/v1/reservations/{id}/</code> - Get reservation<br>
-                        <code class="text-sm text-gray-600">PATCH /api/v1/reservations/{id}/</code> - Update reservation
-                    </div>
-                    <div class="border-l-4 border-green-500 pl-4">
-                        <h3 class="font-semibold text-gray-900 mb-2">Integrations</h3>
-                        <code class="text-sm text-gray-600">GET /api/v1/integrations/</code> - List integrations<br>
-                        <code class="text-sm text-gray-600">POST /api/v1/integrations/sync/</code> - Trigger sync<br>
-                        <code class="text-sm text-gray-600">GET /api/v1/integrations/{id}/status/</code> - Get sync status
-                    </div>
+                <div style="border-left:3px solid var(--success);padding-left:1rem;">
+                    <h3 style="font-family:var(--font-display);font-size:1.05rem;margin:0 0 .5rem;">Integrations</h3>
+                    <code class="dawn-code" style="display:block;margin-bottom:.35rem;">GET /api/v1/integrations/</code>
+                    <code class="dawn-code" style="display:block;margin-bottom:.35rem;">POST /api/v1/integrations/sync/</code>
+                    <code class="dawn-code" style="display:block;">GET /api/v1/integrations/{id}/status/</code>
                 </div>
             </div>
         </div>
@@ -133,23 +122,23 @@
 function showSwagger() {
     document.querySelectorAll('.api-doc-section').forEach(s => s.classList.add('hidden'));
     document.querySelectorAll('.api-tab').forEach(t => {
-        t.classList.remove('active', 'border-indigo-600');
-        t.classList.add('border-transparent');
+        t.classList.remove('dawn-btn-dark');
+        t.classList.add('dawn-btn-outline');
     });
     document.getElementById('swagger-section').classList.remove('hidden');
-    event.target.classList.add('active', 'border-indigo-600');
-    event.target.classList.remove('border-transparent');
+    event.target.classList.add('dawn-btn-dark');
+    event.target.classList.remove('dawn-btn-outline');
 }
 
 function showRedoc() {
     document.querySelectorAll('.api-doc-section').forEach(s => s.classList.add('hidden'));
     document.querySelectorAll('.api-tab').forEach(t => {
-        t.classList.remove('active', 'border-indigo-600');
-        t.classList.add('border-transparent');
+        t.classList.remove('dawn-btn-dark');
+        t.classList.add('dawn-btn-outline');
     });
     document.getElementById('redoc-section').classList.remove('hidden');
-    event.target.classList.add('active', 'border-indigo-600');
-    event.target.classList.remove('border-transparent');
+    event.target.classList.add('dawn-btn-dark');
+    event.target.classList.remove('dawn-btn-outline');
     // Load Redoc
     if (!window.redocLoaded) {
         const script = document.createElement('script');
@@ -165,12 +154,12 @@ function showRedoc() {
 function showPostman() {
     document.querySelectorAll('.api-doc-section').forEach(s => s.classList.add('hidden'));
     document.querySelectorAll('.api-tab').forEach(t => {
-        t.classList.remove('active', 'border-indigo-600');
-        t.classList.add('border-transparent');
+        t.classList.remove('dawn-btn-dark');
+        t.classList.add('dawn-btn-outline');
     });
     document.getElementById('postman-section').classList.remove('hidden');
-    event.target.classList.add('active', 'border-indigo-600');
-    event.target.classList.remove('border-transparent');
+    event.target.classList.add('dawn-btn-dark');
+    event.target.classList.remove('dawn-btn-outline');
 }
 </script>
 {% endblock %}

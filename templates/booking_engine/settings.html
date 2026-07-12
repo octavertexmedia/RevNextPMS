@@ -2,18 +2,52 @@
 
 {% block title %}Booking Engine Settings - RevNext{% endblock %}
 {% block page_title %}Booking Engine Settings{% endblock %}
-{% block page_description %}Embed code, multi-currency, Google Hotel Ads{% endblock %}
+{% block page_description %}booking.revnext.in · widget, currencies, deposits, Google Hotel Ads{% endblock %}
 
 {% block content %}
 <div class="space-y-6 max-w-4xl">
     <div class="bg-white rounded-xl shadow-sm border p-6">
-        <h2 class="text-lg font-semibold mb-4">Embed Code</h2>
-        <p class="text-gray-600 mb-4">Add this iframe to your website to show the booking widget:</p>
-        <pre class="p-4 bg-gray-100 rounded-lg text-sm overflow-x-auto">&lt;iframe src="{{ request.scheme }}://{{ request.get_host }}/booking/widget/PROPERTY_ID/" width="100%" height="600" frameborder="0"&gt;&lt;/iframe&gt;</pre>
+        <h2 class="text-lg font-semibold mb-2">Product host</h2>
+        <p class="text-gray-600 text-sm mb-1">Standalone: <code class="bg-gray-100 px-1 rounded">https://booking.revnext.in</code></p>
+        <p class="text-gray-600 text-sm">Also included in the Hospitality Suite · SSO via <code class="bg-gray-100 px-1 rounded">auth.revnext.in</code></p>
     </div>
+
     <div class="bg-white rounded-xl shadow-sm border p-6">
-        <h2 class="text-lg font-semibold mb-4">Supported Currencies</h2>
-        <p class="text-gray-600">INR, USD, EUR, GBP - Configure per property in property settings.</p>
+        <h2 class="text-lg font-semibold mb-4">Embed widget</h2>
+        <p class="text-gray-600 mb-4">Add this iframe to your property website (replace PROPERTY_ID):</p>
+        <pre class="p-4 bg-gray-100 rounded-lg text-sm overflow-x-auto">&lt;iframe src="https://booking.revnext.in/booking/widget/PROPERTY_ID/" width="100%" height="600" frameborder="0"&gt;&lt;/iframe&gt;</pre>
+        <p class="text-sm text-gray-500 mt-3">Public API: <code>{{ public_api_base }}</code></p>
     </div>
+
+    {% for cfg in configs %}
+    <form method="post" class="bg-white rounded-xl shadow-sm border p-6 space-y-4">
+        {% csrf_token %}
+        <input type="hidden" name="property_id" value="{{ cfg.property_id }}">
+        <h2 class="text-lg font-semibold">{{ cfg.property.name }}</h2>
+        <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" name="is_enabled" {% if cfg.is_enabled %}checked{% endif %}> Enabled
+        </label>
+        <div class="grid md:grid-cols-2 gap-4">
+            <label class="text-sm">Default currency
+                <input class="form-input mt-1 w-full border rounded-lg px-3 py-2" name="default_currency" value="{{ cfg.default_currency }}">
+            </label>
+            <label class="text-sm">Deposit %
+                <input class="form-input mt-1 w-full border rounded-lg px-3 py-2" name="deposit_percent" value="{{ cfg.deposit_percent }}">
+            </label>
+            <label class="text-sm">Widget color
+                <input class="form-input mt-1 w-full border rounded-lg px-3 py-2" name="widget_primary_color" value="{{ cfg.widget_primary_color }}">
+            </label>
+        </div>
+        <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" name="require_phone" {% if cfg.require_phone %}checked{% endif %}> Require phone
+        </label>
+        <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" name="google_hotel_ads_enabled" {% if cfg.google_hotel_ads_enabled %}checked{% endif %}> Google Hotel Ads
+        </label>
+        <button type="submit" class="px-4 py-2 rounded-lg bg-slate-800 text-white text-sm">Save</button>
+    </form>
+    {% empty %}
+    <p class="text-gray-500">No properties yet — add a property to configure the booking engine.</p>
+    {% endfor %}
 </div>
 {% endblock %}

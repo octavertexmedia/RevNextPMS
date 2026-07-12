@@ -3,95 +3,87 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
-<section class="pt-32 pb-20 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Hero Section -->
-        <div class="max-w-4xl mx-auto text-center mb-16">
-            <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Blog & Resources</h1>
-            <p class="text-xl text-gray-600">
-                Insights, tips, and best practices for hotel channel management
-            </p>
+<section class="dawn-page-hero is-compact">
+    <div class="dawn-container">
+        <p class="dawn-eyebrow">Blog &amp; Resources</p>
+        <h1 class="dawn-h1">Insights from the desk</h1>
+        <p class="dawn-lead">Tips and best practices for hotel channel management, straight from the team.</p>
+    </div>
+</section>
+
+<section class="dawn-section">
+    <div class="dawn-container">
+        <div class="dawn-blog-grid" style="margin-bottom:2.5rem;">
+            <article class="dawn-blog-card">
+                <div style="height:9rem;background:linear-gradient(135deg,var(--navy-deep),var(--navy));"></div>
+                <div class="body">
+                    <p class="dawn-meta">January 15, 2026</p>
+                    <h3>Getting Started with Channel Management</h3>
+                    <p>Learn the basics of channel management and how to maximize your hotel's online presence.</p>
+                    <a href="{% url 'core:blog_detail' 'getting-started-with-channel-management' %}" class="dawn-link">Read more →</a>
+                </div>
+            </article>
+
+            <article class="dawn-blog-card">
+                <div style="height:9rem;background:linear-gradient(135deg,#123c2a,var(--success));"></div>
+                <div class="body">
+                    <p class="dawn-meta">January 10, 2026</p>
+                    <h3>GST Compliance for Indian Hotels</h3>
+                    <p>A comprehensive guide to GST calculation and invoicing for hotel bookings in India.</p>
+                    <a href="{% url 'core:blog_detail' 'gst-compliance-for-indian-hotels' %}" class="dawn-link">Read more →</a>
+                </div>
+            </article>
+
+            <article class="dawn-blog-card">
+                <div style="height:9rem;background:linear-gradient(135deg,var(--navy),var(--amber));"></div>
+                <div class="body">
+                    <p class="dawn-meta">January 5, 2026</p>
+                    <h3>Optimizing Revenue with Dynamic Pricing</h3>
+                    <p>Discover strategies for implementing dynamic pricing to maximize your hotel's revenue.</p>
+                    <a href="{% url 'core:blog_detail' 'optimizing-revenue-with-dynamic-pricing' %}" class="dawn-link">Read more →</a>
+                </div>
+            </article>
+
+            <article class="dawn-blog-card">
+                <div style="height:9rem;background:linear-gradient(135deg,#3a1420,#8a3a3a);"></div>
+                <div class="body">
+                    <p class="dawn-meta">December 28, 2025</p>
+                    <h3>OTA Integration Best Practices</h3>
+                    <p>Best practices for integrating with major OTA platforms like Booking.com and Expedia.</p>
+                    <a href="{% url 'core:blog_detail' 'ota-integration-best-practices' %}" class="dawn-link">Read more →</a>
+                </div>
+            </article>
+
+            <article class="dawn-blog-card">
+                <div style="height:9rem;background:linear-gradient(135deg,var(--navy-deep),#2a5570);"></div>
+                <div class="body">
+                    <p class="dawn-meta">December 20, 2025</p>
+                    <h3>Preventing Overbookings</h3>
+                    <p>How real-time synchronization helps prevent overbookings and manage inventory effectively.</p>
+                    <a href="{% url 'core:blog_detail' 'preventing-overbookings' %}" class="dawn-link">Read more →</a>
+                </div>
+            </article>
+
+            <article class="dawn-blog-card">
+                <div style="height:9rem;background:linear-gradient(135deg,var(--navy),#5a3a12);"></div>
+                <div class="body">
+                    <p class="dawn-meta">December 15, 2025</p>
+                    <h3>Multi-Property Management</h3>
+                    <p>Managing multiple hotel properties from a single dashboard with multi-tenant architecture.</p>
+                    <a href="{% url 'core:blog_detail' 'multi-property-management' %}" class="dawn-link">Read more →</a>
+                </div>
+            </article>
         </div>
 
-        <!-- Blog Posts Grid -->
-        <div class="max-w-6xl mx-auto">
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                <!-- Blog Post 1 -->
-                <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-                    <div class="h-48 bg-gradient-to-br from-indigo-400 to-purple-500"></div>
-                    <div class="p-6">
-                        <div class="text-sm text-gray-500 mb-2">January 15, 2026</div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Getting Started with Channel Management</h3>
-                        <p class="text-gray-600 mb-4">Learn the basics of channel management and how to maximize your hotel's online presence.</p>
-                        <a href="{% url 'core:blog_detail' 'getting-started-with-channel-management' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Read more →</a>
-                    </div>
-                </article>
-
-                <!-- Blog Post 2 -->
-                <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-                    <div class="h-48 bg-gradient-to-br from-green-400 to-blue-500"></div>
-                    <div class="p-6">
-                        <div class="text-sm text-gray-500 mb-2">January 10, 2026</div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">GST Compliance for Indian Hotels</h3>
-                        <p class="text-gray-600 mb-4">A comprehensive guide to GST calculation and invoicing for hotel bookings in India.</p>
-                        <a href="{% url 'core:blog_detail' 'gst-compliance-for-indian-hotels' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Read more →</a>
-                    </div>
-                </article>
-
-                <!-- Blog Post 3 -->
-                <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-                    <div class="h-48 bg-gradient-to-br from-yellow-400 to-orange-500"></div>
-                    <div class="p-6">
-                        <div class="text-sm text-gray-500 mb-2">January 5, 2026</div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Optimizing Revenue with Dynamic Pricing</h3>
-                        <p class="text-gray-600 mb-4">Discover strategies for implementing dynamic pricing to maximize your hotel's revenue.</p>
-                        <a href="{% url 'core:blog_detail' 'optimizing-revenue-with-dynamic-pricing' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Read more →</a>
-                    </div>
-                </article>
-
-                <!-- Blog Post 4 -->
-                <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-                    <div class="h-48 bg-gradient-to-br from-pink-400 to-red-500"></div>
-                    <div class="p-6">
-                        <div class="text-sm text-gray-500 mb-2">December 28, 2025</div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">OTA Integration Best Practices</h3>
-                        <p class="text-gray-600 mb-4">Best practices for integrating with major OTA platforms like Booking.com and Expedia.</p>
-                        <a href="{% url 'core:blog_detail' 'ota-integration-best-practices' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Read more →</a>
-                    </div>
-                </article>
-
-                <!-- Blog Post 5 -->
-                <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-                    <div class="h-48 bg-gradient-to-br from-teal-400 to-cyan-500"></div>
-                    <div class="p-6">
-                        <div class="text-sm text-gray-500 mb-2">December 20, 2025</div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Preventing Overbookings</h3>
-                        <p class="text-gray-600 mb-4">How real-time synchronization helps prevent overbookings and manage inventory effectively.</p>
-                        <a href="{% url 'core:blog_detail' 'preventing-overbookings' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Read more →</a>
-                    </div>
-                </article>
-
-                <!-- Blog Post 6 -->
-                <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-                    <div class="h-48 bg-gradient-to-br from-purple-400 to-indigo-500"></div>
-                    <div class="p-6">
-                        <div class="text-sm text-gray-500 mb-2">December 15, 2025</div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Multi-Property Management</h3>
-                        <p class="text-gray-600 mb-4">Managing multiple hotel properties from a single dashboard with multi-tenant architecture.</p>
-                        <a href="{% url 'core:blog_detail' 'multi-property-management' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Read more →</a>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Newsletter Signup -->
-            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-center text-white">
-                <h3 class="text-2xl font-bold mb-2">Stay Updated</h3>
-                <p class="text-indigo-100 mb-6">Subscribe to our newsletter for the latest tips and updates</p>
-                <form class="max-w-md mx-auto flex gap-2">
-                    <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white">
-                    <button type="submit" class="bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">Subscribe</button>
-                </form>
-            </div>
+        <div class="dawn-panel-soft" style="text-align:center;padding:2.5rem 1.5rem;">
+            <p class="dawn-eyebrow" style="color:var(--navy);">Stay updated</p>
+            <h3 style="font-family:var(--font-display);font-size:1.5rem;margin:.5rem 0 .35rem;">Subscribe to our newsletter</h3>
+            <p style="color:var(--muted);margin:0 0 1.25rem;">Get the latest tips and updates delivered to your inbox.</p>
+            <form method="post" style="max-width:28rem;margin-inline:auto;display:flex;gap:.5rem;flex-wrap:wrap;">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="Enter your email" required style="flex:1;min-width:12rem;min-height:3rem;padding:0 1rem;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-family:var(--font-body);font-size:1rem;">
+                <button type="submit" class="dawn-btn dawn-btn-dark">Subscribe</button>
+            </form>
         </div>
     </div>
 </section>

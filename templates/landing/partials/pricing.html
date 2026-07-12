@@ -1,90 +1,54 @@
-<section id="pricing" class="pricing-section py-20 bg-white">
-    <div class="text-center mb-8">
-        <a href="{% url 'core:pricing' %}" class="text-indigo-600 hover:text-indigo-700 font-medium">View full pricing details →</a>
-    </div>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Simple, Transparent Pricing
-            </h2>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                Choose the plan that fits your hotel's needs. All plans include 14-day free trial.
-            </p>
+<section id="pricing" class="dawn-section dawn-section-alt">
+    <div class="dawn-container">
+        <div class="dawn-section-head dawn-reveal">
+            <p class="dawn-eyebrow" style="color:var(--navy);">Pricing</p>
+            <h2 class="dawn-h2">Clear rates. No surprise folio.</h2>
+            <p class="dawn-section-lead">Every plan includes a 14-day trial. Pick the desk size that matches your portfolio.</p>
         </div>
-        
-        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <!-- Starter Plan -->
-            <div class="pricing-card">
-                <div class="pricing-header">
-                    <h3 class="pricing-name">Starter</h3>
-                    <div class="pricing-price">
-                        <span class="price-amount">₹2,999</span>
-                        <span class="price-period">/month</span>
-                    </div>
-                    <p class="pricing-description">Perfect for small hotels</p>
-                </div>
-                <ul class="pricing-features">
+        <div class="dawn-price-grid">
+            <div class="dawn-price dawn-reveal">
+                <h3>Starter</h3>
+                <p style="color:var(--muted);margin:.35rem 0 0;">Small properties finding their rhythm</p>
+                <div class="amount">₹2,999<span>/mo</span></div>
+                <ul>
                     <li>Up to 2 properties</li>
                     <li>10 OTA integrations</li>
                     <li>Unlimited bookings</li>
-                    <li>Basic reporting</li>
+                    <li>GST compliance</li>
                     <li>Email support</li>
-                    <li>GST compliance</li>
                 </ul>
-                <a href="{% url 'tenants:register' %}" class="btn-secondary w-full">Start Free Trial</a>
+                <a href="{% url 'tenants:register' %}" class="dawn-btn dawn-btn-outline">Start free trial</a>
             </div>
-            
-            <!-- Professional Plan (Featured) -->
-            <div class="pricing-card featured">
-                <div class="pricing-badge">Most Popular</div>
-                <div class="pricing-header">
-                    <h3 class="pricing-name">Professional</h3>
-                    <div class="pricing-price">
-                        <span class="price-amount">₹7,999</span>
-                        <span class="price-period">/month</span>
-                    </div>
-                    <p class="pricing-description">For growing hotel businesses</p>
-                </div>
-                <ul class="pricing-features">
+            <div class="dawn-price is-featured dawn-reveal">
+                <p class="dawn-eyebrow" style="color:var(--amber);">Most chosen</p>
+                <h3>Professional</h3>
+                <p style="color:var(--muted);margin:.35rem 0 0;">Growing hotels and multi-property ops</p>
+                <div class="amount">₹7,999<span>/mo</span></div>
+                <ul>
                     <li>Up to 10 properties</li>
-                    <li>Unlimited OTA integrations</li>
-                    <li>Unlimited bookings</li>
+                    <li>Unlimited OTAs</li>
                     <li>Advanced analytics</li>
-                    <li>Priority support</li>
-                    <li>GST compliance</li>
                     <li>API access</li>
-                    <li>Custom integrations</li>
+                    <li>Priority support</li>
                 </ul>
-                <a href="{% url 'tenants:register' %}" class="btn-primary w-full">Start Free Trial</a>
+                <a href="{% url 'tenants:register' %}" class="dawn-btn dawn-btn-dark">Start free trial</a>
             </div>
-            
-            <!-- Enterprise Plan -->
-            <div class="pricing-card">
-                <div class="pricing-header">
-                    <h3 class="pricing-name">Enterprise</h3>
-                    <div class="pricing-price">
-                        <span class="price-amount">Custom</span>
-                        <span class="price-period"></span>
-                    </div>
-                    <p class="pricing-description">For hotel chains & groups</p>
-                </div>
-                <ul class="pricing-features">
+            <div class="dawn-price dawn-reveal">
+                <h3>Enterprise</h3>
+                <p style="color:var(--muted);margin:.35rem 0 0;">Chains and management companies</p>
+                <div class="amount">Custom</div>
+                <ul>
                     <li>Unlimited properties</li>
-                    <li>Unlimited integrations</li>
-                    <li>White-label option</li>
-                    <li>Dedicated account manager</li>
-                    <li>24/7 phone support</li>
+                    <li>White-label options</li>
+                    <li>Dedicated manager</li>
+                    <li>SLA &amp; 24/7 phone</li>
                     <li>Custom development</li>
-                    <li>SLA guarantee</li>
-                    <li>On-premise deployment</li>
                 </ul>
-                <a href="{% url 'tenants:register' %}" class="btn-secondary w-full">Contact Sales</a>
+                <a href="{% url 'core:contact' %}" class="dawn-btn dawn-btn-outline">Talk to sales</a>
             </div>
         </div>
-        
-        <div class="text-center mt-12">
-            <p class="text-gray-600 mb-4">All plans include 14-day free trial • No credit card required</p>
-            <a href="#features" class="text-indigo-600 hover:text-indigo-700 font-medium">Compare all features →</a>
-        </div>
+        <p style="text-align:center;margin-top:1.75rem;" class="dawn-reveal">
+            <a href="{% url 'core:pricing' %}" style="color:var(--navy);font-weight:700;">Full pricing details →</a>
+        </p>
     </div>
 </section>

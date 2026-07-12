@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Explore Tours — RevNext</title>
+  <link rel="stylesheet" href="/static/landing/css/dawn-concierge.css">
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <header class="px-6 py-8 border-b bg-white">
+    <p class="text-sm tracking-widest uppercase text-amber-700">tours.revnext.in</p>
+    <h1 class="text-3xl font-semibold mt-1">Explore Tours</h1>
+    <p class="text-slate-600 mt-2">Curated packages from RevNext hospitality partners.</p>
+  </header>
+  <main class="max-w-5xl mx-auto px-6 py-10 grid md:grid-cols-2 gap-6">
+    {% for p in packages %}
+    <article class="bg-white border rounded-xl p-5">
+      <h2 class="text-xl font-semibold">{{ p.name }}</h2>
+      <p class="text-sm text-slate-500 mt-1">{{ p.get_category_display }} · {{ p.duration_days }}D / {{ p.duration_nights }}N</p>
+      <p class="mt-3 text-slate-700">{{ p.short_description|default:p.description|truncatewords:40 }}</p>
+      <p class="mt-4 font-medium">From {{ p.base_price }}</p>
+      <a class="inline-block mt-3 text-sm text-blue-700" href="/api/tours/public/packages/{{ p.slug }}/">View details (API)</a>
+    </article>
+    {% empty %}
+    <p class="text-slate-500 col-span-2">No published tours yet.</p>
+    {% endfor %}
+  </main>
+</body>
+</html>

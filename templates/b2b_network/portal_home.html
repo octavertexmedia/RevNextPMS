@@ -1,0 +1,84 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}Agent Portal - RevNext B2B Networks{% endblock %}
+{% block page_title %}Agent Portal{% endblock %}
+{% block page_description %}{{ agent.company_name }} · networks.revnext.in{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <div class="grid md:grid-cols-3 gap-4">
+    <div class="bg-white rounded-xl border p-5">
+      <p class="text-sm text-gray-500">Agent type</p>
+      <p class="text-lg font-semibold">{{ agent.get_agent_type_display }}</p>
+    </div>
+    <div class="bg-white rounded-xl border p-5">
+      <p class="text-sm text-gray-500">Commission</p>
+      <p class="text-lg font-semibold">{{ agent.commission_percent }}%</p>
+    </div>
+    <div class="bg-white rounded-xl border p-5">
+      <p class="text-sm text-gray-500">Properties</p>
+      <p class="text-lg font-semibold">{{ properties|length }}</p>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl border p-6">
+    <h2 class="text-lg font-semibold mb-4">Your properties</h2>
+    <ul class="space-y-2">
+      {% for p in properties %}
+      <li class="flex justify-between border-b py-2"><span>{{ p.name }}</span><span class="text-gray-500 text-sm">{{ p.city }}</span></li>
+      {% empty %}
+      <li class="text-gray-500">No property access yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="bg-white rounded-xl border p-6">
+    <h2 class="text-lg font-semibold mb-4">Recent bookings</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead><tr class="text-left text-gray-500 border-b">
+          <th class="py-2 pr-4">Code</th><th class="py-2 pr-4">Guest</th>
+          <th class="py-2 pr-4">Property</th><th class="py-2 pr-4">Dates</th><th class="py-2">Status</th>
+        </tr></thead>
+        <tbody>
+          {% for b in bookings %}
+          <tr class="border-b">
+            <td class="py-2 pr-4 font-mono">{{ b.confirmation_code }}</td>
+            <td class="py-2 pr-4">{{ b.guest_name }}</td>
+            <td class="py-2 pr-4">{{ b.property.name }}</td>
+            <td class="py-2 pr-4">{{ b.check_in }} → {{ b.check_out }}</td>
+            <td class="py-2">{{ b.status }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="py-4 text-gray-500">No bookings yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl border p-6">
+    <h2 class="text-lg font-semibold mb-4">Allotments</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead><tr class="text-left text-gray-500 border-b">
+          <th class="py-2 pr-4">Date</th><th class="py-2 pr-4">Property</th>
+          <th class="py-2 pr-4">Room</th><th class="py-2">Remaining</th>
+        </tr></thead>
+        <tbody>
+          {% for a in allotments %}
+          <tr class="border-b">
+            <td class="py-2 pr-4">{{ a.date }}</td>
+            <td class="py-2 pr-4">{{ a.property.name }}</td>
+            <td class="py-2 pr-4">{{ a.room_type.name }}</td>
+            <td class="py-2">{{ a.remaining }} / {{ a.allocated_rooms }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="py-4 text-gray-500">No allotments.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

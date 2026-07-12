@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.views.decorators.clickjacking import xframe_options_exempt
 from datetime import timedelta
 from core.models import Property, RoomType, RatePlan, Inventory
 from bookings.models import Reservation
@@ -46,6 +47,7 @@ def _get_rates_for_room(room_type, check_in, check_out, nights):
     return result
 
 
+@xframe_options_exempt
 def booking_widget(request, property_id):
     """Public booking widget - embeddable on property websites"""
     property_obj = get_object_or_404(Property, id=property_id)
@@ -75,12 +77,38 @@ def booking_dashboard(request):
 
 @login_required
 def booking_settings(request):
+    from .models import BookingEngineConfig
+
     tenant = getattr(request, 'tenant', None)
     properties = Property.objects.filter(tenant=tenant, is_active=True) if tenant else []
-    
+    configs = []
+    if tenant:
+        for prop in properties:
+            cfg, _ = BookingEngineConfig.objects.get_or_create(property=prop)
+            configs.append(cfg)
+
+        if request.method == 'POST':
+            prop_id = request.POST.get('property_id')
+            cfg = BookingEngineConfig.objects.filter(
+                property_id=prop_id, property__tenant=tenant,
+            ).first()
+            if cfg:
+                cfg.is_enabled = request.POST.get('is_enabled') == 'on'
+                cfg.default_currency = request.POST.get('default_currency') or cfg.default_currency
+                cfg.deposit_percent = request.POST.get('deposit_percent') or 0
+                cfg.require_phone = request.POST.get('require_phone') == 'on'
+                cfg.google_hotel_ads_enabled = request.POST.get('google_hotel_ads_enabled') == 'on'
+                cfg.widget_primary_color = request.POST.get('widget_primary_color') or cfg.widget_primary_color
+                cfg.save()
+                messages.success(request, f'Saved booking settings for {cfg.property.name}.')
+                return redirect('booking_engine:settings')
+
     context = {
         'page_title': 'Booking Engine Settings',
         'properties': properties,
+        'configs': configs,
+        'product_host': 'booking.revnext.in',
+        'public_api_base': '/api/booking-engine/public/',
     }
     return render(request, 'booking_engine/settings.html', context)
 

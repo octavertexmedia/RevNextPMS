@@ -3,213 +3,193 @@
 {% block title %}Getting Started Guide - RevNext Channel Manager{% endblock %}
 
 {% block content %}
-<section class="pt-32 pb-20 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto">
-            <!-- Header -->
-            <div class="mb-12">
-                <a href="{% url 'core:documentation' %}" class="text-indigo-600 hover:text-indigo-700 mb-4 inline-flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Back to Documentation
-                </a>
-                <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Getting Started</h1>
-                <p class="text-xl text-gray-600">Learn the basics and set up your first property in RevNext Channel Manager</p>
+<section class="dawn-page-hero is-compact">
+    <div class="dawn-container">
+        <a href="{% url 'core:documentation' %}" class="dawn-link" style="color:rgba(255,255,255,.75);display:inline-flex;align-items:center;gap:.4rem;margin-bottom:1rem;">
+            <svg style="width:1.1rem;height:1.1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Documentation
+        </a>
+        <p class="dawn-eyebrow">Guide</p>
+        <h1 class="dawn-h1">Getting Started</h1>
+        <p class="dawn-lead">Learn the basics and set up your first property in RevNext Channel Manager.</p>
+    </div>
+</section>
+
+<section class="dawn-section">
+    <div class="dawn-container dawn-prose">
+        <div class="dawn-panel-accent" style="margin-bottom:2rem;">
+            <p style="margin:0;">
+                <strong>Welcome to RevNext Channel Manager!</strong> This guide will walk you through setting up your account and adding your first property. The entire process takes about 15-30 minutes.
+            </p>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Step 1: Create Your Account</h2>
+            <p>Start by creating your free account. No credit card required for the 14-day trial.</p>
+
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <h3 style="margin-top:0;">Registration Process</h3>
+                <ol>
+                    <li>Visit the <a href="{% url 'tenants:register' %}">registration page</a></li>
+                    <li>Fill in your hotel information:
+                        <ul>
+                            <li>Hotel/Property name</li>
+                            <li>Contact email and phone</li>
+                            <li>Business address</li>
+                            <li>GSTIN (if applicable)</li>
+                        </ul>
+                    </li>
+                    <li>Create a secure password</li>
+                    <li>Accept the terms and conditions</li>
+                    <li>Click "Create Account"</li>
+                </ol>
             </div>
 
-            <!-- Content -->
-            <div class="prose prose-lg max-w-none">
-                <!-- Introduction -->
-                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 mb-8 rounded-r-lg">
-                    <p class="text-gray-700 mb-0">
-                        <strong>Welcome to RevNext Channel Manager!</strong> This guide will walk you through setting up your account and adding your first property. The entire process takes about 15-30 minutes.
-                    </p>
-                </div>
-
-                <!-- Step 1: Account Creation -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Step 1: Create Your Account</h2>
-                    <p class="text-gray-700 mb-6">Start by creating your free account. No credit card required for the 14-day trial.</p>
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Registration Process</h3>
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Visit the <a href="{% url 'tenants:register' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">registration page</a></li>
-                            <li>Fill in your hotel information:
-                                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
-                                    <li>Hotel/Property name</li>
-                                    <li>Contact email and phone</li>
-                                    <li>Business address</li>
-                                    <li>GSTIN (if applicable)</li>
-                                </ul>
-                            </li>
-                            <li>Create a secure password</li>
-                            <li>Accept the terms and conditions</li>
-                            <li>Click "Create Account"</li>
-                        </ol>
-                    </div>
-
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                        <p class="text-sm text-yellow-800">
-                            <strong>Tip:</strong> Use a business email address as this will be used for important notifications and account recovery.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Step 2: Verify Email -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Step 2: Verify Your Email</h2>
-                    <p class="text-gray-700 mb-6">After registration, check your email inbox for a verification link.</p>
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Email Verification Steps</h3>
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Check your inbox (and spam folder) for an email from RevNext</li>
-                            <li>Click the verification link in the email</li>
-                            <li>You'll be redirected to the login page</li>
-                            <li>Log in with your credentials</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <!-- Step 3: Add Your First Property -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Step 3: Add Your First Property</h2>
-                    <p class="text-gray-700 mb-6">Once logged in, you'll see your dashboard. Let's add your first hotel property.</p>
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Property Setup</h3>
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Navigate to <strong>Properties</strong> in the sidebar</li>
-                            <li>Click <strong>"Add New Property"</strong> button</li>
-                            <li>Fill in the property details:
-                                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
-                                    <li><strong>Property Name:</strong> Your hotel's name</li>
-                                    <li><strong>Property Type:</strong> Hotel, Resort, Apartment, etc.</li>
-                                    <li><strong>Address:</strong> Complete address with city, state, postal code</li>
-                                    <li><strong>Contact Information:</strong> Phone, email, website</li>
-                                    <li><strong>Business Details:</strong> GSTIN, PAN, timezone, currency</li>
-                                </ul>
-                            </li>
-                            <li>Click <strong>"Save Property"</strong></li>
-                        </ol>
-                    </div>
-
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <p class="text-sm text-blue-800">
-                            <strong>Note:</strong> You can add multiple properties if you manage a hotel chain. Each property can have its own room types, rates, and integrations.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Step 4: Add Room Types -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Step 4: Add Room Types</h2>
-                    <p class="text-gray-700 mb-6">Define the different room categories available at your property.</p>
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Room Type Configuration</h3>
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Go to <strong>Room Types</strong> in the sidebar</li>
-                            <li>Click <strong>"Add New Room Type"</strong></li>
-                            <li>Enter room type details:
-                                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
-                                    <li><strong>Name:</strong> e.g., "Standard Room", "Deluxe Suite"</li>
-                                    <li><strong>Description:</strong> Room features and amenities</li>
-                                    <li><strong>Max Occupancy:</strong> Maximum number of guests</li>
-                                    <li><strong>Bed Configuration:</strong> Number and type of beds</li>
-                                    <li><strong>Room Size:</strong> Square footage or square meters</li>
-                                </ul>
-                            </li>
-                            <li>Add amenities (WiFi, AC, TV, etc.)</li>
-                            <li>Save the room type</li>
-                        </ol>
-                    </div>
-
-                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                        <p class="text-sm text-green-800">
-                            <strong>Best Practice:</strong> Create room types that match your OTA listings. This makes integration mapping easier later.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Step 5: Create Rate Plans -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Step 5: Create Rate Plans</h2>
-                    <p class="text-gray-700 mb-6">Set up pricing for each room type with different rate plans.</p>
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Rate Plan Setup</h3>
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Navigate to <strong>Rate Plans</strong> in the sidebar</li>
-                            <li>Click <strong>"Add New Rate Plan"</strong></li>
-                            <li>Configure the rate plan:
-                                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
-                                    <li><strong>Name:</strong> e.g., "Standard Rate", "Early Bird Discount"</li>
-                                    <li><strong>Room Type:</strong> Select the associated room type</li>
-                                    <li><strong>Base Rate:</strong> Default price per night</li>
-                                    <li><strong>Currency:</strong> INR (default) or other</li>
-                                    <li><strong>Cancellation Policy:</strong> Free cancellation, non-refundable, etc.</li>
-                                    <li><strong>Meal Plan:</strong> Room only, breakfast included, etc.</li>
-                                </ul>
-                            </li>
-                            <li>Set up length-of-stay discounts (optional)</li>
-                            <li>Save the rate plan</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <!-- Step 6: Set Up Inventory -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Step 6: Set Up Inventory</h2>
-                    <p class="text-gray-700 mb-6">Define room availability for the upcoming period.</p>
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Inventory Configuration</h3>
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Go to <strong>Inventory</strong> in the sidebar</li>
-                            <li>Select your property and room type</li>
-                            <li>Choose a date range (recommended: next 365 days)</li>
-                            <li>Set the number of available rooms for each date</li>
-                            <li>Configure blocked rooms if needed (maintenance, events)</li>
-                            <li>Save the inventory</li>
-                        </ol>
-                    </div>
-
-                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                        <p class="text-sm text-purple-800">
-                            <strong>Pro Tip:</strong> You can bulk update inventory for multiple dates at once. The system will automatically sync this to your connected OTA platforms.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Next Steps -->
-                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 border border-indigo-200">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Next Steps</h2>
-                    <p class="text-gray-700 mb-6">Congratulations! You've set up your first property. Now you're ready to:</p>
-                    <ul class="list-disc list-inside space-y-2 text-gray-700 mb-6">
-                        <li><a href="{% url 'core:guide_ota_integration' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Connect OTA platforms</a> to start receiving bookings</li>
-                        <li><a href="{% url 'core:guide_property_management' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Learn more about property management</a></li>
-                        <li><a href="{% url 'core:guide_rate_management' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Set up dynamic pricing rules</a></li>
-                    </ul>
-                    <div class="flex gap-4">
-                        <a href="{% url 'core:guide_ota_integration' %}" class="btn-primary">Connect OTA Platforms →</a>
-                        <a href="{% url 'core:documentation' %}" class="btn-secondary">View All Guides</a>
-                    </div>
-                </div>
-
-                <!-- Help Section -->
-                <div class="mt-12 bg-gray-50 rounded-lg p-6 border border-gray-200">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Need Help?</h3>
-                    <p class="text-gray-700 mb-4">If you encounter any issues during setup, we're here to help:</p>
-                    <ul class="space-y-2 text-gray-700">
-                        <li>📧 <a href="{% url 'core:contact' %}" class="text-indigo-600 hover:text-indigo-700">Contact Support</a></li>
-                        <li>💬 <a href="{% url 'core:help_center' %}" class="text-indigo-600 hover:text-indigo-700">Visit Help Center</a></li>
-                        <li>📚 <a href="{% url 'core:documentation' %}" class="text-indigo-600 hover:text-indigo-700">Browse Documentation</a></li>
-                    </ul>
-                </div>
+            <div class="dawn-panel-accent">
+                <p style="margin:0;"><strong>Tip:</strong> Use a business email address as this will be used for important notifications and account recovery.</p>
             </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Step 2: Verify Your Email</h2>
+            <p>After registration, check your email inbox for a verification link.</p>
+
+            <div class="dawn-panel">
+                <h3 style="margin-top:0;">Email Verification Steps</h3>
+                <ol>
+                    <li>Check your inbox (and spam folder) for an email from RevNext</li>
+                    <li>Click the verification link in the email</li>
+                    <li>You'll be redirected to the login page</li>
+                    <li>Log in with your credentials</li>
+                </ol>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Step 3: Add Your First Property</h2>
+            <p>Once logged in, you'll see your dashboard. Let's add your first hotel property.</p>
+
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <h3 style="margin-top:0;">Property Setup</h3>
+                <ol>
+                    <li>Navigate to <strong>Properties</strong> in the sidebar</li>
+                    <li>Click <strong>"Add New Property"</strong> button</li>
+                    <li>Fill in the property details:
+                        <ul>
+                            <li><strong>Property Name:</strong> Your hotel's name</li>
+                            <li><strong>Property Type:</strong> Hotel, Resort, Apartment, etc.</li>
+                            <li><strong>Address:</strong> Complete address with city, state, postal code</li>
+                            <li><strong>Contact Information:</strong> Phone, email, website</li>
+                            <li><strong>Business Details:</strong> GSTIN, PAN, timezone, currency</li>
+                        </ul>
+                    </li>
+                    <li>Click <strong>"Save Property"</strong></li>
+                </ol>
+            </div>
+
+            <div class="dawn-panel-accent">
+                <p style="margin:0;"><strong>Note:</strong> You can add multiple properties if you manage a hotel chain. Each property can have its own room types, rates, and integrations.</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Step 4: Add Room Types</h2>
+            <p>Define the different room categories available at your property.</p>
+
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <h3 style="margin-top:0;">Room Type Configuration</h3>
+                <ol>
+                    <li>Go to <strong>Room Types</strong> in the sidebar</li>
+                    <li>Click <strong>"Add New Room Type"</strong></li>
+                    <li>Enter room type details:
+                        <ul>
+                            <li><strong>Name:</strong> e.g., "Standard Room", "Deluxe Suite"</li>
+                            <li><strong>Description:</strong> Room features and amenities</li>
+                            <li><strong>Max Occupancy:</strong> Maximum number of guests</li>
+                            <li><strong>Bed Configuration:</strong> Number and type of beds</li>
+                            <li><strong>Room Size:</strong> Square footage or square meters</li>
+                        </ul>
+                    </li>
+                    <li>Add amenities (WiFi, AC, TV, etc.)</li>
+                    <li>Save the room type</li>
+                </ol>
+            </div>
+
+            <div class="dawn-panel-accent">
+                <p style="margin:0;"><strong>Best Practice:</strong> Create room types that match your OTA listings. This makes integration mapping easier later.</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Step 5: Create Rate Plans</h2>
+            <p>Set up pricing for each room type with different rate plans.</p>
+
+            <div class="dawn-panel">
+                <h3 style="margin-top:0;">Rate Plan Setup</h3>
+                <ol>
+                    <li>Navigate to <strong>Rate Plans</strong> in the sidebar</li>
+                    <li>Click <strong>"Add New Rate Plan"</strong></li>
+                    <li>Configure the rate plan:
+                        <ul>
+                            <li><strong>Name:</strong> e.g., "Standard Rate", "Early Bird Discount"</li>
+                            <li><strong>Room Type:</strong> Select the associated room type</li>
+                            <li><strong>Base Rate:</strong> Default price per night</li>
+                            <li><strong>Currency:</strong> INR (default) or other</li>
+                            <li><strong>Cancellation Policy:</strong> Free cancellation, non-refundable, etc.</li>
+                            <li><strong>Meal Plan:</strong> Room only, breakfast included, etc.</li>
+                        </ul>
+                    </li>
+                    <li>Set up length-of-stay discounts (optional)</li>
+                    <li>Save the rate plan</li>
+                </ol>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Step 6: Set Up Inventory</h2>
+            <p>Define room availability for the upcoming period.</p>
+
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <h3 style="margin-top:0;">Inventory Configuration</h3>
+                <ol>
+                    <li>Go to <strong>Inventory</strong> in the sidebar</li>
+                    <li>Select your property and room type</li>
+                    <li>Choose a date range (recommended: next 365 days)</li>
+                    <li>Set the number of available rooms for each date</li>
+                    <li>Configure blocked rooms if needed (maintenance, events)</li>
+                    <li>Save the inventory</li>
+                </ol>
+            </div>
+
+            <div class="dawn-panel-accent">
+                <p style="margin:0;"><strong>Pro Tip:</strong> You can bulk update inventory for multiple dates at once. The system will automatically sync this to your connected OTA platforms.</p>
+            </div>
+        </div>
+
+        <div class="dawn-panel-soft" style="margin-bottom:2rem;">
+            <h2 style="margin-top:0;">Next Steps</h2>
+            <p>Congratulations! You've set up your first property. Now you're ready to:</p>
+            <ul>
+                <li><a href="{% url 'core:guide_ota_integration' %}">Connect OTA platforms</a> to start receiving bookings</li>
+                <li><a href="{% url 'core:guide_property_management' %}">Learn more about property management</a></li>
+                <li><a href="{% url 'core:guide_rate_management' %}">Set up dynamic pricing rules</a></li>
+            </ul>
+            <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem;">
+                <a href="{% url 'core:guide_ota_integration' %}" class="dawn-btn dawn-btn-dark">Connect OTA Platforms →</a>
+                <a href="{% url 'core:documentation' %}" class="dawn-btn dawn-btn-outline">View All Guides</a>
+            </div>
+        </div>
+
+        <div class="dawn-panel">
+            <h3 style="margin-top:0;">Need Help?</h3>
+            <p>If you encounter any issues during setup, we're here to help:</p>
+            <ul style="list-style:none;padding:0;">
+                <li><a href="{% url 'core:contact' %}">Contact Support</a></li>
+                <li><a href="{% url 'core:help_center' %}">Visit Help Center</a></li>
+                <li><a href="{% url 'core:documentation' %}">Browse Documentation</a></li>
+            </ul>
         </div>
     </div>
 </section>

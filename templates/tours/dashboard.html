@@ -1,0 +1,61 @@
+{% extends 'tenants/base_dashboard.html' %}
+
+{% block title %}RevNext Tours{% endblock %}
+{% block page_title %}RevNext Tours{% endblock %}
+{% block page_description %}tours.revnext.in · packages, departures, bookings{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <div class="grid md:grid-cols-4 gap-4">
+    <div class="bg-white rounded-xl border p-5"><p class="text-sm text-gray-500">Packages</p><p class="text-2xl font-semibold">{{ package_count }}</p></div>
+    <div class="bg-white rounded-xl border p-5"><p class="text-sm text-gray-500">Published</p><p class="text-2xl font-semibold">{{ published_count }}</p></div>
+    <div class="bg-white rounded-xl border p-5"><p class="text-sm text-gray-500">Open departures</p><p class="text-2xl font-semibold">{{ open_departures }}</p></div>
+    <div class="bg-white rounded-xl border p-5"><p class="text-sm text-gray-500">Public API</p><p class="text-xs font-mono mt-2 break-all">{{ public_api }}</p></div>
+  </div>
+
+  <div class="bg-white rounded-xl border p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold">Packages</h2>
+      <a href="{% url 'tours:public_catalog' %}" class="text-sm text-blue-700">Public catalog →</a>
+    </div>
+    <table class="min-w-full text-sm">
+      <thead><tr class="text-left text-gray-500 border-b">
+        <th class="py-2 pr-4">Name</th><th class="py-2 pr-4">Days</th><th class="py-2 pr-4">Category</th><th class="py-2">Status</th>
+      </tr></thead>
+      <tbody>
+        {% for p in packages %}
+        <tr class="border-b">
+          <td class="py-2 pr-4"><a class="text-blue-700" href="{% url 'tours:package_detail' p.id %}">{{ p.name }}</a></td>
+          <td class="py-2 pr-4">{{ p.duration_days }}D / {{ p.duration_nights }}N</td>
+          <td class="py-2 pr-4">{{ p.get_category_display }}</td>
+          <td class="py-2">{% if p.is_published %}Published{% else %}Draft{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="py-4 text-gray-500">No packages yet — create via API or admin.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bg-white rounded-xl border p-6">
+    <h2 class="text-lg font-semibold mb-4">Recent bookings</h2>
+    <table class="min-w-full text-sm">
+      <thead><tr class="text-left text-gray-500 border-b">
+        <th class="py-2 pr-4">Code</th><th class="py-2 pr-4">Guest</th><th class="py-2 pr-4">Package</th><th class="py-2">Status</th>
+      </tr></thead>
+      <tbody>
+        {% for b in bookings %}
+        <tr class="border-b">
+          <td class="py-2 pr-4 font-mono">{{ b.confirmation_code }}</td>
+          <td class="py-2 pr-4">{{ b.guest_name }}</td>
+          <td class="py-2 pr-4">{{ b.package.name }}</td>
+          <td class="py-2">{{ b.status }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="py-4 text-gray-500">No bookings yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

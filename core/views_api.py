@@ -15,26 +15,33 @@ from .serializers import (
     RatePlanSerializer, InventorySerializer, PromotionSerializer
 )
 from tenants.permissions import IsTenantMember
+from rbac.permissions import HasCapability
+from rbac.services import filter_properties_for_user, filter_by_property_fk
 
 
 class PropertyViewSet(viewsets.ModelViewSet):
     """ViewSet for Properties"""
     serializer_class = PropertySerializer
-    permission_classes = [IsAuthenticated, IsTenantMember]
+    permission_classes = [IsAuthenticated, IsTenantMember, HasCapability]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['property_type', 'city', 'state', 'country', 'is_active']
     search_fields = ['name', 'legal_name', 'city', 'gstin']
     ordering_fields = ['name', 'created_at']
     ordering = ['-created_at']
+    capability_map = {
+        'list': 'properties.view',
+        'retrieve': 'properties.view',
+        'create': 'properties.create',
+        'update': 'properties.edit',
+        'partial_update': 'properties.edit',
+        'destroy': 'properties.delete',
+        'inventory': 'inventory.view',
+        'stats': 'properties.view',
+    }
     
     def get_queryset(self):
-        """Filter properties by tenant"""
-        user = self.request.user
-        if user.is_superuser:
-            return Property.objects.all()
-        elif hasattr(user, 'tenant') and user.tenant:
-            return Property.objects.filter(tenant=user.tenant)
-        return Property.objects.none()
+        """Filter properties by tenant + RBAC property assignments"""
+        return filter_properties_for_user(Property.objects.all(), self.request.user)
     
     def perform_create(self, serializer):
         """Set tenant when creating property"""
@@ -103,71 +110,79 @@ class PropertyViewSet(viewsets.ModelViewSet):
 class RoomTypeViewSet(viewsets.ModelViewSet):
     """ViewSet for Room Types"""
     serializer_class = RoomTypeSerializer
-    permission_classes = [IsAuthenticated, IsTenantMember]
+    permission_classes = [IsAuthenticated, IsTenantMember, HasCapability]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['property', 'is_active']
     search_fields = ['name', 'description']
+    capability_map = {
+        'list': 'properties.view',
+        'retrieve': 'properties.view',
+        'create': 'properties.edit',
+        'update': 'properties.edit',
+        'partial_update': 'properties.edit',
+        'destroy': 'properties.edit',
+    }
     
     def get_queryset(self):
-        """Filter room types by tenant"""
-        user = self.request.user
-        if user.is_superuser:
-            return RoomType.objects.all()
-        elif hasattr(user, 'tenant') and user.tenant:
-            return RoomType.objects.filter(property__tenant=user.tenant)
-        return RoomType.objects.none()
+        return filter_by_property_fk(RoomType.objects.all(), self.request.user)
 
 
 class RatePlanViewSet(viewsets.ModelViewSet):
     """ViewSet for Rate Plans"""
     serializer_class = RatePlanSerializer
-    permission_classes = [IsAuthenticated, IsTenantMember]
+    permission_classes = [IsAuthenticated, IsTenantMember, HasCapability]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['property', 'room_type', 'is_active']
     search_fields = ['name', 'description']
+    capability_map = {
+        'list': 'rates.view',
+        'retrieve': 'rates.view',
+        'create': 'rates.edit',
+        'update': 'rates.edit',
+        'partial_update': 'rates.edit',
+        'destroy': 'rates.edit',
+    }
     
     def get_queryset(self):
-        """Filter rate plans by tenant"""
-        user = self.request.user
-        if user.is_superuser:
-            return RatePlan.objects.all()
-        elif hasattr(user, 'tenant') and user.tenant:
-            return RatePlan.objects.filter(property__tenant=user.tenant)
-        return RatePlan.objects.none()
+        return filter_by_property_fk(RatePlan.objects.all(), self.request.user)
 
 
 class InventoryViewSet(viewsets.ModelViewSet):
     """ViewSet for Inventory"""
     serializer_class = InventorySerializer
-    permission_classes = [IsAuthenticated, IsTenantMember]
+    permission_classes = [IsAuthenticated, IsTenantMember, HasCapability]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['property', 'room_type', 'date']
     ordering_fields = ['date']
     ordering = ['date']
+    capability_map = {
+        'list': 'inventory.view',
+        'retrieve': 'inventory.view',
+        'create': 'inventory.edit',
+        'update': 'inventory.edit',
+        'partial_update': 'inventory.edit',
+        'destroy': 'inventory.edit',
+    }
     
     def get_queryset(self):
-        """Filter inventory by tenant"""
-        user = self.request.user
-        if user.is_superuser:
-            return Inventory.objects.all()
-        elif hasattr(user, 'tenant') and user.tenant:
-            return Inventory.objects.filter(property__tenant=user.tenant)
-        return Inventory.objects.none()
+        return filter_by_property_fk(Inventory.objects.all(), self.request.user)
 
 
 class PromotionViewSet(viewsets.ModelViewSet):
     """ViewSet for Promotions"""
     serializer_class = PromotionSerializer
-    permission_classes = [IsAuthenticated, IsTenantMember]
+    permission_classes = [IsAuthenticated, IsTenantMember, HasCapability]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['property', 'promotion_type', 'is_active']
     search_fields = ['name', 'description']
+    capability_map = {
+        'list': 'rates.view',
+        'retrieve': 'rates.view',
+        'create': 'rates.edit',
+        'update': 'rates.edit',
+        'partial_update': 'rates.edit',
+        'destroy': 'rates.edit',
+    }
     
     def get_queryset(self):
-        """Filter promotions by tenant"""
-        user = self.request.user
-        if user.is_superuser:
-            return Promotion.objects.all()
-        elif hasattr(user, 'tenant') and user.tenant:
-            return Promotion.objects.filter(property__tenant=user.tenant)
-        return Promotion.objects.none()
+        return filter_by_property_fk(Promotion.objects.all(), self.request.user)

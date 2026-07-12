@@ -3,158 +3,127 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
-<section class="pt-32 pb-20 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Hero Section -->
-        <div class="max-w-4xl mx-auto text-center mb-16">
-            <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Documentation</h1>
-            <p class="text-xl text-gray-600">
-                Complete guide to get started with RevNext Channel Manager
-            </p>
+<section class="dawn-page-hero is-compact">
+    <div class="dawn-container">
+        <p class="dawn-eyebrow">Documentation</p>
+        <h1 class="dawn-h1">Complete guide to RevNext</h1>
+        <p class="dawn-lead">Everything you need to get started with RevNext Channel Manager.</p>
+    </div>
+</section>
+
+<section class="dawn-section">
+    <div class="dawn-container dawn-prose">
+        <div class="dawn-panel-soft">
+            <p class="dawn-eyebrow" style="color:var(--navy);">Quick start</p>
+            <h2 class="dawn-h2" style="font-size:1.75rem;">Quick start guide</h2>
+
+            <h3>1. Create your account</h3>
+            <p>Sign up for a free 14-day trial. No credit card required.</p>
+            <ol>
+                <li>Visit the <a href="{% url 'tenants:register' %}">registration page</a></li>
+                <li>Fill in your hotel information and create your account</li>
+                <li>Verify your email address</li>
+                <li>Log in to your dashboard</li>
+            </ol>
+
+            <h3>2. Add your first property</h3>
+            <p>Set up your hotel property with room types and rates.</p>
+            <ol>
+                <li>Go to <strong>Core Management → Properties</strong> in the admin</li>
+                <li>Click <strong>Add Property</strong></li>
+                <li>Enter property details (name, address, contact info)</li>
+                <li>Add room types (Standard, Deluxe, Suite, etc.)</li>
+                <li>Create rate plans for each room type</li>
+                <li>Set up inventory for the next 365 days</li>
+            </ol>
+
+            <h3>3. Connect OTA platforms</h3>
+            <p>Integrate with your preferred booking platforms.</p>
+            <ol>
+                <li>Go to <strong>Platform Integrations → Integration Platforms</strong></li>
+                <li>Select the platform you want to connect (e.g., Booking.com)</li>
+                <li>Click <strong>Add Property Integration</strong></li>
+                <li>Enter your API credentials from the OTA platform</li>
+                <li>Map your room types and rate plans</li>
+                <li>Test the connection</li>
+            </ol>
+
+            <h3>4. Configure synchronization</h3>
+            <p>Set up automatic synchronization of inventory and rates.</p>
+            <ol>
+                <li>Go to <strong>Platform Integrations → Property Integrations</strong></li>
+                <li>Select your integration</li>
+                <li>Enable <strong>Automatic Sync</strong></li>
+                <li>Set sync frequency (every 5 minutes recommended)</li>
+                <li>Configure rate update rules</li>
+            </ol>
         </div>
+    </div>
+</section>
 
-        <!-- Quick Start -->
-        <div class="max-w-4xl mx-auto mb-16">
-            <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 lg:p-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Quick Start Guide</h2>
-                <div class="space-y-6">
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">1. Create Your Account</h3>
-                        <p class="text-gray-700 mb-4">Sign up for a free 14-day trial. No credit card required.</p>
-                        <ol class="list-decimal list-inside space-y-2 text-gray-700 ml-4">
-                            <li>Visit the <a href="{% url 'tenants:register' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">registration page</a></li>
-                            <li>Fill in your hotel information and create your account</li>
-                            <li>Verify your email address</li>
-                            <li>Log in to your dashboard</li>
-                        </ol>
-                    </div>
-
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">2. Add Your First Property</h3>
-                        <p class="text-gray-700 mb-4">Set up your hotel property with room types and rates.</p>
-                        <ol class="list-decimal list-inside space-y-2 text-gray-700 ml-4">
-                            <li>Go to <strong>Core Management → Properties</strong> in the admin</li>
-                            <li>Click <strong>Add Property</strong></li>
-                            <li>Enter property details (name, address, contact info)</li>
-                            <li>Add room types (Standard, Deluxe, Suite, etc.)</li>
-                            <li>Create rate plans for each room type</li>
-                            <li>Set up inventory for the next 365 days</li>
-                        </ol>
-                    </div>
-
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">3. Connect OTA Platforms</h3>
-                        <p class="text-gray-700 mb-4">Integrate with your preferred booking platforms.</p>
-                        <ol class="list-decimal list-inside space-y-2 text-gray-700 ml-4">
-                            <li>Go to <strong>Platform Integrations → Integration Platforms</strong></li>
-                            <li>Select the platform you want to connect (e.g., Booking.com)</li>
-                            <li>Click <strong>Add Property Integration</strong></li>
-                            <li>Enter your API credentials from the OTA platform</li>
-                            <li>Map your room types and rate plans</li>
-                            <li>Test the connection</li>
-                        </ol>
-                    </div>
-
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">4. Configure Synchronization</h3>
-                        <p class="text-gray-700 mb-4">Set up automatic synchronization of inventory and rates.</p>
-                        <ol class="list-decimal list-inside space-y-2 text-gray-700 ml-4">
-                            <li>Go to <strong>Platform Integrations → Property Integrations</strong></li>
-                            <li>Select your integration</li>
-                            <li>Enable <strong>Automatic Sync</strong></li>
-                            <li>Set sync frequency (every 5 minutes recommended)</li>
-                            <li>Configure rate update rules</li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
+<section class="dawn-section dawn-section-alt">
+    <div class="dawn-container">
+        <div class="dawn-section-head" style="text-align:center;margin-inline:auto;">
+            <p class="dawn-eyebrow" style="color:var(--navy);">Guides</p>
+            <h2 class="dawn-h2">Browse documentation sections</h2>
         </div>
-
-        <!-- Documentation Sections -->
-        <div class="max-w-6xl mx-auto">
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                <!-- Getting Started -->
-                <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Getting Started</h3>
-                    <p class="text-gray-600 mb-4">Learn the basics and set up your first property</p>
-                    <a href="{% url 'core:guide_getting_started' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Read Guide →</a>
+        <div class="dawn-grid-3">
+            <a href="{% url 'core:guide_getting_started' %}" class="dawn-card" style="display:block;">
+                <div class="dawn-card-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 </div>
-
-                <!-- Property Management -->
-                <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Property Management</h3>
-                    <p class="text-gray-600 mb-4">Manage properties, rooms, and rate plans</p>
-                    <a href="{% url 'core:guide_property_management' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Read Guide →</a>
+                <h3>Getting Started</h3>
+                <p>Learn the basics and set up your first property</p>
+            </a>
+            <a href="{% url 'core:guide_property_management' %}" class="dawn-card" style="display:block;">
+                <div class="dawn-card-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                 </div>
-
-                <!-- OTA Integration -->
-                <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">OTA Integration</h3>
-                    <p class="text-gray-600 mb-4">Connect with Booking.com, Expedia, and more</p>
-                    <a href="{% url 'core:guide_ota_integration' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Read Guide →</a>
+                <h3>Property Management</h3>
+                <p>Manage properties, rooms, and rate plans</p>
+            </a>
+            <a href="{% url 'core:guide_ota_integration' %}" class="dawn-card" style="display:block;">
+                <div class="dawn-card-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
                 </div>
-
-                <!-- Inventory Management -->
-                <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Inventory Management</h3>
-                    <p class="text-gray-600 mb-4">Manage room availability and blocks</p>
-                    <a href="{% url 'core:guide_inventory_management' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Read Guide →</a>
+                <h3>OTA Integration</h3>
+                <p>Connect with Booking.com, Expedia, and more</p>
+            </a>
+            <a href="{% url 'core:guide_inventory_management' %}" class="dawn-card" style="display:block;">
+                <div class="dawn-card-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                 </div>
-
-                <!-- Rate Management -->
-                <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Rate Management</h3>
-                    <p class="text-gray-600 mb-4">Set up dynamic pricing and rate rules</p>
-                    <a href="{% url 'core:guide_rate_management' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Read Guide →</a>
+                <h3>Inventory Management</h3>
+                <p>Manage room availability and blocks</p>
+            </a>
+            <a href="{% url 'core:guide_rate_management' %}" class="dawn-card" style="display:block;">
+                <div class="dawn-card-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
-
-                <!-- GST & Invoicing -->
-                <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">GST & Invoicing</h3>
-                    <p class="text-gray-600 mb-4">GST compliance and invoice generation</p>
-                    <a href="{% url 'core:guide_gst_invoicing' %}" class="text-indigo-600 hover:text-indigo-700 font-semibold">Read Guide →</a>
+                <h3>Rate Management</h3>
+                <p>Set up dynamic pricing and rate rules</p>
+            </a>
+            <a href="{% url 'core:guide_gst_invoicing' %}" class="dawn-card" style="display:block;">
+                <div class="dawn-card-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 </div>
-            </div>
+                <h3>GST &amp; Invoicing</h3>
+                <p>GST compliance and invoice generation</p>
+            </a>
+        </div>
+    </div>
+</section>
 
-            <!-- API Documentation Link -->
-            <div class="bg-indigo-50 rounded-2xl p-8 text-center border border-indigo-200">
-                <h3 class="text-2xl font-bold text-gray-900 mb-4">API Documentation</h3>
-                <p class="text-gray-700 mb-6">Integrate RevNext Channel Manager with your existing systems using our REST API</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="{% url 'core:api_reference' %}" class="btn-primary">View API Reference</a>
-                    <a href="{% url 'core:api_reference' %}#swagger" class="btn-secondary">Swagger UI</a>
-                    <a href="{% url 'core:api_reference' %}#redoc" class="btn-secondary">Redoc</a>
-                </div>
+<section class="dawn-section">
+    <div class="dawn-container" style="max-width:40rem;text-align:center;">
+        <div class="dawn-panel">
+            <p class="dawn-eyebrow" style="color:var(--amber);">Developers</p>
+            <h3 style="font-family:var(--font-display);font-size:1.5rem;margin:.5rem 0 .75rem;">API documentation</h3>
+            <p style="color:var(--muted);margin:0 0 1.5rem;">Integrate RevNext Channel Manager with your existing systems using our REST API.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;">
+                <a href="{% url 'core:api_reference' %}" class="dawn-btn dawn-btn-dark">View API Reference</a>
+                <a href="{% url 'core:api_reference' %}#swagger" class="dawn-btn dawn-btn-outline">Swagger UI</a>
+                <a href="{% url 'core:api_reference' %}#redoc" class="dawn-btn dawn-btn-outline">Redoc</a>
             </div>
         </div>
     </div>

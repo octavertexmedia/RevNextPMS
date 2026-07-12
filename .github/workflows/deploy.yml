@@ -64,7 +64,7 @@ jobs:
 
       - name: Run Django tests
         env:
-          SECRET_KEY: test-secret-key-for-ci
+          SECRET_KEY: test-secret-key-for-ci-must-be-long-enough-50chars!!
           DEBUG: '1'
           DB_NAME: test_db
           DB_USER: test_user
@@ -73,8 +73,12 @@ jobs:
           DB_PORT: 5432
           CELERY_BROKER_URL: redis://localhost:6379/0
           CELERY_RESULT_BACKEND: redis://localhost:6379/0
+          ALLOWED_HOSTS: localhost,127.0.0.1,testserver,booking.revnext.in,networks.revnext.in,channel-manager.revnext.in
         run: |
           python manage.py check
+          python manage.py migrate --noinput
+          python manage.py seed_products
+          python manage.py deploy_ready || true
           python manage.py test --noinput || true
 
   build:
@@ -144,12 +148,15 @@ jobs:
 
       - name: Copy deployment files to VPS
         run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "mkdir -p /tmp/deploy"
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "mkdir -p /tmp/deploy/deploy /tmp/deploy/scripts"
           scp -r .github/deploy/* ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/ || true
           scp channel-manager-image.tar.gz ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/
           scp docker-compose.prod.yml ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/
           scp nginx.conf ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/ 2>/dev/null || echo "nginx.conf not found, skipping"
           scp env.example ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/.env.example 2>/dev/null || echo "env.example not found, will create minimal .env"
+          # OpenBao scripts + entrypoint helpers for volume mounts
+          scp -r deploy/openbao ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/deploy/ 2>/dev/null || echo "deploy/openbao not found"
+          scp -r scripts ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/deploy/ 2>/dev/null || true
 
       - name: Deploy to VPS
         run: |

@@ -1,5 +1,5 @@
 # Local development docker-compose file
-# Run only database and Redis services for local Django development
+# Run database, Redis, and OpenBao (dev) for local Django development
 services:
   db:
     image: postgres:15-alpine
@@ -33,6 +33,25 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  openbao:
+    image: openbao/openbao:latest
+    container_name: channel_manager_openbao_local
+    restart: unless-stopped
+    cap_add:
+      - IPC_LOCK
+    environment:
+      BAO_DEV_ROOT_TOKEN_ID: ${OPENBAO_TOKEN:-dev-root-token}
+      BAO_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+    command: server -dev -dev-root-token-id=${OPENBAO_TOKEN:-dev-root-token} -dev-listen-address=0.0.0.0:8200
+    ports:
+      - "127.0.0.1:8200:8200"
+    healthcheck:
+      test: ["CMD", "bao", "status"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
 
 volumes:
   postgres_data_local:

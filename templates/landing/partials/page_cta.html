@@ -1,0 +1,14 @@
+<section class="dawn-section" style="padding-top:1rem;">
+    <div class="dawn-container">
+        <div class="dawn-cta-band dawn-reveal">
+            <p class="dawn-eyebrow">Ready when you are</p>
+            <h2 class="dawn-h2">{{ cta_title|default:"Open the desk with RevNext" }}</h2>
+            <p class="dawn-section-lead">{{ cta_lead|default:"Join 500+ hotels already syncing channels before the first check-in of the day." }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;">
+                <a href="{% url 'tenants:register' %}" class="dawn-btn dawn-btn-primary">{{ cta_primary|default:"Start free trial" }}</a>
+                <a href="{% url 'core:contact' %}" class="dawn-btn dawn-btn-ghost">{{ cta_secondary|default:"Talk to us" }}</a>
+            </div>
+            <p style="margin:1.25rem 0 0;font-size:.9rem;color:rgba(255,255,255,.55);">No card · Cancel anytime · 14-day trial</p>
+        </div>
+    </div>
+</section>

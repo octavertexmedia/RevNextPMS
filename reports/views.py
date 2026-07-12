@@ -128,6 +128,72 @@ class ReportTemplateViewSet(viewsets.ReadOnlyModelViewSet):
         # Show public templates or tenant-specific templates
         return qs.filter(is_public=True)
 
+    @action(detail=True, methods=['post'])
+    def generate(self, request, pk=None):
+        """Generate a report for the authenticated tenant (token/mobile)."""
+        template = self.get_object()
+        user = request.user
+        if not getattr(user, 'tenant', None) and not user.is_superuser:
+            return Response({'detail': 'Tenant required.'}, status=status.HTTP_403_FORBIDDEN)
+        tenant = user.tenant if getattr(user, 'tenant', None) else None
+        if tenant is None and user.is_superuser:
+            return Response({'detail': 'Superuser must generate via tenant context.'}, status=400)
+
+        start_date = request.data.get('start_date')
+        end_date = request.data.get('end_date')
+        report_format = request.data.get('format', template.format or 'pdf')
+        if not start_date or not end_date:
+            end = timezone.now().date()
+            start = end - timedelta(days=30)
+        else:
+            start = datetime.strptime(start_date, '%Y-%m-%d').date()
+            end = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+        generated_report = GeneratedReport.objects.create(
+            tenant=tenant,
+            template=template,
+            report_type=template.report_type,
+            format=report_format,
+            date_range_start=start,
+            date_range_end=end,
+            status='generating',
+            generated_by=user,
+        )
+        try:
+            if template.report_type == 'revenue':
+                buffer = generate_revenue_report(tenant, start, end, report_format)
+            elif template.report_type == 'occupancy':
+                buffer = generate_occupancy_report(tenant, start, end, report_format)
+            elif template.report_type == 'bookings':
+                buffer = generate_bookings_report(tenant, start, end, report_format)
+            elif template.report_type == 'channel_performance':
+                buffer = generate_channel_performance_report(tenant, start, end, report_format)
+            else:
+                raise ValueError(f'Unsupported report type: {template.report_type}')
+
+            from django.conf import settings
+            file_name = f'{template.report_type}_{tenant.slug}_{start}_{end}.{report_format}'
+            file_path = os.path.join(settings.MEDIA_ROOT, 'reports', file_name)
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            with open(file_path, 'wb') as f:
+                f.write(buffer.read())
+            relative_path = os.path.join('reports', file_name)
+            generated_report.status = 'completed'
+            generated_report.file_path = relative_path
+            generated_report.file_size = os.path.getsize(file_path)
+            generated_report.generated_at = timezone.now()
+            generated_report.expires_at = timezone.now() + timedelta(days=30)
+            generated_report.save()
+            return Response(GeneratedReportSerializer(generated_report).data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            generated_report.status = 'failed'
+            generated_report.error_message = str(e)
+            generated_report.save()
+            return Response(
+                {'detail': str(e), 'report': GeneratedReportSerializer(generated_report).data},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
 
 class GeneratedReportViewSet(viewsets.ModelViewSet):
     """ViewSet for Generated Reports"""

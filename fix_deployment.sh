@@ -39,7 +39,9 @@ if [ ! -f .env ]; then
     cat > .env << EOF
 SECRET_KEY=$SECRET_KEY
 DEBUG=False
-ALLOWED_HOSTS=channel-manager.revnext.in,5.189.180.67,localhost,127.0.0.1
+ALLOWED_HOSTS=revnext.in,www.revnext.in,channel-manager.revnext.in,booking.revnext.in,networks.revnext.in,pms.revnext.in,pos.revnext.in,cms.revnext.in,hotels.revnext.in,tours.revnext.in,secrets.revnext.in,auth.revnext.in,localhost,127.0.0.1
+CSRF_TRUSTED_ORIGINS=https://revnext.in,https://www.revnext.in,https://channel-manager.revnext.in,https://booking.revnext.in,https://networks.revnext.in,https://pms.revnext.in,https://pos.revnext.in,https://cms.revnext.in,https://hotels.revnext.in,https://tours.revnext.in
+SITE_URL=https://channel-manager.revnext.in
 DB_NAME=channel_manager
 DB_USER=postgres
 DB_PASSWORD=$DB_PASSWORD
@@ -47,7 +49,9 @@ DB_HOST=db
 DB_PORT=5432
 CELERY_BROKER_URL=redis://redis:6379/0
 CELERY_RESULT_BACKEND=redis://redis:6379/0
+OPENBAO_ADDR=http://openbao:8200
 ENVIRONMENT=production
+SEED_ON_START=true
 EOF
     echo "   ✅ Created .env file"
     echo "   ⚠️  Please review and update DB_PASSWORD if needed"

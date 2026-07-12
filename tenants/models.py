@@ -289,6 +289,15 @@ class Tenant(models.Model):
         self.auto_renew = False
         self.save(update_fields=['subscription_status', 'auto_renew'])
 
+    def has_product(self, product_code: str) -> bool:
+        """Whether this tenant is entitled to a RevNext product (or suite)."""
+        from products.services import has_product
+        return has_product(self, product_code)
+
+    def product_entitlements(self) -> set:
+        from products.services import entitled_product_codes
+        return entitled_product_codes(self)
+
 
 class SubscriptionPayment(models.Model):
     """Track subscription payments"""
@@ -406,3 +415,60 @@ class TenantUser(AbstractUser):
     def has_tenant_access(self, tenant):
         """Check if user has access to a specific tenant"""
         return self.tenant == tenant or self.is_superuser
+
+    def has_capability(self, capability, property_id=None):
+        """Enterprise RBAC capability check (falls back to legacy role)."""
+        from rbac.services import user_has_capability
+        return user_has_capability(self, capability, property_id=property_id)
+
+    def get_capabilities(self, property_id=None):
+        from rbac.services import get_user_capabilities
+        return get_user_capabilities(self, property_id=property_id)
+
+    def accessible_properties(self):
+        """Property queryset limited by RBAC assignments."""
+        from core.models import Property
+        from rbac.services import filter_properties_for_user
+        return filter_properties_for_user(Property.objects.all(), self)
+
+
+class DeviceRegistration(models.Model):
+    """FCM / APNs device token for mobile push notifications."""
+
+    PLATFORM_CHOICES = [
+        ('ios', 'iOS'),
+        ('android', 'Android'),
+        ('web', 'Web'),
+    ]
+
+    id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(
+        TenantUser,
+        on_delete=models.CASCADE,
+        related_name='devices',
+    )
+    tenant = models.ForeignKey(
+        Tenant,
+        on_delete=models.CASCADE,
+        related_name='devices',
+        null=True,
+        blank=True,
+    )
+    token = models.CharField(max_length=512, unique=True)
+    platform = models.CharField(max_length=20, choices=PLATFORM_CHOICES, default='android')
+    device_name = models.CharField(max_length=100, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    last_seen_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'device_registrations'
+        ordering = ['-updated_at']
+        indexes = [
+            models.Index(fields=['user', 'is_active']),
+            models.Index(fields=['tenant', 'is_active']),
+        ]
+
+    def __str__(self):
+        return f'{self.user_id} · {self.platform} · {self.token[:16]}…'

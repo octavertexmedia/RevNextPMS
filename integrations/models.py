@@ -58,10 +58,15 @@ class IntegrationPlatform(TimeStampedModel):
     api_version = models.CharField(max_length=20, blank=True)
     auth_type = models.CharField(max_length=20, choices=AUTH_TYPES, default='API_KEY')
     
-    # Credentials (encrypted in production)
+    # Credentials — prefer OpenBao via secret_ref; DB fields are fallback
     api_key = models.CharField(max_length=255, blank=True)
     api_secret = models.CharField(max_length=255, blank=True)
     additional_credentials = models.JSONField(default=dict, blank=True)
+    secret_ref = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text='OpenBao KV path for platform credentials',
+    )
     
     # Rate Limiting
     rate_limit_rpm = models.PositiveIntegerField(
@@ -97,6 +102,17 @@ class IntegrationPlatform(TimeStampedModel):
 
     def __str__(self):
         return self.display_name
+
+    def resolved_credentials(self) -> dict:
+        from channel_manager.openbao.credentials import resolve_mapping
+        return resolve_mapping(
+            secret_ref=self.secret_ref,
+            local={
+                'api_key': self.api_key,
+                'api_secret': self.api_secret,
+                **(self.additional_credentials or {}),
+            },
+        )
 
 
 class PropertyIntegration(TimeStampedModel):
@@ -141,8 +157,13 @@ class PropertyIntegration(TimeStampedModel):
     error_count = models.PositiveIntegerField(default=0)
     last_error_at = models.DateTimeField(null=True, blank=True)
     
-    # Configuration
+    # Configuration + OpenBao secret path for property-level OTA credentials
     config = models.JSONField(default=dict, blank=True)
+    secret_ref = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text='OpenBao KV path for this property↔platform credential set',
+    )
     
     history = HistoricalRecords()
 
@@ -155,6 +176,28 @@ class PropertyIntegration(TimeStampedModel):
 
     def __str__(self):
         return f"{self.property.name} - {self.platform.display_name}"
+
+    def ensure_secret_ref(self):
+        if self.secret_ref:
+            return self.secret_ref
+        tenant_id = self.property.tenant_id
+        if not tenant_id:
+            return ''
+        from channel_manager.openbao.credentials import openbao_path_for_integration
+        code = self.platform.name.replace('.', '_').lower()
+        self.secret_ref = openbao_path_for_integration(tenant_id, self.property_id, code)
+        return self.secret_ref
+
+    def resolved_credentials(self) -> dict:
+        """Property credentials overlay platform credentials; OpenBao wins when set."""
+        from channel_manager.openbao.credentials import resolve_mapping
+        base = self.platform.resolved_credentials()
+        self.ensure_secret_ref()
+        local = {**(self.config or {})}
+        overlay = resolve_mapping(secret_ref=self.secret_ref, local=local)
+        merged = dict(base)
+        merged.update({k: v for k, v in overlay.items() if v not in (None, '')})
+        return merged
 
 
 class RoomTypeMapping(TimeStampedModel):

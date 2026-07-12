@@ -27,7 +27,9 @@ FROM python:3.11-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PATH="/app/.venv/bin:$PATH"
+    PATH="/app/.venv/bin:$PATH" \
+    SEED_ON_START=true \
+    COLLECTSTATIC_ON_START=false
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y \
@@ -50,19 +52,22 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Copy project files
 COPY --chown=appuser:appuser . .
 
+# Entrypoint: migrate + seed products, then exec CMD
+RUN chmod +x /app/scripts/docker-entrypoint.sh && \
+    chown appuser:appuser /app/scripts/docker-entrypoint.sh
+
 # Switch to app user
 USER appuser
 
-# Collect static files
+# Collect static files into image (runtime volume may overlay; deploy.sh also collects)
 RUN python manage.py collectstatic --noinput || true
 
 # Expose port
 EXPOSE 8001
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+# Health check (SECURE_REDIRECT_EXEMPT covers /health/)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8001/health/ || exit 1
 
-# Run gunicorn
+ENTRYPOINT ["/app/scripts/docker-entrypoint.sh"]
 CMD ["gunicorn", "--bind", "0.0.0.0:8001", "--workers", "4", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-", "channel_manager.wsgi:application"]
-

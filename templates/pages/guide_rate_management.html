@@ -3,157 +3,143 @@
 {% block title %}Rate Management Guide - RevNext Channel Manager{% endblock %}
 
 {% block content %}
-<section class="pt-32 pb-20 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto">
-            <!-- Header -->
-            <div class="mb-12">
-                <a href="{% url 'core:documentation' %}" class="text-indigo-600 hover:text-indigo-700 mb-4 inline-flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Back to Documentation
-                </a>
-                <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Rate Management</h1>
-                <p class="text-xl text-gray-600">Set up dynamic pricing and automated rate rules to maximize revenue</p>
+<section class="dawn-page-hero is-compact">
+    <div class="dawn-container">
+        <a href="{% url 'core:documentation' %}" class="dawn-link" style="color:rgba(255,255,255,.75);display:inline-flex;align-items:center;gap:.4rem;margin-bottom:1rem;">
+            <svg style="width:1.1rem;height:1.1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Documentation
+        </a>
+        <p class="dawn-eyebrow">Guide</p>
+        <h1 class="dawn-h1">Rate Management</h1>
+        <p class="dawn-lead">Set up dynamic pricing and automated rate rules to maximize revenue.</p>
+    </div>
+</section>
+
+<section class="dawn-section">
+    <div class="dawn-container dawn-prose">
+        <div class="dawn-panel-accent" style="margin-bottom:2rem;">
+            <p style="margin:0;">
+                <strong>Dynamic Rate Management</strong> allows you to automatically adjust room rates based on demand, seasonality, occupancy, and other factors to maximize revenue and occupancy.
+            </p>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Understanding Rate Plans</h2>
+            <p>Rate plans define your pricing strategy for each room type:</p>
+            <div class="dawn-panel">
+                <h3 style="margin-top:0;">Rate Plan Components</h3>
+                <ul style="margin:0;">
+                    <li><strong>Base Rate:</strong> Your default price per night</li>
+                    <li><strong>Currency:</strong> INR or other supported currencies</li>
+                    <li><strong>Cancellation Policy:</strong> Free cancellation, non-refundable, etc.</li>
+                    <li><strong>Meal Plan:</strong> Room only, breakfast, half-board, full-board</li>
+                    <li><strong>Length of Stay Discounts:</strong> Discounts for longer stays</li>
+                    <li><strong>Advance Booking Discounts:</strong> Early bird specials</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Dynamic Pricing Rules</h2>
+            <p>Create automated pricing rules to adjust rates based on various conditions:</p>
+
+            <h3>Types of Pricing Rules</h3>
+            <div class="dawn-grid-3" style="margin-bottom:1rem;">
+                <div class="dawn-card">
+                    <h3 style="margin-top:0;font-size:1rem;">Seasonal Adjustment</h3>
+                    <p>Adjust rates for peak/off-peak seasons</p>
+                </div>
+                <div class="dawn-card">
+                    <h3 style="margin-top:0;font-size:1rem;">Demand-Based Pricing</h3>
+                    <p>Increase rates when occupancy is high</p>
+                </div>
+                <div class="dawn-card">
+                    <h3 style="margin-top:0;font-size:1rem;">Length of Stay Discount</h3>
+                    <p>Offer discounts for longer stays</p>
+                </div>
+                <div class="dawn-card">
+                    <h3 style="margin-top:0;font-size:1rem;">Advance Booking Discount</h3>
+                    <p>Reward early bookings with lower rates</p>
+                </div>
+                <div class="dawn-card">
+                    <h3 style="margin-top:0;font-size:1rem;">Last Minute Pricing</h3>
+                    <p>Special rates for same-day bookings</p>
+                </div>
+                <div class="dawn-card">
+                    <h3 style="margin-top:0;font-size:1rem;">Occupancy-Based Pricing</h3>
+                    <p>Adjust rates based on current occupancy</p>
+                </div>
             </div>
 
-            <!-- Content -->
-            <div class="prose prose-lg max-w-none">
-                <!-- Overview -->
-                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 mb-8 rounded-r-lg">
-                    <p class="text-gray-700 mb-0">
-                        <strong>Dynamic Rate Management</strong> allows you to automatically adjust room rates based on demand, seasonality, occupancy, and other factors to maximize revenue and occupancy.
-                    </p>
-                </div>
-
-                <!-- Understanding Rate Plans -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Understanding Rate Plans</h2>
-                    <p class="text-gray-700 mb-6">Rate plans define your pricing strategy for each room type:</p>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Rate Plan Components</h3>
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Base Rate:</strong> Your default price per night</li>
-                            <li><strong>Currency:</strong> INR or other supported currencies</li>
-                            <li><strong>Cancellation Policy:</strong> Free cancellation, non-refundable, etc.</li>
-                            <li><strong>Meal Plan:</strong> Room only, breakfast, half-board, full-board</li>
-                            <li><strong>Length of Stay Discounts:</strong> Discounts for longer stays</li>
-                            <li><strong>Advance Booking Discounts:</strong> Early bird specials</li>
+            <h3>Creating Pricing Rules</h3>
+            <div class="dawn-panel">
+                <ol style="margin:0;">
+                    <li>Go to <strong>Pricing Rules</strong> in your dashboard</li>
+                    <li>Click <strong>"Create New Rule"</strong></li>
+                    <li>Select the rule type</li>
+                    <li>Configure the rule:
+                        <ul>
+                            <li>Property and rate plan (or apply to all)</li>
+                            <li>Adjustment type (percentage, fixed amount, multiplier)</li>
+                            <li>Adjustment value</li>
+                            <li>Date range (for seasonal rules)</li>
+                            <li>Conditions (occupancy threshold, etc.)</li>
+                            <li>Priority (higher priority rules apply first)</li>
                         </ul>
-                    </div>
-                </div>
-
-                <!-- Dynamic Pricing Rules -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Dynamic Pricing Rules</h2>
-                    <p class="text-gray-700 mb-6">Create automated pricing rules to adjust rates based on various conditions:</p>
-                    
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Types of Pricing Rules</h3>
-                    <div class="grid md:grid-cols-2 gap-4 mb-6">
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
-                            <h4 class="font-semibold text-gray-900 mb-2">Seasonal Adjustment</h4>
-                            <p class="text-sm text-gray-600">Adjust rates for peak/off-peak seasons</p>
-                        </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
-                            <h4 class="font-semibold text-gray-900 mb-2">Demand-Based Pricing</h4>
-                            <p class="text-sm text-gray-600">Increase rates when occupancy is high</p>
-                        </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
-                            <h4 class="font-semibold text-gray-900 mb-2">Length of Stay Discount</h4>
-                            <p class="text-sm text-gray-600">Offer discounts for longer stays</p>
-                        </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
-                            <h4 class="font-semibold text-gray-900 mb-2">Advance Booking Discount</h4>
-                            <p class="text-sm text-gray-600">Reward early bookings with lower rates</p>
-                        </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
-                            <h4 class="font-semibold text-gray-900 mb-2">Last Minute Pricing</h4>
-                            <p class="text-sm text-gray-600">Special rates for same-day bookings</p>
-                        </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
-                            <h4 class="font-semibold text-gray-900 mb-2">Occupancy-Based Pricing</h4>
-                            <p class="text-sm text-gray-600">Adjust rates based on current occupancy</p>
-                        </div>
-                    </div>
-
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Creating Pricing Rules</h3>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Go to <strong>Pricing Rules</strong> in your dashboard</li>
-                            <li>Click <strong>"Create New Rule"</strong></li>
-                            <li>Select the rule type</li>
-                            <li>Configure the rule:
-                                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
-                                    <li>Property and rate plan (or apply to all)</li>
-                                    <li>Adjustment type (percentage, fixed amount, multiplier)</li>
-                                    <li>Adjustment value</li>
-                                    <li>Date range (for seasonal rules)</li>
-                                    <li>Conditions (occupancy threshold, etc.)</li>
-                                    <li>Priority (higher priority rules apply first)</li>
-                                </ul>
-                            </li>
-                            <li>Set minimum and maximum price constraints (optional)</li>
-                            <li>Enable automatic application</li>
-                            <li>Save the rule</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <!-- Rate Optimization -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Rate Optimization</h2>
-                    <p class="text-gray-700 mb-6">Use the Rate Optimization dashboard to view suggested rate adjustments:</p>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Optimization Features</h3>
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Demand Analysis:</strong> View current occupancy and demand trends</li>
-                            <li><strong>Optimized Rates:</strong> See suggested rate adjustments based on demand</li>
-                            <li><strong>Base vs Final Rates:</strong> Compare original rates with rates after applying all rules</li>
-                            <li><strong>Occupancy Tracking:</strong> Monitor occupancy percentages for each date</li>
-                        </ul>
-                    </div>
-
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <p class="text-sm text-blue-800">
-                            <strong>Pro Tip:</strong> Review optimized rates regularly and apply them manually, or enable automatic application for trusted rules.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Best Practices -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Best Practices</h2>
-                    <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-6 border border-green-200">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Rate Management Best Practices</h3>
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li>Start with conservative pricing rules and adjust based on results</li>
-                            <li>Monitor competitor rates regularly</li>
-                            <li>Use seasonal rules for predictable demand patterns</li>
-                            <li>Set minimum and maximum price constraints to protect margins</li>
-                            <li>Test pricing rules on a small date range first</li>
-                            <li>Review rate optimization suggestions before applying</li>
-                            <li>Track revenue impact of pricing changes</li>
-                            <li>Adjust rules based on performance data</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Related Guides -->
-                <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Related Guides</h3>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <a href="{% url 'core:guide_property_management' %}" class="block p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all">
-                            <h4 class="font-semibold text-gray-900 mb-2">Property Management →</h4>
-                            <p class="text-sm text-gray-600">Manage properties, rooms, and rate plans</p>
-                        </a>
-                        <a href="{% url 'core:guide_inventory_management' %}" class="block p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all">
-                            <h4 class="font-semibold text-gray-900 mb-2">Inventory Management →</h4>
-                            <p class="text-sm text-gray-600">Manage room availability and blocks</p>
-                        </a>
-                    </div>
-                </div>
+                    </li>
+                    <li>Set minimum and maximum price constraints (optional)</li>
+                    <li>Enable automatic application</li>
+                    <li>Save the rule</li>
+                </ol>
             </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Rate Optimization</h2>
+            <p>Use the Rate Optimization dashboard to view suggested rate adjustments:</p>
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <h3 style="margin-top:0;">Optimization Features</h3>
+                <ul style="margin:0;">
+                    <li><strong>Demand Analysis:</strong> View current occupancy and demand trends</li>
+                    <li><strong>Optimized Rates:</strong> See suggested rate adjustments based on demand</li>
+                    <li><strong>Base vs Final Rates:</strong> Compare original rates with rates after applying all rules</li>
+                    <li><strong>Occupancy Tracking:</strong> Monitor occupancy percentages for each date</li>
+                </ul>
+            </div>
+
+            <div class="dawn-panel-accent">
+                <p style="margin:0;"><strong>Pro Tip:</strong> Review optimized rates regularly and apply them manually, or enable automatic application for trusted rules.</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Best Practices</h2>
+            <div class="dawn-panel-soft">
+                <h3 style="margin-top:0;">Rate Management Best Practices</h3>
+                <ul style="margin:0;">
+                    <li>Start with conservative pricing rules and adjust based on results</li>
+                    <li>Monitor competitor rates regularly</li>
+                    <li>Use seasonal rules for predictable demand patterns</li>
+                    <li>Set minimum and maximum price constraints to protect margins</li>
+                    <li>Test pricing rules on a small date range first</li>
+                    <li>Review rate optimization suggestions before applying</li>
+                    <li>Track revenue impact of pricing changes</li>
+                    <li>Adjust rules based on performance data</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="dawn-guide-nav" style="display:grid;gap:1rem;grid-template-columns:repeat(2,1fr);">
+            <a href="{% url 'core:guide_property_management' %}">
+                <strong>Property Management →</strong>
+                <span>Manage properties, rooms, and rate plans</span>
+            </a>
+            <a href="{% url 'core:guide_inventory_management' %}">
+                <strong>Inventory Management →</strong>
+                <span>Manage room availability and blocks</span>
+            </a>
         </div>
     </div>
 </section>

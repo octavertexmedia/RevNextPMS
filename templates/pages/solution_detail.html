@@ -3,42 +3,135 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
-<section class="pt-32 pb-20 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Hero Section -->
-        <div class="max-w-4xl mx-auto text-center mb-16">
-            <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">{{ solution_title }}</h1>
-            <p class="text-xl text-gray-600 leading-relaxed">
-                {{ solution_description }}
-            </p>
+<section class="dawn-page-hero is-compact">
+    <div class="dawn-container">
+        <p class="dawn-eyebrow">{{ solution.eyebrow }}</p>
+        <h1 class="dawn-h1">{{ solution.title }}</h1>
+        <p class="dawn-lead">{{ solution.lead }}</p>
+        <div class="dawn-page-hero-actions">
+            <a href="{% url 'tenants:register' %}" class="dawn-btn dawn-btn-primary">Start free trial</a>
+            <a href="{% url 'core:contact' %}" class="dawn-btn dawn-btn-ghost">Talk to sales</a>
         </div>
+    </div>
+</section>
 
-        <!-- Features Section -->
-        <div class="max-w-4xl mx-auto mb-20">
-            <h2 class="text-2xl font-bold text-gray-900 mb-8">Key Features</h2>
-            <ul class="space-y-4">
-                {% for feature in solution_features %}
-                <li class="flex items-start gap-3">
-                    <span class="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mt-0.5">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                    </span>
-                    <span class="text-gray-700">{{ feature }}</span>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <!-- CTA Section -->
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-12 text-white">
-                <h2 class="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-                <p class="text-xl text-indigo-100 mb-8">Join hotels already using RevNext Channel Manager</p>
-                <div class="flex flex-wrap justify-center gap-4">
-                    <a href="{% url 'tenants:register' %}" class="btn-white-large">Start Free Trial</a>
-                    <a href="{% url 'core:contact' %}" class="inline-block px-8 py-3 border-2 border-white rounded-lg font-semibold hover:bg-white hover:text-indigo-600 transition-colors">Contact Sales</a>
-                </div>
+<section class="dawn-section" style="padding-top:2.5rem;">
+    <div class="dawn-container">
+        <div class="dawn-sol-preview-wrap dawn-reveal">
+            <div class="dawn-sol-preview-bar">
+                <span>{{ solution.preview_caption }}</span>
+                <span class="ui-chip">Product UI</span>
+            </div>
+            <div class="dawn-sol-preview-body">
+                {% include 'pages/partials/solution_ui_preview.html' %}
             </div>
         </div>
     </div>
 </section>
+
+<section class="dawn-section dawn-section-alt">
+    <div class="dawn-container">
+        <div class="dawn-section-head dawn-reveal">
+            <p class="dawn-eyebrow" style="color:var(--navy);">Why it matters</p>
+            <h2 class="dawn-h2">Built for how the desk actually works</h2>
+        </div>
+        <div class="dawn-grid-4">
+            {% for item in solution.highlights %}
+            <div class="dawn-card dawn-reveal">
+                <p class="dawn-meta" style="color:var(--amber);margin-bottom:.5rem;">Highlight</p>
+                <h3 style="font-size:1.05rem;">{{ item.label }}</h3>
+                <p>{{ item.text }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="dawn-section">
+    <div class="dawn-container">
+        <div class="dawn-section-head dawn-reveal">
+            <p class="dawn-eyebrow" style="color:var(--navy);">Modules</p>
+            <h2 class="dawn-h2">What you get in the product</h2>
+        </div>
+        <div class="dawn-grid-2-sol">
+            {% for mod in solution.modules %}
+            <div class="dawn-panel dawn-reveal">
+                <h3 style="font-family:var(--font-display);margin:0 0 .45rem;font-size:1.15rem;">{{ mod.title }}</h3>
+                <p style="margin:0;color:var(--muted);line-height:1.55;">{{ mod.text }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="dawn-section dawn-section-alt">
+    <div class="dawn-container">
+        <div class="dawn-section-head dawn-reveal">
+            <p class="dawn-eyebrow" style="color:var(--navy);">Outcomes</p>
+            <h2 class="dawn-h2">What changes on the floor</h2>
+        </div>
+        <div class="dawn-grid-3">
+            {% for o in solution.outcomes %}
+            <div class="dawn-card dawn-reveal" style="text-align:center;">
+                <p class="dawn-meta" style="color:var(--amber);margin-bottom:.5rem;">Result</p>
+                <div style="font-family:var(--font-display);font-size:1.75rem;color:var(--navy);margin-bottom:.35rem;">{{ o.stat }}</div>
+                <p style="margin:0;color:var(--muted);">{{ o.label }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="dawn-section">
+    <div class="dawn-container dawn-split">
+        <div>
+            <div class="dawn-section-head">
+                <p class="dawn-eyebrow" style="color:var(--navy);">How it works</p>
+                <h2 class="dawn-h2">From setup to steady state</h2>
+            </div>
+            <div style="display:grid;gap:1rem;">
+                {% for step in solution.steps %}
+                <div class="dawn-panel-soft dawn-reveal">
+                    <p class="dawn-meta" style="color:var(--amber);">{{ step.num }}</p>
+                    <h3 style="font-family:var(--font-display);margin:.35rem 0 .35rem;">{{ step.title }}</h3>
+                    <p style="margin:0;color:var(--muted);">{{ step.text }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <div class="dawn-section-head">
+                <p class="dawn-eyebrow" style="color:var(--navy);">Included</p>
+                <h2 class="dawn-h2" style="font-size:1.75rem;">Capability checklist</h2>
+            </div>
+            <ul class="dawn-check-list">
+                {% for feature in solution.features %}
+                <li>{{ feature }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="dawn-section dawn-section-alt">
+    <div class="dawn-container">
+        <div class="dawn-section-head dawn-reveal">
+            <p class="dawn-eyebrow" style="color:var(--navy);">Stack</p>
+            <h2 class="dawn-h2">Works with the rest of RevNext</h2>
+            <p class="dawn-section-lead">Every solution shares inventory, rates, and guest truth with Channel Manager.</p>
+        </div>
+        <div class="dawn-grid-4">
+            <a href="{% url 'core:solution_cloud_pms' %}" class="dawn-card"><h3>Cloud PMS</h3><p>Front desk, HK, folios</p></a>
+            <a href="{% url 'core:solution_cloud_pos' %}" class="dawn-card"><h3>Cloud POS</h3><p>F&amp;B + bill to room</p></a>
+            <a href="{% url 'core:solution_booking_engine' %}" class="dawn-card"><h3>Booking Engine</h3><p>Commission-free directs</p></a>
+            <a href="{% url 'core:solution_mobile_apps' %}" class="dawn-card"><h3>Mobile Apps</h3><p>Desk on iOS &amp; Android</p></a>
+            <a href="{% url 'core:solution_website_builder' %}" class="dawn-card"><h3>Website Builder</h3><p>Sites that book</p></a>
+            <a href="{% url 'core:solution_b2b' %}" class="dawn-card"><h3>Stay B2B</h3><p>Agent &amp; corporate rates</p></a>
+            <a href="{% url 'core:solution_ota_listing' %}" class="dawn-card"><h3>OTA Listing</h3><p>Go live on platforms</p></a>
+            <a href="{% url 'core:solution_google_hotel_ads' %}" class="dawn-card"><h3>Google Hotel Ads</h3><p>Pay per conversion</p></a>
+        </div>
+    </div>
+</section>
+
+{% include 'landing/partials/page_cta.html' with cta_title="Ready to run this on your desk?" %}
 {% endblock %}

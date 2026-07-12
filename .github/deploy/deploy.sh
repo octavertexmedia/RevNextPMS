@@ -49,11 +49,69 @@ else
     fi
 fi
 
-# Copy docker-compose file
+# Copy docker-compose + OpenBao deploy assets
 if [ -f "$IMAGE_DIR/docker-compose.prod.yml" ]; then
     echo "[INFO] Copying docker-compose file..."
     cp "$IMAGE_DIR/docker-compose.prod.yml" "$DEPLOY_DIR/docker-compose.yml"
 fi
+if [ -d "$IMAGE_DIR/deploy" ]; then
+    echo "[INFO] Copying deploy/ assets (OpenBao scripts)..."
+    mkdir -p "$DEPLOY_DIR/deploy"
+    cp -R "$IMAGE_DIR/deploy/." "$DEPLOY_DIR/deploy/"
+fi
+
+# Required production hosts (booking + networks + suite)
+REQUIRED_HOSTS="revnext.in,www.revnext.in,channel-manager.revnext.in,booking.revnext.in,networks.revnext.in,pms.revnext.in,pos.revnext.in,cms.revnext.in,hotels.revnext.in,tours.revnext.in,secrets.revnext.in,auth.revnext.in,localhost,127.0.0.1"
+
+ensure_env_hosts() {
+    local envfile="$1"
+    if [ ! -f "$envfile" ]; then
+        return
+    fi
+    if grep -q '^ALLOWED_HOSTS=' "$envfile"; then
+        # Merge any missing required hosts into existing ALLOWED_HOSTS
+        local current
+        current=$(grep '^ALLOWED_HOSTS=' "$envfile" | head -1 | cut -d= -f2-)
+        local merged="$current"
+        IFS=',' read -ra PARTS <<< "$REQUIRED_HOSTS"
+        for h in "${PARTS[@]}"; do
+            case ",$merged," in
+                *",$h,"*) ;;
+                *) merged="${merged},${h}" ;;
+            esac
+        done
+        # Normalize leading comma
+        merged=$(echo "$merged" | sed 's/^,//')
+        if command -v python3 >/dev/null 2>&1; then
+            python3 - "$envfile" "$merged" <<'PY'
+import sys
+path, hosts = sys.argv[1], sys.argv[2]
+lines = open(path).read().splitlines()
+out = []
+replaced = False
+for line in lines:
+    if line.startswith('ALLOWED_HOSTS=') and not replaced:
+        out.append(f'ALLOWED_HOSTS={hosts}')
+        replaced = True
+    else:
+        out.append(line)
+if not replaced:
+    out.append(f'ALLOWED_HOSTS={hosts}')
+open(path, 'w').write('\n'.join(out) + '\n')
+PY
+        else
+            echo "[WARN] Could not merge ALLOWED_HOSTS (no python3)"
+        fi
+        echo "[INFO] Ensured product hosts in ALLOWED_HOSTS"
+    else
+        echo "ALLOWED_HOSTS=$REQUIRED_HOSTS" >> "$envfile"
+    fi
+    # Ensure CSRF origins for product hosts if missing
+    if ! grep -q '^CSRF_TRUSTED_ORIGINS=' "$envfile"; then
+        echo "CSRF_TRUSTED_ORIGINS=https://revnext.in,https://www.revnext.in,https://channel-manager.revnext.in,https://booking.revnext.in,https://networks.revnext.in,https://pms.revnext.in,https://pos.revnext.in,https://cms.revnext.in,https://hotels.revnext.in,https://tours.revnext.in,https://secrets.revnext.in,https://auth.revnext.in" >> "$envfile"
+        echo "[INFO] Added CSRF_TRUSTED_ORIGINS"
+    fi
+}
 
 # Copy .env file if it doesn't exist
 if [ ! -f "$DEPLOY_DIR/.env" ]; then
@@ -82,7 +140,10 @@ if [ ! -f "$DEPLOY_DIR/.env" ]; then
 # Django Configuration
 SECRET_KEY=$SECRET_KEY
 DEBUG=False
-ALLOWED_HOSTS=channel-manager.revnext.in,5.189.180.67,localhost,127.0.0.1
+ALLOWED_HOSTS=$REQUIRED_HOSTS
+CSRF_TRUSTED_ORIGINS=https://revnext.in,https://www.revnext.in,https://channel-manager.revnext.in,https://booking.revnext.in,https://networks.revnext.in,https://pms.revnext.in,https://pos.revnext.in,https://cms.revnext.in,https://hotels.revnext.in,https://tours.revnext.in,https://secrets.revnext.in,https://auth.revnext.in
+SITE_URL=https://channel-manager.revnext.in
+SECURE_SSL_REDIRECT=True
 
 # Database Configuration
 DB_NAME=channel_manager
@@ -95,14 +156,27 @@ DB_PORT=5432
 CELERY_BROKER_URL=redis://redis:6379/0
 CELERY_RESULT_BACKEND=redis://redis:6379/0
 
+# OpenBao (docker network)
+OPENBAO_ENABLED=false
+OPENBAO_ADDR=http://openbao:8200
+OPENBAO_TOKEN=dev-root-token
+OPENBAO_ENVIRONMENT=production
+OPENBAO_TLS_VERIFY=false
+
+# OIDC
+OIDC_ENABLED=false
+OIDC_OP_ISSUER=https://auth.revnext.in
+
 # Environment
 ENVIRONMENT=production
+SEED_ON_START=true
 EOF
         echo "[INFO] Minimal .env file created with auto-generated values"
         echo "[WARN] Please review and update DB_PASSWORD in $DEPLOY_DIR/.env"
     fi
 fi
 
+ensure_env_hosts "$DEPLOY_DIR/.env"
 # Copy nginx config if provided and nginx is installed
 if [ -f "$IMAGE_DIR/nginx.conf" ]; then
     if command -v nginx >/dev/null 2>&1; then
@@ -164,16 +238,26 @@ if ! grep -q "DB_PASSWORD" "$DEPLOY_DIR/.env"; then
     echo "[WARN] DB_PASSWORD not found in .env file"
 fi
 
-# Run migrations
+# Run migrations + seed product catalog (also runs via web entrypoint)
 echo "[INFO] Running database migrations..."
-docker compose run --rm web python manage.py migrate --noinput || {
+docker compose run --rm -e SKIP_MIGRATE=false -e SEED_ON_START=true web \
+  python manage.py migrate --noinput || {
     echo "[WARN] Migrations failed - this is normal on first deployment if database doesn't exist yet"
     echo "[INFO] Database will be initialized when services start"
 }
 
+echo "[INFO] Seeding product catalog (booking + networks + suite)..."
+docker compose run --rm -e SKIP_MIGRATE=true -e SEED_ON_START=false web \
+  python manage.py seed_products || echo "[WARN] seed_products failed"
+
+echo "[INFO] Seeding RBAC catalog (optional)..."
+docker compose run --rm -e SKIP_MIGRATE=true -e SEED_ON_START=false web \
+  python manage.py seed_rbac || echo "[WARN] seed_rbac failed (ok if first boot)"
+
 # Collect static files
 echo "[INFO] Collecting static files..."
-docker compose run --rm web python manage.py collectstatic --noinput || echo "[WARN] Static files collection failed"
+docker compose run --rm -e SKIP_MIGRATE=true -e SEED_ON_START=false web \
+  python manage.py collectstatic --noinput || echo "[WARN] Static files collection failed"
 
 # Start/restart services
 echo "[INFO] Starting services..."
@@ -229,6 +313,12 @@ else
     docker compose ps || true
 fi
 
+echo "[INFO] Running deploy_ready checks..."
+docker compose exec -T web python manage.py deploy_ready || echo "[WARN] deploy_ready reported issues"
+
 echo "[INFO] Deployment completed!"
+echo "[INFO] Product hosts: booking.revnext.in · networks.revnext.in · channel-manager.revnext.in · …"
 echo "[INFO] Services are running. Check logs with: docker compose logs -f"
+echo "[INFO] Expand TLS SANs if needed:"
+echo "  certbot --nginx -d channel-manager.revnext.in -d booking.revnext.in -d networks.revnext.in -d pms.revnext.in -d pos.revnext.in -d cms.revnext.in -d hotels.revnext.in -d tours.revnext.in -d revnext.in -d www.revnext.in"
 

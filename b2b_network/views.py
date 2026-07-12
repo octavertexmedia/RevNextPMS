@@ -1,29 +1,63 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import B2BAgent, B2BRatePlan, CorporateAccount
+from django.db.models import Q
+from .models import B2BAgent, B2BAllotment, B2BBooking, B2BRatePlan, CorporateAccount
 from .forms import B2BAgentForm, B2BRatePlanForm
 from core.models import Property
+
+
+def _tenant_agents(tenant):
+    if not tenant:
+        return B2BAgent.objects.none()
+    return B2BAgent.objects.filter(
+        Q(tenant=tenant) | Q(property_access__property__tenant=tenant)
+    ).distinct()
 
 
 @login_required
 def b2b_dashboard(request):
     tenant = getattr(request, 'tenant', None)
-    agents = B2BAgent.objects.filter(property_access__property__tenant=tenant).distinct() if tenant else []
+    agents = _tenant_agents(tenant)
     properties = Property.objects.filter(tenant=tenant, is_active=True) if tenant else []
-    
+    bookings = B2BBooking.objects.filter(property__tenant=tenant).order_by('-created_at')[:20] if tenant else []
+
     context = {
-        'page_title': 'Stay B2B Network',
+        'page_title': 'B2B Networks',
         'agents': agents,
         'properties': properties,
+        'bookings': bookings,
+        'product_host': 'networks.revnext.in',
     }
     return render(request, 'b2b_network/dashboard.html', context)
 
 
 @login_required
+def agent_portal_home(request):
+    """Agent-facing portal on networks.revnext.in/b2b/portal/."""
+    agent = getattr(request.user, 'b2b_agent', None)
+    if not agent or not agent.is_active or not agent.portal_enabled:
+        messages.error(request, 'You do not have B2B portal access.')
+        return redirect('b2b_network:dashboard')
+    bookings = B2BBooking.objects.filter(agent=agent).order_by('-created_at')[:30]
+    allotments = B2BAllotment.objects.filter(agent=agent).select_related(
+        'property', 'room_type',
+    ).order_by('date')[:60]
+    access = CorporateAccount.objects.filter(agent=agent, has_access=True).select_related('property')
+    return render(request, 'b2b_network/portal_home.html', {
+        'page_title': 'Agent Portal',
+        'agent': agent,
+        'bookings': bookings,
+        'allotments': allotments,
+        'properties': [ca.property for ca in access],
+        'product_host': 'networks.revnext.in',
+    })
+
+
+@login_required
 def b2b_agents(request):
     tenant = getattr(request, 'tenant', None)
-    agents = B2BAgent.objects.filter(property_access__property__tenant=tenant).distinct() if tenant else []
+    agents = _tenant_agents(tenant)
     
     # Filters
     agent_type = request.GET.get('type')

@@ -3,40 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% block meta_description %}{{ meta_description|default:'RevNext Channel Manager - Hotel Channel Management SaaS' }}{% endblock %}">
-    <meta name="keywords" content="hotel channel manager, OTA integration, hotel booking system, revenue management, India hotels">
+    <meta name="description" content="{% block meta_description %}{{ meta_description|default:'RevNext Channel Manager — sync inventory, rates, and reservations across OTAs with confidence.' }}{% endblock %}">
+    <meta name="keywords" content="hotel channel manager, OTA integration, hotel booking system, revenue management, India hotels, RevNext">
     <title>{% block title %}{{ page_title|default:'RevNext Channel Manager' }}{% endblock %}</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="https://www.revnext.in/logo.png">
-    
-    <!-- Fonts -->
+
+    <link rel="icon" href="https://www.revnext.in/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="https://www.revnext.in/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="https://www.revnext.in/favicon.ico">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS (Compiled) -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
     {% load static %}
     <link rel="stylesheet" href="{% static 'landing/css/main.css' %}">
-    
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
-    
+    <link rel="stylesheet" href="{% static 'landing/css/dawn-concierge.css' %}">
+
     {% block extra_css %}{% endblock %}
 </head>
-<body class="font-inter antialiased">
+<body class="dawn-body">
     {% include 'landing/partials/header.html' %}
-    
+
     <main>
         {% block content %}{% endblock %}
     </main>
-    
+
     {% include 'landing/partials/footer.html' %}
-    
-    <!-- Scripts -->
+
     <script src="{% static 'landing/js/main.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>

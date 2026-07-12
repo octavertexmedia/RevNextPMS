@@ -128,6 +128,10 @@ class Command(BaseCommand):
         self.stdout.write('🛏️  Creating room types...')
         room_types_data = self._create_room_types(hotels_data)
 
+        # Meal plans are required by rate plans
+        self.stdout.write('🍽️  Ensuring meal plans...')
+        self._ensure_meal_plans()
+
         # Create Rate Plans
         self.stdout.write('💵 Creating rate plans...')
         rate_plans_data = self._create_rate_plans(hotels_data, room_types_data, policies)
@@ -1458,6 +1462,23 @@ class Command(BaseCommand):
             room_types[hotel_id] = hotel_room_types
 
         return room_types
+
+    def _ensure_meal_plans(self):
+        """Create standard meal plans if missing (required by rate plans)."""
+        meal_plans = [
+            ('ROOM_ONLY', 'Room Only', 'No meals included'),
+            ('BREAKFAST', 'Breakfast', 'Breakfast included'),
+            ('HALF_BOARD', 'Half Board', 'Breakfast and dinner included'),
+            ('FULL_BOARD', 'Full Board', 'All meals included'),
+            ('ALL_INCLUSIVE', 'All Inclusive', 'All meals and beverages included'),
+        ]
+        for code, name, description in meal_plans:
+            meal_plan, created = MealPlan.objects.get_or_create(
+                code=code,
+                defaults={'name': name, 'description': description},
+            )
+            if created:
+                self.stdout.write(f'  ✓ {name}')
 
     def _create_rate_plans(self, hotels_data, room_types_data, policies):
         """Create rate plans for each room type"""

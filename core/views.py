@@ -107,6 +107,33 @@ def health_check(request):
             'status': 'unknown',
             'error': str(e),
         }
+
+    # OpenBao secrets manager
+    try:
+        from channel_manager.openbao.loader import is_enabled, secret_status
+        from channel_manager.openbao.client import OpenBaoClient
+        if is_enabled():
+            client = OpenBaoClient()
+            reachable = client.is_reachable()
+            status = secret_status()
+            health_status['checks']['openbao'] = {
+                'status': 'healthy' if reachable else 'unhealthy',
+                'addr': client.addr,
+                'loaded': status.get('loaded', False),
+                'keys': len(status.get('keys') or []),
+            }
+            if not reachable:
+                health_status['status'] = 'degraded'
+        else:
+            health_status['checks']['openbao'] = {
+                'status': 'disabled',
+                'source': 'env',
+            }
+    except Exception as e:
+        health_status['checks']['openbao'] = {
+            'status': 'unknown',
+            'error': str(e),
+        }
     
     # Determine HTTP status code
     status_code = 200
@@ -503,133 +530,54 @@ def integrations_page(request):
     return render(request, 'pages/integrations.html', context)
 
 
-# --- Solution Pages (eGlobe parity) ---
+# --- Solution Pages ---
 
-def _solution_context(title, description, features, meta_desc=None):
-    return {
-        'page_title': f'{title} | RevNext Channel Manager',
-        'meta_description': meta_desc or f'{description[:150]}...',
-        'solution_title': title,
-        'solution_description': description,
-        'solution_features': features,
+def _solution_page(request, slug):
+    from .solutions_data import get_solution
+    solution = get_solution(slug)
+    if not solution:
+        from django.http import Http404
+        raise Http404
+    context = {
+        'page_title': f"{solution['eyebrow']} | RevNext Hospitality",
+        'meta_description': solution['meta'],
+        'solution': solution,
+        'solution_slug': slug,
+        'solution_title': solution['title'],
+        'solution_description': solution['lead'],
+        'solution_features': solution['features'],
     }
+    return render(request, 'pages/solution_detail.html', context)
 
 
 def solution_cloud_pms(request):
-    """Cloud PMS solution page"""
-    context = _solution_context(
-        'Cloud PMS',
-        'A secure, cloud-based Property Management System for front desk, reservations, housekeeping, billing, and maintenance. Multi-property management under a single login.',
-        [
-            'Front desk, reservations, housekeeping, folios, and billing modules',
-            'Linked Room feature: sell villas/apartments as whole unit or individual rooms',
-            'Bill to Room integration with Cloud POS',
-            'Multi-property login for chains and groups',
-        ],
-    )
-    return render(request, 'pages/solution_detail.html', context)
+    return _solution_page(request, 'cloud-pms')
 
 
 def solution_cloud_pos(request):
-    """Cloud POS solution page"""
-    context = _solution_context(
-        'Cloud POS',
-        'F&B management with touch-friendly interface. Direct integration with PMS folios for unified restaurant and room billing.',
-        [
-            'F&B management with touch-friendly interface',
-            'Direct integration with PMS folios',
-            'Bill to Room for seamless guest experience',
-            'Unifies restaurant and room billing',
-        ],
-    )
-    return render(request, 'pages/solution_detail.html', context)
+    return _solution_page(request, 'cloud-pos')
 
 
 def solution_booking_engine(request):
-    """Booking Engine solution page"""
-    context = _solution_context(
-        'Booking Engine',
-        'One-page booking with multi-currency support. Integrated with Google Hotel Ads and payment gateways for commission-free direct revenue.',
-        [
-            'One-page booking with multi-currency support',
-            'Google Hotel Ads integration',
-            'Payment gateway integration',
-            'Drives commission-free direct revenue',
-        ],
-    )
-    return render(request, 'pages/solution_detail.html', context)
+    return _solution_page(request, 'booking-engine')
 
 
 def solution_website_builder(request):
-    """Website Builder solution page"""
-    context = _solution_context(
-        'Website Builder',
-        'No-code templates with SEO optimization and SSL included. Free hosting with direct link to Booking Engine.',
-        [
-            'No-code templates with SEO optimization',
-            'Multi-language support',
-            'Free hosting with SSL certificate',
-            'Direct link to Booking Engine',
-        ],
-    )
-    return render(request, 'pages/solution_detail.html', context)
+    return _solution_page(request, 'website-builder')
 
 
 def solution_mobile_apps(request):
-    """Mobile Apps solution page"""
-    context = _solution_context(
-        'Mobile Apps',
-        'HMS and Housekeeping apps for property management, inventory control, and guest service management from mobile devices.',
-        [
-            'eGlobe HMS & Housekeeping App',
-            'Real-time service requests to housekeeping',
-            'Property management and inventory control',
-            'Remote management for owners and staff',
-        ],
-    )
-    return render(request, 'pages/solution_detail.html', context)
+    return _solution_page(request, 'mobile-apps')
 
 
 def solution_b2b(request):
-    """Stay B2B Network solution page"""
-    context = _solution_context(
-        'Stay B2B Network',
-        'Dedicated platform for corporate partners and travel agents with secure logins and special rate management.',
-        [
-            'Corporate/Agent login portals',
-            'Role-based access control',
-            'Special rate management',
-            'Dedicated B2B sales channel',
-        ],
-    )
-    return render(request, 'pages/solution_detail.html', context)
+    return _solution_page(request, 'b2b-network')
 
 
 def solution_ota_listing(request):
-    """OTA Listing Service solution page"""
-    context = _solution_context(
-        'OTA Listing Service',
-        'Professional setup and optimization of property listings on major OTAs. Get your property online fast.',
-        [
-            'Professional setup on major OTAs',
-            'Listing optimization',
-            'Quick onboarding',
-            'Support for 100+ platforms',
-        ],
-    )
-    return render(request, 'pages/solution_detail.html', context)
+    return _solution_page(request, 'ota-listing')
 
 
 def solution_google_hotel_ads(request):
-    """Google Hotel Ads solution page"""
-    context = _solution_context(
-        'Google Hotel Ads',
-        'Display real-time hotel rates on Google Search, Google Maps, and Google Business Listings. Pay-Per-Conversion—pay only for confirmed bookings.',
-        [
-            'Pay-Per-Conversion model (pay only for confirmed bookings)',
-            'Real-time rates on Google Search & Maps',
-            'Direct API link to Booking Engine',
-            'Improve look-to-book ratios and ARR',
-        ],
-    )
-    return render(request, 'pages/solution_detail.html', context)
+    return _solution_page(request, 'google-hotel-ads')
+

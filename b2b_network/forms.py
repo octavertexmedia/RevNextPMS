@@ -29,6 +29,7 @@ class B2BAgentForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         tenant = kwargs.pop('tenant', None)
+        self._tenant = tenant
         super().__init__(*args, **kwargs)
         if tenant:
             from core.models import Property
@@ -37,13 +38,18 @@ class B2BAgentForm(forms.ModelForm):
             self.fields['properties'].initial = [
                 ca.property_id for ca in CorporateAccount.objects.filter(agent=self.instance, has_access=True)
             ]
-    
+
     def save(self, commit=True):
-        agent = super().save(commit=commit)
-        if commit and 'properties' in self.cleaned_data:
-            CorporateAccount.objects.filter(agent=agent).delete()
-            for prop in self.cleaned_data['properties']:
-                CorporateAccount.objects.create(property=prop, agent=agent, has_access=True)
+        agent = super().save(commit=False)
+        tenant = getattr(self, '_tenant', None)
+        if tenant and not agent.tenant_id:
+            agent.tenant = tenant
+        if commit:
+            agent.save()
+            if 'properties' in self.cleaned_data:
+                CorporateAccount.objects.filter(agent=agent).delete()
+                for prop in self.cleaned_data['properties']:
+                    CorporateAccount.objects.create(property=prop, agent=agent, has_access=True)
         return agent
 
 

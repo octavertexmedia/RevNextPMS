@@ -3,199 +3,181 @@
 {% block title %}GST & Invoicing Guide - RevNext Channel Manager{% endblock %}
 
 {% block content %}
-<section class="pt-32 pb-20 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto">
-            <!-- Header -->
-            <div class="mb-12">
-                <a href="{% url 'core:documentation' %}" class="text-indigo-600 hover:text-indigo-700 mb-4 inline-flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Back to Documentation
-                </a>
-                <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">GST & Invoicing</h1>
-                <p class="text-xl text-gray-600">GST compliance and automated invoice generation for Indian hotels</p>
-            </div>
+<section class="dawn-page-hero is-compact">
+    <div class="dawn-container">
+        <a href="{% url 'core:documentation' %}" class="dawn-link" style="color:rgba(255,255,255,.75);display:inline-flex;align-items:center;gap:.4rem;margin-bottom:1rem;">
+            <svg style="width:1.1rem;height:1.1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Documentation
+        </a>
+        <p class="dawn-eyebrow">Guide</p>
+        <h1 class="dawn-h1">GST &amp; Invoicing</h1>
+        <p class="dawn-lead">GST compliance and automated invoice generation for Indian hotels.</p>
+    </div>
+</section>
 
-            <!-- Content -->
-            <div class="prose prose-lg max-w-none">
-                <!-- Overview -->
-                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 mb-8 rounded-r-lg">
-                    <p class="text-gray-700 mb-0">
-                        <strong>GST Compliance</strong> is essential for Indian hotels. RevNext Channel Manager automatically calculates CGST, SGST, and IGST based on your property location and guest location, ensuring full compliance with Indian tax regulations.
-                    </p>
-                </div>
+<section class="dawn-section">
+    <div class="dawn-container dawn-prose">
+        <div class="dawn-panel-accent" style="margin-bottom:2rem;">
+            <p style="margin:0;">
+                <strong>GST Compliance</strong> is essential for Indian hotels. RevNext Channel Manager automatically calculates CGST, SGST, and IGST based on your property location and guest location, ensuring full compliance with Indian tax regulations.
+            </p>
+        </div>
 
-                <!-- Understanding GST -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Understanding GST for Hotels</h2>
-                    
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">GST Rates for Hotels</h3>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <p class="text-gray-700 mb-4">Hotel room rates are subject to GST based on the room rate per night:</p>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
-                                <span class="font-medium text-gray-900">Room rate up to ₹1,000</span>
-                                <span class="font-semibold text-indigo-600">12% GST</span>
-                            </div>
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
-                                <span class="font-medium text-gray-900">Room rate ₹1,001 to ₹7,500</span>
-                                <span class="font-semibold text-indigo-600">18% GST</span>
-                            </div>
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
-                                <span class="font-medium text-gray-900">Room rate above ₹7,500</span>
-                                <span class="font-semibold text-indigo-600">28% GST</span>
-                            </div>
-                        </div>
+        <div style="margin-bottom:2.5rem;">
+            <h2>Understanding GST for Hotels</h2>
+
+            <h3>GST Rates for Hotels</h3>
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <p>Hotel room rates are subject to GST based on the room rate per night:</p>
+                <div style="display:grid;gap:.6rem;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:.65rem .85rem;background:var(--marble);border-radius:8px;">
+                        <span style="font-weight:600;color:var(--ink);">Room rate up to ₹1,000</span>
+                        <span style="font-weight:700;color:var(--navy);">12% GST</span>
                     </div>
-
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">CGST, SGST, and IGST</h3>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <p class="text-gray-700 mb-4">GST is divided into three components:</p>
-                        <div class="space-y-4">
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">CGST (Central GST)</h4>
-                                <p class="text-gray-600 text-sm">Collected by the central government. Applied for intra-state transactions (same state).</p>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">SGST (State GST)</h4>
-                                <p class="text-gray-600 text-sm">Collected by the state government. Applied for intra-state transactions (same state).</p>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-2">IGST (Integrated GST)</h4>
-                                <p class="text-gray-600 text-sm">Applied for inter-state transactions (different states). Collected by the central government.</p>
-                            </div>
-                        </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:.65rem .85rem;background:var(--marble);border-radius:8px;">
+                        <span style="font-weight:600;color:var(--ink);">Room rate ₹1,001 to ₹7,500</span>
+                        <span style="font-weight:700;color:var(--navy);">18% GST</span>
                     </div>
-
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <p class="text-sm text-yellow-800">
-                            <strong>Important:</strong> CGST + SGST = IGST. For intra-state bookings, CGST and SGST are applied. For inter-state bookings, IGST is applied.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Setting Up GST -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Setting Up GST</h2>
-                    
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Property GST Configuration</h3>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Go to your <strong>Property</strong> settings</li>
-                            <li>Enter your <strong>GSTIN</strong> (GST Identification Number)</li>
-                            <li>Enter your <strong>PAN</strong> (Permanent Account Number)</li>
-                            <li>Verify your property address matches your GST registration</li>
-                            <li>Save the settings</li>
-                        </ol>
-                    </div>
-
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <p class="text-sm text-blue-800">
-                            <strong>Note:</strong> GSTIN is mandatory for properties with annual turnover above ₹20 lakhs. Ensure your GSTIN is valid and active.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Automatic GST Calculation -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Automatic GST Calculation</h2>
-                    <p class="text-gray-700 mb-6">RevNext Channel Manager automatically calculates GST for every reservation:</p>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">How It Works</h3>
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>System identifies the room rate per night</li>
-                            <li>Determines the applicable GST rate (12%, 18%, or 28%)</li>
-                            <li>Checks if booking is intra-state or inter-state:
-                                <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
-                                    <li><strong>Intra-state:</strong> Guest and property in same state → CGST + SGST</li>
-                                    <li><strong>Inter-state:</strong> Guest and property in different states → IGST</li>
-                                </ul>
-                            </li>
-                            <li>Calculates CGST, SGST, or IGST amounts</li>
-                            <li>Adds GST to the total booking amount</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <!-- Invoice Generation -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Invoice Generation</h2>
-                    <p class="text-gray-700 mb-6">Generate GST-compliant invoices for all bookings:</p>
-                    
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Invoice Components</h3>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Invoice Number:</strong> Unique invoice number</li>
-                            <li><strong>Invoice Date:</strong> Date of invoice generation</li>
-                            <li><strong>Property Details:</strong> Name, address, GSTIN, PAN</li>
-                            <li><strong>Guest Details:</strong> Name, address, contact</li>
-                            <li><strong>Booking Details:</strong> Check-in, check-out, room type, nights</li>
-                            <li><strong>Room Charges:</strong> Base rate × nights</li>
-                            <li><strong>GST Breakdown:</strong> CGST, SGST, or IGST amounts</li>
-                            <li><strong>Total Amount:</strong> Room charges + GST</li>
-                        </ul>
-                    </div>
-
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 mt-6">Generating Invoices</h3>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <ol class="list-decimal list-inside space-y-3 text-gray-700">
-                            <li>Go to <strong>Reservations</strong> in your dashboard</li>
-                            <li>Select the reservation</li>
-                            <li>Click <strong>"Generate Invoice"</strong></li>
-                            <li>Review the invoice details</li>
-                            <li>Download as PDF or email to guest</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <!-- GST Reports -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">GST Reports</h2>
-                    <p class="text-gray-700 mb-6">Generate GST reports for tax filing:</p>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Available Reports</h3>
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>GST Summary Report:</strong> Total GST collected (CGST, SGST, IGST)</li>
-                            <li><strong>Monthly GST Report:</strong> GST breakdown by month</li>
-                            <li><strong>Invoice Register:</strong> List of all invoices with GST details</li>
-                            <li><strong>GST Return Report:</strong> Formatted for GST return filing</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Best Practices -->
-                <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Best Practices</h2>
-                    <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-6 border border-green-200">
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li>Keep your GSTIN and PAN updated in the system</li>
-                            <li>Verify GST calculations for the first few bookings</li>
-                            <li>Generate invoices immediately after booking confirmation</li>
-                            <li>Maintain proper invoice numbering sequence</li>
-                            <li>Regularly review GST reports for accuracy</li>
-                            <li>Keep digital copies of all invoices for tax records</li>
-                            <li>Consult with a tax advisor for complex GST scenarios</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Related Guides -->
-                <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Related Guides</h3>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <a href="{% url 'core:guide_property_management' %}" class="block p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all">
-                            <h4 class="font-semibold text-gray-900 mb-2">Property Management →</h4>
-                            <p class="text-sm text-gray-600">Set up your property with GST details</p>
-                        </a>
-                        <a href="{% url 'core:documentation' %}" class="block p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all">
-                            <h4 class="font-semibold text-gray-900 mb-2">All Documentation →</h4>
-                            <p class="text-sm text-gray-600">Browse all guides and resources</p>
-                        </a>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:.65rem .85rem;background:var(--marble);border-radius:8px;">
+                        <span style="font-weight:600;color:var(--ink);">Room rate above ₹7,500</span>
+                        <span style="font-weight:700;color:var(--navy);">28% GST</span>
                     </div>
                 </div>
             </div>
+
+            <h3>CGST, SGST, and IGST</h3>
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <p>GST is divided into three components:</p>
+                <div style="display:grid;gap:1rem;">
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .3rem;">CGST (Central GST)</h4>
+                        <p style="margin:0;font-size:.9rem;">Collected by the central government. Applied for intra-state transactions (same state).</p>
+                    </div>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .3rem;">SGST (State GST)</h4>
+                        <p style="margin:0;font-size:.9rem;">Collected by the state government. Applied for intra-state transactions (same state).</p>
+                    </div>
+                    <div>
+                        <h4 style="font-family:var(--font-display);margin:0 0 .3rem;">IGST (Integrated GST)</h4>
+                        <p style="margin:0;font-size:.9rem;">Applied for inter-state transactions (different states). Collected by the central government.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dawn-panel-accent">
+                <p style="margin:0;"><strong>Important:</strong> CGST + SGST = IGST. For intra-state bookings, CGST and SGST are applied. For inter-state bookings, IGST is applied.</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Setting Up GST</h2>
+
+            <h3>Property GST Configuration</h3>
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <ol style="margin:0;">
+                    <li>Go to your <strong>Property</strong> settings</li>
+                    <li>Enter your <strong>GSTIN</strong> (GST Identification Number)</li>
+                    <li>Enter your <strong>PAN</strong> (Permanent Account Number)</li>
+                    <li>Verify your property address matches your GST registration</li>
+                    <li>Save the settings</li>
+                </ol>
+            </div>
+
+            <div class="dawn-panel-accent">
+                <p style="margin:0;"><strong>Note:</strong> GSTIN is mandatory for properties with annual turnover above ₹20 lakhs. Ensure your GSTIN is valid and active.</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Automatic GST Calculation</h2>
+            <p>RevNext Channel Manager automatically calculates GST for every reservation:</p>
+            <div class="dawn-panel">
+                <h3 style="margin-top:0;">How It Works</h3>
+                <ol style="margin:0;">
+                    <li>System identifies the room rate per night</li>
+                    <li>Determines the applicable GST rate (12%, 18%, or 28%)</li>
+                    <li>Checks if booking is intra-state or inter-state:
+                        <ul>
+                            <li><strong>Intra-state:</strong> Guest and property in same state → CGST + SGST</li>
+                            <li><strong>Inter-state:</strong> Guest and property in different states → IGST</li>
+                        </ul>
+                    </li>
+                    <li>Calculates CGST, SGST, or IGST amounts</li>
+                    <li>Adds GST to the total booking amount</li>
+                </ol>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Invoice Generation</h2>
+            <p>Generate GST-compliant invoices for all bookings:</p>
+
+            <h3>Invoice Components</h3>
+            <div class="dawn-panel" style="margin-bottom:1rem;">
+                <ul style="margin:0;">
+                    <li><strong>Invoice Number:</strong> Unique invoice number</li>
+                    <li><strong>Invoice Date:</strong> Date of invoice generation</li>
+                    <li><strong>Property Details:</strong> Name, address, GSTIN, PAN</li>
+                    <li><strong>Guest Details:</strong> Name, address, contact</li>
+                    <li><strong>Booking Details:</strong> Check-in, check-out, room type, nights</li>
+                    <li><strong>Room Charges:</strong> Base rate × nights</li>
+                    <li><strong>GST Breakdown:</strong> CGST, SGST, or IGST amounts</li>
+                    <li><strong>Total Amount:</strong> Room charges + GST</li>
+                </ul>
+            </div>
+
+            <h3>Generating Invoices</h3>
+            <div class="dawn-panel">
+                <ol style="margin:0;">
+                    <li>Go to <strong>Reservations</strong> in your dashboard</li>
+                    <li>Select the reservation</li>
+                    <li>Click <strong>"Generate Invoice"</strong></li>
+                    <li>Review the invoice details</li>
+                    <li>Download as PDF or email to guest</li>
+                </ol>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>GST Reports</h2>
+            <p>Generate GST reports for tax filing:</p>
+            <div class="dawn-panel">
+                <h3 style="margin-top:0;">Available Reports</h3>
+                <ul style="margin:0;">
+                    <li><strong>GST Summary Report:</strong> Total GST collected (CGST, SGST, IGST)</li>
+                    <li><strong>Monthly GST Report:</strong> GST breakdown by month</li>
+                    <li><strong>Invoice Register:</strong> List of all invoices with GST details</li>
+                    <li><strong>GST Return Report:</strong> Formatted for GST return filing</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="margin-bottom:2.5rem;">
+            <h2>Best Practices</h2>
+            <div class="dawn-panel-soft">
+                <ul style="margin:0;">
+                    <li>Keep your GSTIN and PAN updated in the system</li>
+                    <li>Verify GST calculations for the first few bookings</li>
+                    <li>Generate invoices immediately after booking confirmation</li>
+                    <li>Maintain proper invoice numbering sequence</li>
+                    <li>Regularly review GST reports for accuracy</li>
+                    <li>Keep digital copies of all invoices for tax records</li>
+                    <li>Consult with a tax advisor for complex GST scenarios</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="dawn-guide-nav" style="display:grid;gap:1rem;grid-template-columns:repeat(2,1fr);">
+            <a href="{% url 'core:guide_property_management' %}">
+                <strong>Property Management →</strong>
+                <span>Set up your property with GST details</span>
+            </a>
+            <a href="{% url 'core:documentation' %}">
+                <strong>All Documentation →</strong>
+                <span>Browse all guides and resources</span>
+            </a>
         </div>
     </div>
 </section>

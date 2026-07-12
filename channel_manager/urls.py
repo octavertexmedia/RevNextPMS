@@ -60,10 +60,23 @@ For API support, contact: support@revnext.in
     public=True,
     permission_classes=[permissions.AllowAny],
     patterns=[
+        path('api/auth/', include('tenants.urls_auth')),
         path('api/', include('tenants.urls_api')),
+        path('api/rbac/', include('rbac.urls')),
+        path('api/products/', include('products.urls')),
         path('api/core/', include('core.urls_api')),
         path('api/integrations/', include('integrations.urls_api')),
         path('api/bookings/', include('bookings.urls_api')),
+        path('api/pms/', include('cloud_pms.urls_api')),
+        path('api/pos/', include('cloud_pos.urls_api')),
+        path('api/booking-engine/', include('booking_engine.urls_api')),
+        path('api/website-builder/', include('website_builder.urls_api')),
+        path('api/b2b/', include('b2b_network.urls_api')),
+        path('api/ota-listing/', include('ota_listing.urls_api')),
+        path('api/google-hotel-ads/', include('google_hotel_ads.urls_api')),
+        path('api/reports/', include('reports.urls')),
+        path('api/tours/', include('tours.urls_api')),
+        path('api/hotels/', include('hotels.urls_api')),
     ],
 )
 
@@ -84,6 +97,11 @@ urlpatterns = [
     path('ota-listing/', include('ota_listing.urls')),
     path('google-hotel-ads/', include('google_hotel_ads.urls')),
     path('payment-gateways/', include('payment_gateways.urls')),
+    path('tours/', include('tours.urls')),
+    path('hotels/', include('hotels.urls')),
+
+    # OIDC RP → auth.revnext.in (SSO across product hosts)
+    path('oidc/', include('channel_manager.oidc_urls')),
     
     # Health check
     path('health/', include(('core.urls', 'core'), namespace='health')),
@@ -96,11 +114,23 @@ urlpatterns = [
     path('api/swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui-alt'),
     
     # API Endpoints
+    path('api/auth/', include('tenants.urls_auth')),
     path('api/', include('tenants.urls_api')),  # Tenant and subscription APIs
-    path('api/core/', include(('core.urls', 'core'), namespace='core-api')),
+    path('api/rbac/', include('rbac.urls')),  # Enterprise hospitality RBAC
+    path('api/products/', include('products.urls')),  # Multi-product catalog & billing
+    path('api/core/', include('core.urls_api')),
     path('api/integrations/', include('integrations.urls')),
     path('api/bookings/', include('bookings.urls')),
+    path('api/pms/', include('cloud_pms.urls_api')),
+    path('api/pos/', include('cloud_pos.urls_api')),
+    path('api/booking-engine/', include('booking_engine.urls_api')),
+    path('api/website-builder/', include('website_builder.urls_api')),
+    path('api/b2b/', include('b2b_network.urls_api')),
+    path('api/ota-listing/', include('ota_listing.urls_api')),
+    path('api/google-hotel-ads/', include('google_hotel_ads.urls_api')),
     path('api/reports/', include('reports.urls')),  # Reports API
+    path('api/tours/', include('tours.urls_api')),
+    path('api/hotels/', include('hotels.urls_api')),
 ]
 
 if settings.DEBUG:

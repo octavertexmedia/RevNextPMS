@@ -32,25 +32,55 @@ services:
       timeout: 5s
       retries: 5
 
+  openbao:
+    image: openbao/openbao:latest
+    container_name: channel_manager_openbao
+    restart: unless-stopped
+    cap_add:
+      - IPC_LOCK
+    environment:
+      BAO_DEV_ROOT_TOKEN_ID: ${OPENBAO_TOKEN:-dev-root-token}
+      BAO_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+      # For non-dev file mode, comment command below and mount deploy/openbao/config.hcl
+    command: server -dev -dev-root-token-id=${OPENBAO_TOKEN:-dev-root-token} -dev-listen-address=0.0.0.0:8200
+    volumes:
+      - openbao_data:/openbao/file
+      - ./deploy/openbao:/openbao/scripts:ro
+    ports:
+      - "127.0.0.1:8200:8200"
+    healthcheck:
+      test: ["CMD", "bao", "status"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
   web:
     image: channel-manager:latest
     container_name: channel_manager_web
     restart: unless-stopped
+    # entrypoint (in image) runs migrate + seed_products before gunicorn
     command: gunicorn --bind 0.0.0.0:8001 --workers 4 --timeout 120 --access-logfile - --error-logfile - channel_manager.wsgi:application
     volumes:
       - ./media:/app/media
       - ./staticfiles:/app/staticfiles
       - ./logs:/app/logs
+      - ./deploy/openbao:/openbao/scripts:ro
     env_file:
       - .env
     environment:
       - DB_HOST=db
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - OPENBAO_ADDR=http://openbao:8200
+      - SEED_ON_START=true
+      - COLLECTSTATIC_ON_START=false
     depends_on:
       db:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      openbao:
         condition: service_healthy
     ports:
       - "127.0.0.1:8001:8001"
@@ -58,8 +88,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8001/health/"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 40s
+      retries: 5
+      start_period: 90s
 
   celery:
     image: channel-manager:latest
@@ -76,10 +106,14 @@ services:
       - DB_HOST=db
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - OPENBAO_ADDR=http://openbao:8200
+      - SKIP_MIGRATE=true
+      - SEED_ON_START=false
     depends_on:
       - db
       - redis
       - web
+      - openbao
 
   celery-beat:
     image: channel-manager:latest
@@ -96,14 +130,20 @@ services:
       - DB_HOST=db
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - OPENBAO_ADDR=http://openbao:8200
+      - SKIP_MIGRATE=true
+      - SEED_ON_START=false
     depends_on:
       - db
       - redis
       - web
+      - openbao
 
 volumes:
   postgres_data:
     driver: local
   redis_data:
+    driver: local
+  openbao_data:
     driver: local
 

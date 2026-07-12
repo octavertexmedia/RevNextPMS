@@ -1,112 +1,50 @@
-<section id="solutions" class="solutions-section py-20 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                All-in-One Hospitality Platform
-            </h2>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                From channel management to direct bookings—everything you need to run your property efficiently
-            </p>
+<section id="solutions" class="dawn-section dawn-section-alt">
+    <div class="dawn-container">
+        <div class="dawn-section-head dawn-reveal">
+            <p class="dawn-eyebrow" style="color:var(--navy);">Solutions</p>
+            <h2 class="dawn-h2">The full front-of-house stack</h2>
+            <p class="dawn-section-lead">Channel sync, PMS, POS, and direct bookings — one RevNext desk for the whole property.</p>
         </div>
-        
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Channel Manager -->
-            <a href="{% url 'core:integrations' %}" class="solution-card group block bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all border border-gray-200 hover:border-blue-300">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-2">Channel Manager</h3>
-                <p class="text-sm text-gray-600">Real-time sync with 100+ OTAs. Single-click distribution. Eliminates overbooking.</p>
+        <div class="dawn-grid-4">
+            <a href="{% url 'core:integrations' %}" class="dawn-card dawn-reveal">
+                <div class="dawn-card-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></div>
+                <h3>Channel Manager</h3>
+                <p>Real-time ARI sync across OTAs. One inventory truth.</p>
             </a>
-            
-            <!-- Cloud PMS -->
-            <a href="{% url 'core:solution_cloud_pms' %}" class="solution-card group block bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all border border-gray-200 hover:border-indigo-300">
-                <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-2">Cloud PMS</h3>
-                <p class="text-sm text-gray-600">Front desk, housekeeping, billing. Multi-property login. Linked Room for villas.</p>
+            <a href="{% url 'core:solution_cloud_pms' %}" class="dawn-card dawn-reveal">
+                <div class="dawn-card-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></div>
+                <h3>Cloud PMS</h3>
+                <p>Arrivals, housekeeping, folios, linked rooms.</p>
             </a>
-            
-            <!-- Cloud POS -->
-            <a href="{% url 'core:solution_cloud_pos' %}" class="solution-card group block bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all border border-gray-200 hover:border-purple-300">
-                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-2">Cloud POS</h3>
-                <p class="text-sm text-gray-600">F&B management. Touch-friendly. Bill to Room integration with PMS.</p>
+            <a href="{% url 'core:solution_cloud_pos' %}" class="dawn-card dawn-reveal">
+                <div class="dawn-card-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg></div>
+                <h3>Cloud POS</h3>
+                <p>F&amp;B orders with bill-to-room into the guest folio.</p>
             </a>
-            
-            <!-- Booking Engine -->
-            <a href="{% url 'core:solution_booking_engine' %}" class="solution-card group block bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all border border-gray-200 hover:border-green-300">
-                <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-green-500 group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-2">Booking Engine</h3>
-                <p class="text-sm text-gray-600">One-page booking. Multi-currency. Google Hotel Ads. Commission-free direct revenue.</p>
+            <a href="{% url 'core:solution_booking_engine' %}" class="dawn-card dawn-reveal">
+                <div class="dawn-card-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+                <h3>Booking Engine</h3>
+                <p>Commission-free direct stays, multi-currency ready.</p>
             </a>
-            
-            <!-- Website Builder -->
-            <a href="{% url 'core:solution_website_builder' %}" class="solution-card group block bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all border border-gray-200 hover:border-teal-300">
-                <div class="w-12 h-12 bg-teal-100 text-teal-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-teal-500 group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-2">Website Builder</h3>
-                <p class="text-sm text-gray-600">No-code templates. SEO-optimized. SSL included. Direct link to Booking Engine.</p>
+            <a href="{% url 'core:solution_website_builder' %}" class="dawn-card dawn-reveal">
+                <div class="dawn-card-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg></div>
+                <h3>Website Builder</h3>
+                <p>Property sites that plug straight into your engine.</p>
             </a>
-            
-            <!-- Mobile Apps -->
-            <a href="{% url 'core:solution_mobile_apps' %}" class="solution-card group block bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all border border-gray-200 hover:border-blue-300">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-2">Mobile Apps</h3>
-                <p class="text-sm text-gray-600">HMS & Housekeeping App. Real-time service requests. Remote management.</p>
+            <a href="{% url 'core:solution_mobile_apps' %}" class="dawn-card dawn-reveal">
+                <div class="dawn-card-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
+                <h3>Mobile Apps</h3>
+                <p>Front desk and housekeeping on iOS &amp; Android.</p>
             </a>
-            
-            <!-- Stay B2B Network -->
-            <a href="{% url 'core:solution_b2b' %}" class="solution-card group block bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all border border-gray-200 hover:border-amber-300">
-                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-amber-500 group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-2">Stay B2B Network</h3>
-                <p class="text-sm text-gray-600">Corporate/Agent portals. Special rate management. Dedicated B2B sales channel.</p>
+            <a href="{% url 'core:solution_b2b' %}" class="dawn-card dawn-reveal">
+                <div class="dawn-card-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+                <h3>Stay B2B</h3>
+                <p>Corporate and agent rates without spreadsheet chaos.</p>
             </a>
-            
-            <!-- OTA Listing Service -->
-            <a href="{% url 'core:solution_ota_listing' %}" class="solution-card group block bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all border border-gray-200 hover:border-rose-300">
-                <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-rose-500 group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-2">OTA Listing Service</h3>
-                <p class="text-sm text-gray-600">Professional setup & optimization on major OTAs. Get your property online fast.</p>
-            </a>
-            
-            <!-- Google Hotel Ads -->
-            <a href="{% url 'core:solution_google_hotel_ads' %}" class="solution-card group block bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all border border-gray-200 hover:border-red-300">
-                <div class="w-12 h-12 bg-red-100 text-red-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-red-500 group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-2">Google Hotel Ads</h3>
-                <p class="text-sm text-gray-600">Pay-Per-Conversion. Real-time rates on Google Search & Maps. Drive direct bookings.</p>
-            </a>
-            
-            <!-- API Connectivity -->
-            <a href="{% url 'core:api_reference' %}" class="solution-card group block bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all border border-gray-200 hover:border-blue-300">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-2">API Connectivity</h3>
-                <p class="text-sm text-gray-600">OAuth 2.0. Bi-directional sync. 99.9% uptime. Integrate PMS, RMS, Analytics.</p>
-            </a>
-            
-            <!-- Payment Gateways -->
-            <a href="{% url 'core:integrations' %}#payment-gateways" class="solution-card group block bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all border border-gray-200 hover:border-emerald-300">
-                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
-                </div>
-                <h3 class="font-bold text-gray-900 mb-2">Payment Gateways</h3>
-                <p class="text-sm text-gray-600">PayPal, Razorpay, iPay88. PCI-DSS compliant. Secure payment processing.</p>
+            <a href="{% url 'core:solution_google_hotel_ads' %}" class="dawn-card dawn-reveal">
+                <div class="dawn-card-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg></div>
+                <h3>Google Hotel Ads</h3>
+                <p>Pay for confirmed bookings, not empty clicks.</p>
             </a>
         </div>
     </div>

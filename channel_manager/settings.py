@@ -5,7 +5,12 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+# 1) Bootstrap from .env (includes OPENBAO_* connection settings)
 load_dotenv()
+
+# 2) Overlay application secrets from OpenBao when enabled
+from channel_manager.openbao import apply_openbao_secrets  # noqa: E402
+apply_openbao_secrets()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,7 +21,22 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this-in-production'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOSTS',
+    ','.join(__import__('channel_manager.domains', fromlist=['default_allowed_hosts']).default_allowed_hosts()),
+).split(',')
+
+# Product host → product code (see products.catalog.HOST_ALIASES)
+PRODUCT_BASE_DOMAIN = os.getenv('PRODUCT_BASE_DOMAIN', 'revnext.in')
+
+# CSRF for multi-host product suite + auth/secrets
+CSRF_TRUSTED_ORIGINS = [
+    o for o in os.getenv(
+        'CSRF_TRUSTED_ORIGINS',
+        ','.join(__import__('channel_manager.domains', fromlist=['csrf_trusted_origins']).csrf_trusted_origins()),
+    ).split(',')
+    if o
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -43,10 +63,16 @@ INSTALLED_APPS = [
     'location_field.apps.DefaultConfig',
     'djangoql',
     'rest_framework',  # Django REST Framework
+    'rest_framework.authtoken',  # Token auth for mobile / API clients
+    'django_filters',
+    'corsheaders',
     'drf_yasg',  # Swagger/OpenAPI documentation
     
     # Local apps
     'tenants',  # Must be before other apps for custom user model
+    'rbac',  # Enterprise hospitality RBAC
+    'products',  # Multi-product catalog & billing
+    'secrets_manager',  # OpenBao secrets management commands
     'core',
     'integrations',
     'bookings',
@@ -60,17 +86,28 @@ INSTALLED_APPS = [
     'ota_listing',
     'google_hotel_ads',
     'payment_gateways',
+    'tours',  # Tours planner (tours.revnext.in)
+    'hotels',  # Hotels aggregator discovery (hotels.revnext.in)
 ]
+
+# Auth backends (ModelBackend + django-guardian object permissions)
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'tenants.middleware.TenantMiddleware',  # Add tenant context to request
-    'tenants.middleware.SubscriptionMiddleware',  # Enforce subscription limits
+    'products.middleware.ProductHostMiddleware',  # Resolve product from Host
+    'tenants.middleware.SubscriptionMiddleware',  # Enforce legacy subscription limits
+    'products.middleware.ProductEntitlementMiddleware',  # Per-product billing gates
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
@@ -152,7 +189,7 @@ UNFOLD = {
     "SITE_TITLE": "RevNext Admin Management",
     "SITE_HEADER": "RevNext Admin Management",
     "SITE_URL": "/",
-    "SITE_ICON": "https://www.revnext.in/logo.png",
+    "SITE_ICON": "https://www.revnext.in/favicon.ico",
     "SITE_LOGO": "https://www.revnext.in/logo.png",
     "SITE_SYMBOL": "speed",  # Icon from https://fonts.google.com/icons
     "SHOW_HISTORY": True,
@@ -160,7 +197,7 @@ UNFOLD = {
     "ENVIRONMENT": "channel_manager.settings.environment_callback",
     "DASHBOARD_CALLBACK": None,  # We handle this in core/admin.py
     "LOGIN": {
-        "image": "https://www.revnext.in/logo.png",
+        "image": "https://www.revnext.in/favicon.ico",
         "redirect_after_login": lambda request: "/admin/",
     },
     "STYLES": [],
@@ -182,7 +219,46 @@ CONSTANCE_CONFIG = {
     'MAX_PROPERTIES_ENTERPRISE': (100, 'Maximum properties for enterprise plan'),
     'TRIAL_PERIOD_DAYS': (14, 'Trial period in days'),
     'API_RATE_LIMIT_PER_MINUTE': (60, 'API rate limit per minute'),
+    'BILLING_GATEWAY': (
+        'razorpay',
+        'Preferred SaaS billing gateway: razorpay or payu (one over the other)',
+    ),
 }
+
+# Platform SaaS billing (RevNext subscription payments — not hotel guest checkout)
+BILLING_GATEWAY = os.getenv('BILLING_GATEWAY', 'razorpay').lower()
+RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID', '')
+RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET', '')
+RAZORPAY_WEBHOOK_SECRET = os.getenv('RAZORPAY_WEBHOOK_SECRET', '')
+PAYU_MERCHANT_KEY = os.getenv('PAYU_MERCHANT_KEY', '')
+PAYU_MERCHANT_SALT = os.getenv('PAYU_MERCHANT_SALT', '')
+PAYU_MODE = os.getenv('PAYU_MODE', 'test').lower()  # test | live
+SITE_URL = os.getenv('SITE_URL', 'http://127.0.0.1:8000')
+
+# OpenBao secrets manager — production host is secrets.revnext.in
+OPENBAO_ENABLED = os.getenv('OPENBAO_ENABLED', 'false').lower() in ('1', 'true', 'yes')
+OPENBAO_ADDR = os.getenv(
+    'OPENBAO_ADDR',
+    os.getenv('BAO_ADDR', 'https://secrets.revnext.in'),
+)
+OPENBAO_MOUNT_POINT = os.getenv('OPENBAO_MOUNT_POINT', 'secret')
+OPENBAO_SECRET_PATH = os.getenv('OPENBAO_SECRET_PATH', 'revnext/channel-manager')
+OPENBAO_REQUIRED = os.getenv('OPENBAO_REQUIRED', 'false').lower() in ('1', 'true', 'yes')
+
+# OIDC relying party → auth.revnext.in (IdP). Client secrets live in OpenBao.
+OIDC_ENABLED = os.getenv('OIDC_ENABLED', 'false').lower() in ('1', 'true', 'yes')
+OIDC_OP_ISSUER = os.getenv('OIDC_OP_ISSUER', 'https://auth.revnext.in')
+OIDC_RP_CLIENT_ID = os.getenv('OIDC_RP_CLIENT_ID', '')
+OIDC_RP_CLIENT_SECRET = os.getenv('OIDC_RP_CLIENT_SECRET', '')
+OIDC_RP_SIGN_ALGO = os.getenv('OIDC_RP_SIGN_ALGO', 'RS256')
+OIDC_RP_SCOPES = os.getenv('OIDC_RP_SCOPES', 'openid profile email')
+LOGIN_REDIRECT_URL = os.getenv('LOGIN_REDIRECT_URL', '/tenants/dashboard/')
+LOGOUT_REDIRECT_URL = os.getenv('LOGOUT_REDIRECT_URL', '/')
+# Absolute callback used by the IdP (per product host in production)
+OIDC_RP_CALLBACK_URL = os.getenv(
+    'OIDC_RP_CALLBACK_URL',
+    'https://channel-manager.revnext.in/oidc/callback/',
+)
 
 # Celery Configuration
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
@@ -256,6 +332,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
     'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
     ],
@@ -395,11 +472,46 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-# Security Settings
+# Security Settings (behind nginx TLS termination)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+# Health checks hit gunicorn over plain HTTP inside Docker — do not redirect those.
+SECURE_REDIRECT_EXEMPT = [r'^health/?$']
+
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'True').lower() in ('1', 'true', 'yes')
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
+    # SAMEORIGIN (not DENY) — booking widget uses @xframe_options_exempt for embeds
+    X_FRAME_OPTIONS = 'SAMEORIGIN'
+    SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '31536000'))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# CORS — product hosts + local SPAs (override via CORS_ALLOWED_ORIGINS)
+from channel_manager.domains import production_cors_origins_csv  # noqa: E402
+CORS_ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        'CORS_ALLOWED_ORIGINS',
+        production_cors_origins_csv(),
+    ).split(',')
+    if origin.strip()
+]
+CORS_ALLOW_CREDENTIALS = True
+# Flutter mobile apps do not send Origin; allow non-browser clients
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# Optional FCM legacy server key for mobile push (tenants.push)
+FCM_SERVER_KEY = os.getenv('FCM_SERVER_KEY', '')

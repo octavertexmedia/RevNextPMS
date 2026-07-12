@@ -1,26 +1,14 @@
-<section class="cta-section py-20 bg-gradient-to-r from-indigo-600 to-purple-600">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl lg:text-4xl font-bold text-white mb-6">
-                Ready to Streamline Your Hotel Operations?
-            </h2>
-            <p class="text-xl text-indigo-100 mb-10 max-w-2xl mx-auto">
-                Join 500+ hotels already using RevNext Channel Manager. Start your 14-day free trial today.
-            </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="{% url 'tenants:register' %}" class="btn-white-large">
-                    Start Free Trial
-                    <svg class="inline-block ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                    </svg>
-                </a>
-                <a href="#features" class="btn-outline-white">
-                    Learn More
-                </a>
+<section class="dawn-section" style="padding-top:1rem;">
+    <div class="dawn-container">
+        <div class="dawn-cta-band dawn-reveal">
+            <p class="dawn-eyebrow">Ready when you are</p>
+            <h2 class="dawn-h2">Open the desk with RevNext</h2>
+            <p class="dawn-section-lead">Join 500+ hotels already syncing channels before the first check-in of the day.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;">
+                <a href="{% url 'tenants:register' %}" class="dawn-btn dawn-btn-primary">Start free trial</a>
+                <a href="{% url 'core:contact' %}" class="dawn-btn dawn-btn-ghost">Talk to us</a>
             </div>
-            <p class="text-indigo-200 text-sm mt-6">
-                No credit card required • Cancel anytime • 14-day free trial
-            </p>
+            <p style="margin:1.25rem 0 0;font-size:.9rem;color:rgba(255,255,255,.55);">No card · Cancel anytime · 14-day trial</p>
         </div>
     </div>
 </section>

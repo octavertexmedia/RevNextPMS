@@ -143,6 +143,13 @@ if ! docker images channel-manager --format "{{.Repository}}:{{.Tag}}" | grep -q
 fi
 docker tag channel-manager:latest channel-manager:prod 2>/dev/null || true
 
+# Landing / marketing assets (compose mounts ./static over the image — keep host in sync)
+if [ -d "$IMAGE_DIR/app/static" ]; then
+  print_status "Syncing static/ from build (landing CSS must not go stale)..."
+  mkdir -p "$DEPLOY_DIR/static"
+  rsync -a --delete "$IMAGE_DIR/app/static/" "$DEPLOY_DIR/static/"
+fi
+
 # Compose
 if [ -f "$IMAGE_DIR/docker-compose.prod.yml" ]; then
   cp "$IMAGE_DIR/docker-compose.prod.yml" "$DEPLOY_DIR/docker-compose.yml"

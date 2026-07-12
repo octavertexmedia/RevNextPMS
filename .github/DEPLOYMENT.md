@@ -166,11 +166,13 @@ Suite packaging: `cms` remains in `PRODUCT_CATALOG` / `revnext_suite` but is ext
 | `qr_token_*_like already exists` / migrate race | Ensure `SKIP_MIGRATE=true` on web; only `deploy.sh` migrates; drop orphan indexes if needed |
 | Celery “unhealthy” | Often no HTTP healthcheck — check `docker compose logs celery` for `ready` |
 | POS empty after deploy | `seed_pos_demo` (and `seed_products` for plans/entitlements) |
+| Product hero looks stacked (not split) | Host `./static` was stale — deploy now rsyncs `app/static` → `~/channel-manager/static` before collectstatic |
 
 ```bash
 cd ~/channel-manager && docker compose ps && docker compose logs web --tail=80
 curl -fsS -H 'Host: channel-manager.revnext.in' http://127.0.0.1:8001/health/
 curl -fsS -H 'Host: pos.revnext.in' http://127.0.0.1:8001/health/
+grep -c dawn-split-hero static/landing/css/dawn-concierge.css staticfiles/landing/css/dawn-concierge.css
 curl -fsS http://127.0.0.1:8200/v1/sys/health
 cd ~/revnext-secrets && docker compose ps
 ```

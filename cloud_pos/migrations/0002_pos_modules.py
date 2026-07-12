@@ -26,6 +26,11 @@ def _backfill_qr_tokens(apps, schema_editor):
         table.save(update_fields=['qr_token'])
 
 
+def _advisory_lock(apps, schema_editor):
+    # Serialize concurrent migrators (entrypoint + deploy script).
+    schema_editor.execute('SELECT pg_advisory_xact_lock(87234101)')
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -35,6 +40,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(_advisory_lock, migrations.RunPython.noop),
         migrations.AddField(
             model_name='historicalmenucategory',
             name='icon',
@@ -228,13 +234,36 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='postable',
             name='qr_token',
-            field=models.CharField(blank=True, db_index=True, default='', max_length=64),
+            field=models.CharField(blank=True, default='', max_length=64),
         ),
         migrations.RunPython(_backfill_qr_tokens, migrations.RunPython.noop),
-        migrations.AlterField(
-            model_name='postable',
-            name='qr_token',
-            field=models.CharField(db_index=True, default=cloud_pos.models._qr_token, max_length=64, unique=True),
+        migrations.SeparateDatabaseAndState(
+            database_operations=[
+                migrations.RunSQL(
+                    sql=(
+                        "CREATE UNIQUE INDEX IF NOT EXISTS cloud_pos_postable_qr_token_3bbec074 "
+                        "ON cloud_pos_postable (qr_token);"
+                        "CREATE INDEX IF NOT EXISTS cloud_pos_postable_qr_token_3bbec074_like "
+                        "ON cloud_pos_postable (qr_token varchar_pattern_ops);"
+                    ),
+                    reverse_sql=(
+                        "DROP INDEX IF EXISTS cloud_pos_postable_qr_token_3bbec074_like;"
+                        "DROP INDEX IF EXISTS cloud_pos_postable_qr_token_3bbec074;"
+                    ),
+                ),
+            ],
+            state_operations=[
+                migrations.AlterField(
+                    model_name='postable',
+                    name='qr_token',
+                    field=models.CharField(
+                        db_index=True,
+                        default=cloud_pos.models._qr_token,
+                        max_length=64,
+                        unique=True,
+                    ),
+                ),
+            ],
         ),
         migrations.AddField(
             model_name='postable',

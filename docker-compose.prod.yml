@@ -70,6 +70,7 @@ services:
       - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND:-redis://redis:6379/0}
       # Host-published OpenBao from ~/revnext-secrets (override in .env)
       - OPENBAO_ADDR=${OPENBAO_ADDR:-http://172.17.0.1:8200}
+      - SKIP_MIGRATE=true
       - SEED_ON_START=true
       - COLLECTSTATIC_ON_START=false
     extra_hosts:

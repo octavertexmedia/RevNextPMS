@@ -17,6 +17,7 @@ ChannelManager product deploy **never** touches OpenBao containers, volumes, or 
 Product hosts  → nginx → :8001  (Django)
 secrets.revnext.in → nginx → :8200  (OpenBao)
 auth.revnext.in    → external IdP (SSO only)
+cms / app / *.sites → 84.247.183.69 (RevNextCMS — not this stack)
 ```
 
 **Env SoT:** OpenBao at `secrets.revnext.in` holds app secrets.  
@@ -26,7 +27,7 @@ auth.revnext.in    → external IdP (SSO only)
 
 ## GitHub secrets
 
-Repo: **revnext-hospitality/ChannelManager** → Settings → Secrets and variables → Actions
+Repo: **octavertexmedia/RevNextPMS** → Settings → Secrets and variables → Actions
 
 | Secret | Value |
 |--------|--------|
@@ -73,7 +74,7 @@ Workflow: `.github/workflows/deploy-secrets.yml` (only on `deploy/infra/**`, `ng
 # ~/channel-manager/.env — bootstrap only (see env.example):
 OPENBAO_ENABLED=true
 OPENBAO_REQUIRED=true
-OPENBAO_ADDR=http://172.17.0.1:8200
+OPENBAO_ADDR=http://openbao:8200   # or http://172.17.0.1:8200
 OPENBAO_ROLE_ID=...
 OPENBAO_SECRET_ID=...
 DB_PASSWORD=...   # still required for Postgres container
@@ -101,6 +102,27 @@ sudo certbot --nginx \
 `revnext.in` / `www.revnext.in` → **Vercel** (do not terminate on Contabo).  
 `secrets.revnext.in` → separate cert / nginx site `secrets`.
 
+### Migrations (important)
+
+- `docker-compose.prod.yml` sets **`SKIP_MIGRATE=true`** on **web / celery / beat** so entrypoint does not race `deploy.sh`.
+- `deploy.sh` runs a **single** `manage.py migrate` after containers are up.
+- Do not run concurrent migrates (entrypoint + deploy) — that caused POS `0002` index collisions.
+
+### Cloud POS (`pos.revnext.in`)
+
+After a successful product deploy:
+
+```bash
+cd ~/channel-manager
+docker compose exec -T web python manage.py seed_products
+docker compose exec -T web python manage.py seed_pos_demo   # or --reset
+```
+
+Demo login (seed_pos_demo): `posdemo` / `posdemo123`  
+Public QR: Tables list → `/pos/qr/<token>/` (no login).
+
+Modules: `/pos/billing/`, `/pos/waiter/`, `/pos/inventory/`, `/pos/delivery/`, `/pos/qr/<token>/`.
+
 ---
 
 ## 3) auth.revnext.in (SSO)
@@ -124,11 +146,11 @@ Suite packaging: `cms` remains in `PRODUCT_CATALOG` / `revnext_suite` but is ext
 | `.github/workflows/deploy.yml` | Product: SSH → rsync → build on VPS → `~/channel-manager` |
 | `.github/workflows/deploy-secrets.yml` | OpenBao only: `~/revnext-secrets` |
 | `.github/deploy/build-channel-manager-on-vps.sh` | `docker build` on VPS |
-| `.github/deploy/deploy.sh` | Compose up products; **skips** secrets stack |
+| `.github/deploy/deploy.sh` | Compose up products; **skips** secrets stack; runs migrate once |
 | `deploy/infra/*` | OpenBao compose, config, init, deploy-secrets.sh |
 | `nginx-config*.conf` | Product hosts |
 | `nginx-secrets*.conf` | `secrets.revnext.in` |
-| `env.example` | Bootstrap OPENBAO_* + DB_* |
+| `env.example` | Bootstrap OPENBAO_* + DB_* + OIDC notes |
 
 ---
 
@@ -141,10 +163,14 @@ Suite packaging: `cms` remains in `PRODUCT_CATALOG` / `revnext_suite` but is ext
 | App missing SECRET_KEY | OpenBao KV empty or `OPENBAO_ENABLED` false; check `manage.py openbao_status` |
 | OpenBao wiped after product deploy | Should not happen — file a bug if CM deploy touched `revnext_secrets_*` |
 | Port 5432 in use | Prod compose does not bind host 5432 |
+| `qr_token_*_like already exists` / migrate race | Ensure `SKIP_MIGRATE=true` on web; only `deploy.sh` migrates; drop orphan indexes if needed |
+| Celery “unhealthy” | Often no HTTP healthcheck — check `docker compose logs celery` for `ready` |
+| POS empty after deploy | `seed_pos_demo` (and `seed_products` for plans/entitlements) |
 
 ```bash
 cd ~/channel-manager && docker compose ps && docker compose logs web --tail=80
 curl -fsS -H 'Host: channel-manager.revnext.in' http://127.0.0.1:8001/health/
+curl -fsS -H 'Host: pos.revnext.in' http://127.0.0.1:8001/health/
 curl -fsS http://127.0.0.1:8200/v1/sys/health
 cd ~/revnext-secrets && docker compose ps
 ```

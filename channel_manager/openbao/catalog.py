@@ -58,6 +58,7 @@ SECRET_GROUPS = {
         'OIDC_CLIENT_NETWORKS_SECRET',
         'OIDC_CLIENT_TOURS_ID',
         'OIDC_CLIENT_TOURS_SECRET',
+        'ENTITLEMENTS_SERVICE_TOKEN',
     ],
     'integrations': [
         'GOOGLE_MAPS_API_KEY',

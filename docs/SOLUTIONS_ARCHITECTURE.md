@@ -13,7 +13,7 @@ This document describes the architecture for in-depth, detailed web applications
 | **cloud_pms** | Property Management System | Folio, HousekeepingTask, LinkedRoomUnit | Front desk, housekeeping, billing, villa inventory |
 | **cloud_pos** | Point of Sale | MenuCategory, MenuItem, POSOrder, Table | F&B orders, Bill to Room |
 | **booking_engine** | Direct Booking | DirectBooking, BookingSession | One-page booking, multi-currency |
-| **website_builder** | Website Builder | SiteTemplate, PropertyWebsite | Templates, SEO, SSL config |
+| **Hotel CMS (external)** | RevNextCMS on dedicated VPS | Organization / HotelSite (Wagtail) | `cms.revnext.in` + `app.revnext.in` — billed here as `cms` / suite |
 | **b2b_network** | Stay B2B | B2BAgent, B2BRatePlan, CorporateAccount | Agent portals, special rates |
 | **ota_listing** | OTA Listing Service | ListingProject, OTAListingStatus | Setup workflow, optimization |
 | **google_hotel_ads** | Google Hotel Ads | HotelAdsConfig, FeedSubmission | Pay-per-conversion, feed management |
@@ -32,7 +32,7 @@ Tenant → Properties → RoomTypes → RatePlans
                 ↓
         [booking_engine] Direct bookings → Reservations
                 ↓
-        [website_builder] Property website → Booking Engine
+        [RevNextCMS] Property website (external VPS) → Booking Engine
                 ↓
         [b2b_network] Agent rates → RatePlans
                 ↓
@@ -50,7 +50,7 @@ Tenant → Properties → RoomTypes → RatePlans
 - `/pms/` - Cloud PMS dashboard
 - `/pos/` - Cloud POS dashboard  
 - `/booking/` - Booking engine (public + admin)
-- `/website-builder/` - Website builder
+- Hotel CMS → `https://app.revnext.in/` (RevNextCMS; `/website-builder/` redirects)
 - `/b2b/` - B2B network (agent portal)
 - `/ota-listing/` - OTA listing service
 - `/google-hotel-ads/` - Google Hotel Ads config

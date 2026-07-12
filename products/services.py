@@ -76,8 +76,17 @@ def has_product(tenant, product_code: str) -> bool:
 
 def tenant_entitlements_summary(tenant) -> dict:
     subs = active_subscriptions(tenant)
+    entitled = sorted(entitled_product_codes(tenant))
+    launch_urls = {}
+    for code in entitled:
+        try:
+            product = Product.objects.get(code=code, is_active=True)
+        except Product.DoesNotExist:
+            continue
+        launch_urls[code] = product.launch_url(with_oidc=True)
     return {
-        'products': sorted(entitled_product_codes(tenant)),
+        'products': entitled,
+        'launch_urls': launch_urls,
         'subscriptions': [
             {
                 'id': s.id,
@@ -91,10 +100,34 @@ def tenant_entitlements_summary(tenant) -> dict:
                 'ends_at': s.ends_at,
                 'trial_end_date': s.trial_end_date,
                 'entitles': s.entitled_product_codes(),
+                'limits': s.limits_snapshot or {},
+                'features': s.features_snapshot or [],
             }
             for s in subs
         ],
     }
+
+
+def launch_urls_for_plan(plan: ProductPlan) -> dict:
+    """Map entitled product codes → launch URLs after subscribe/trial."""
+    urls = {}
+    for code in plan.entitled_product_codes():
+        try:
+            product = Product.objects.get(code=code, is_active=True)
+        except Product.DoesNotExist:
+            continue
+        urls[code] = product.launch_url(with_oidc=True)
+    return urls
+
+
+def primary_launch_url_for_plan(plan: ProductPlan) -> str:
+    """Prefer CMS / first external product launch URL, else first entitled product."""
+    urls = launch_urls_for_plan(plan)
+    if 'cms' in urls:
+        return urls['cms']
+    if urls:
+        return next(iter(urls.values()))
+    return ''
 
 
 @transaction.atomic

@@ -16,6 +16,8 @@ from .serializers import (
 )
 from .services import (
     cancel_subscription,
+    launch_urls_for_plan,
+    primary_launch_url_for_plan,
     start_product_trial,
     subscribe,
     tenant_entitlements_summary,
@@ -108,8 +110,13 @@ class SubscribeView(APIView):
 
         if data['start_trial']:
             sub = start_product_trial(tenant, plan)
+            payload = TenantProductSubscriptionSerializer(sub).data
             return Response(
-                TenantProductSubscriptionSerializer(sub).data,
+                {
+                    **payload,
+                    'launch_url': primary_launch_url_for_plan(plan),
+                    'launch_urls': launch_urls_for_plan(plan),
+                },
                 status=status.HTTP_201_CREATED,
             )
 
@@ -124,6 +131,8 @@ class SubscribeView(APIView):
             'subscription': TenantProductSubscriptionSerializer(sub).data,
             'invoice': ProductInvoiceSerializer(invoice).data,
             'payment_required': invoice.status == 'pending',
+            'launch_url': primary_launch_url_for_plan(plan),
+            'launch_urls': launch_urls_for_plan(plan),
             'message': (
                 'Subscription created. Complete payment to activate.'
                 if invoice.status == 'pending'
@@ -191,6 +200,7 @@ class CatalogBootstrapView(APIView):
             'plans': plans,
             'suite': suite,
             'hosts': {p['code']: p['primary_host'] for p in products},
+            'launch_urls': {p['code']: p['launch_url'] for p in products if p.get('launch_url')},
             'billing_cycles': ['monthly', 'yearly'],
             'billing': {
                 'preferred': get_preferred_gateway_code(),

@@ -21,7 +21,7 @@ Set `FCM_SERVER_KEY` for outbound pushes. Flutter: `ENABLE_FIREBASE=true` + Fire
 | Mount | Resources / actions |
 |-------|---------------------|
 | `/api/booking-engine/` | bookings list/detail; `cancel`, `confirm` |
-| `/api/website-builder/` | websites, templates; `publish`, `unpublish` |
+| `/api/website-builder/` | **retired** — use RevNextCMS (`app.revnext.in`); path redirects |
 | `/api/b2b/` | agents; `set_active` |
 | `/api/ota-listing/` | projects; `set_status` |
 | `/api/google-hotel-ads/` | configs; `toggle`, `submit_feed` |

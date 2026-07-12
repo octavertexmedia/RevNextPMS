@@ -2,17 +2,21 @@
 Canonical RevNext platform + product host map.
 
 Infrastructure (not billable Django product apps):
-  secrets.revnext.in  → OpenBao
-  auth.revnext.in     → OIDC IdP (SSO for all product hosts)
+  secrets.revnext.in  → OpenBao (shared Contabo)
+  auth.revnext.in     → OIDC IdP (SSO)
 
-Marketing / suite apex:
+Dedicated CMS VPS (84.247.183.69 — RevNextCMS, NOT this process):
+  cms.revnext.in
+  app.revnext.in
+  *.sites.revnext.in  (hotel websites)
+
+Marketing / suite apex (shared Contabo / this process):
   revnext.in / www.revnext.in
 
-Billable product hosts:
+Billable product hosts on THIS process (shared Contabo 77.237.234.201):
   channel-manager.revnext.in
   pms.revnext.in
   pos.revnext.in
-  cms.revnext.in
   booking.revnext.in
   hotels.revnext.in
   networks.revnext.in
@@ -31,10 +35,29 @@ INFRA_HOSTS = {
     'auth': {
         'host': 'auth.revnext.in',
         'service': 'oidc',
-        'issuer': 'https://auth.revnext.in',
+        'issuer': 'https://auth.revnext.in/realms/revnext',
         'description': 'OIDC identity provider (SSO across products)',
     },
+    'cms': {
+        'host': 'cms.revnext.in',
+        'service': 'revnext-cms',
+        'vps': '84.247.183.69',
+        'runtime_url': 'https://app.revnext.in',
+        'oidc_callbacks': [
+            'https://cms.revnext.in/oidc/callback/',
+            'https://app.revnext.in/oidc/callback/',
+        ],
+        'description': 'Hotel CMS + tenant sites (RevNextCMS — separate VPS; OIDC RP client revnext-platform)',
+    },
 }
+
+# Hosts served by RevNextCMS on dedicated VPS — exclude from this nginx upstream
+DEDICATED_CMS_HOSTS = frozenset({
+    'cms.revnext.in',
+    'app.revnext.in',
+    'cms.localhost',
+    'app.localhost',
+})
 
 ALL_PUBLIC_HOSTS = [
     'localhost',
@@ -45,7 +68,8 @@ ALL_PUBLIC_HOSTS = [
     'channel-manager.revnext.in',
     'pms.revnext.in',
     'pos.revnext.in',
-    'cms.revnext.in',
+    'cms.revnext.in',  # documented / CSRF; DNS → 84.247.183.69
+    'app.revnext.in',
     'booking.revnext.in',
     'networks.revnext.in',
     'tours.revnext.in',
@@ -100,10 +124,11 @@ PRODUCTION_HOSTS = [
     if h not in ('localhost', '127.0.0.1') and not h.endswith('.localhost')
 ]
 
-# Nginx / app product hosts (exclude infra secrets/auth which may be separate services)
+# Nginx / app product hosts on shared Contabo (exclude infra + dedicated CMS VPS)
 NGINX_APP_HOSTS = [
     h for h in PRODUCTION_HOSTS
     if h not in ('secrets.revnext.in', 'auth.revnext.in')
+    and h not in DEDICATED_CMS_HOSTS
 ]
 
 

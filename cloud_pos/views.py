@@ -4,7 +4,11 @@ from django.contrib import messages
 from core.models import Property
 from .models import POSOrder, POSOrderItem, MenuCategory, MenuItem, POSTable
 from .forms import MenuCategoryForm, MenuItemForm, POSTableForm, POSOrderForm, POSOrderItemForm
+from .services import recalculate_order_totals, consume_inventory_for_order, sync_table_occupancy
 
+
+def _recalculate_order_total(order):
+    return recalculate_order_totals(order)
 
 @login_required
 def pos_dashboard(request):
@@ -193,16 +197,6 @@ def table_edit(request, table_id):
     return render(request, 'cloud_pos/table_form.html', {'form': form, 'page_title': 'Edit Table'})
 
 
-def _recalculate_order_total(order):
-    """Recalculate order total from items."""
-    from django.db.models import Sum
-    from djmoney.money import Money
-    agg = order.items.aggregate(s=Sum('line_total'))
-    total = agg.get('s') or Money(0, order.total_amount.currency)
-    order.total_amount = total
-    order.save(update_fields=['total_amount'])
-
-
 # --- Task 11: Order add items ---
 @login_required
 def order_detail(request, order_id):
@@ -268,22 +262,27 @@ def order_status_update(request, order_id):
         messages.error(request, 'Invalid status transition.')
         return redirect('cloud_pos:order_detail', order_id=order.id)
     order.status = new_status
+    if new_status == 'SENT':
+        consume_inventory_for_order(order)
     if new_status == 'BILLED' and order.bill_to_room and order.folio_id:
         from cloud_pms.models import FolioLineItem
         from cloud_pms.views import _recalculate_folio_totals
-        FolioLineItem.objects.create(
-            folio=order.folio,
-            item_type='POS',
-            description=f'POS Order #{order.id} - F&B',
-            amount=order.total_amount,
-            quantity=1,
-            pos_order_id=str(order.id),
-        )
-        _recalculate_folio_totals(order.folio)
+        if not FolioLineItem.objects.filter(pos_order_id=str(order.id)).exists():
+            FolioLineItem.objects.create(
+                folio=order.folio,
+                item_type='POS',
+                description=f'POS Order #{order.id} - F&B',
+                amount=order.total_amount,
+                quantity=1,
+                pos_order_id=str(order.id),
+            )
+            _recalculate_folio_totals(order.folio)
         messages.success(request, f'Order billed. Charges added to Folio #{order.folio.id}.')
     elif new_status == 'PAID':
         messages.success(request, 'Order marked as paid.')
     else:
         messages.success(request, f'Order status updated to {order.get_status_display()}.')
     order.save(update_fields=['status'])
+    if order.table_id:
+        sync_table_occupancy(order.table)
     return redirect('cloud_pos:order_detail', order_id=order.id)

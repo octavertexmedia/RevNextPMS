@@ -1,0 +1,252 @@
+{% extends 'tenants/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Billing POS — RevNext{% endblock %}
+{% block page_title %}Billing POS{% endblock %}
+{% block page_description %}Dine In · Takeaway · Delivery · Bill to room{% endblock %}
+
+{% block extra_css %}
+<style>
+  .pos-shell { display:grid; grid-template-columns: 4.5rem 1fr 20rem; gap:0; min-height:calc(100vh - 11rem); background:#0f1419; border-radius:1rem; overflow:hidden; color:#fff; }
+  .pos-cats { background:#161c24; padding:.75rem .4rem; display:flex; flex-direction:column; gap:.4rem; overflow:auto; }
+  .pos-cat { border:0; background:#1e2630; color:#c8d0da; border-radius:.75rem; padding:.65rem .25rem; font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; cursor:pointer; }
+  .pos-cat.on { background:#c1272d; color:#fff; }
+  .pos-main { padding:1rem; display:flex; flex-direction:column; gap:.75rem; background:#121820; }
+  .pos-modes { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+  .pos-mode { border:0; border-radius:999px; padding:.55rem 1rem; font-weight:700; font-size:.85rem; cursor:pointer; color:#111; }
+  .pos-mode[data-type="DINE_IN"] { background:#3b82f6; color:#fff; }
+  .pos-mode[data-type="TAKEAWAY"] { background:#eab308; }
+  .pos-mode[data-type="DELIVERY"] { background:#f97316; color:#fff; }
+  .pos-mode[data-type="ROOM_SERVICE"] { background:#8b5cf6; color:#fff; }
+  .pos-mode:not(.on) { opacity:.55; filter:saturate(.7); }
+  .pos-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(9.5rem,1fr)); gap:.75rem; overflow:auto; flex:1; }
+  .pos-card { background:#1c2430; border-radius:.9rem; overflow:hidden; cursor:pointer; border:1px solid #2a3442; transition:transform .12s ease; }
+  .pos-card:hover { transform:translateY(-2px); border-color:#c1272d; }
+  .pos-card img { width:100%; height:5.5rem; object-fit:cover; background:#0b1016; display:block; }
+  .pos-card .meta { padding:.65rem .7rem .8rem; }
+  .pos-card .meta b { display:block; font-size:.9rem; margin-bottom:.2rem; }
+  .pos-card .meta span { color:#9aa6b5; font-size:.85rem; font-weight:700; }
+  .pos-cart { background:#fff; color:#111; display:flex; flex-direction:column; }
+  .pos-cart h3 { margin:0; padding:1rem 1rem .5rem; font-size:1rem; }
+  .pos-cart-items { flex:1; overflow:auto; padding:0 1rem; }
+  .pos-line { display:flex; justify-content:space-between; gap:.5rem; padding:.55rem 0; border-bottom:1px solid #eee; font-size:.9rem; }
+  .pos-sum { padding:1rem; border-top:1px solid #eee; background:#fafafa; }
+  .pos-sum div { display:flex; justify-content:space-between; margin:.25rem 0; color:#555; font-size:.9rem; }
+  .pos-sum .total { font-size:1.25rem; font-weight:800; color:#111; margin-top:.5rem; }
+  .pos-actions { display:grid; grid-template-columns:1fr 1.4fr; gap:.5rem; padding:0 1rem 1rem; }
+  .pos-actions button { border:0; border-radius:.75rem; padding:.9rem; font-weight:800; cursor:pointer; }
+  .pos-hold { background:#fff; border:2px solid #ddd !important; }
+  .pos-pay { background:#16a34a; color:#fff; }
+  .pos-toolbar { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+  .pos-toolbar select, .pos-toolbar input { border-radius:.6rem; border:1px solid #2a3442; background:#1c2430; color:#fff; padding:.45rem .6rem; font-size:.85rem; }
+  @media (max-width: 960px) {
+    .pos-shell { grid-template-columns: 1fr; }
+    .pos-cats { flex-direction:row; overflow:auto; }
+    .pos-cart { min-height:18rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if not property %}
+<div class="bg-white rounded-xl border p-8 text-center text-gray-600">Create a property first, then open Billing POS.</div>
+{% else %}
+<div class="mb-3 flex flex-wrap gap-2 items-center justify-between">
+  <form method="get" class="flex gap-2 items-center">
+    <label class="text-sm text-gray-600">Property</label>
+    <select name="property" onchange="this.form.submit()" class="rounded-lg border-gray-300 text-sm">
+      {% for p in properties %}
+      <option value="{{ p.id }}" {% if property.id == p.id %}selected{% endif %}>{{ p.name }}</option>
+      {% endfor %}
+    </select>
+  </form>
+  <div class="text-sm text-gray-500">Order {% if active_order %}#{{ active_order.id }} · {{ active_order.get_status_display }}{% else %}— start a new ticket{% endif %}</div>
+</div>
+
+<div class="pos-shell" id="posTerminal"
+     data-property="{{ property.id }}"
+     data-order="{% if active_order %}{{ active_order.id }}{% endif %}"
+     data-api="{% url 'cloud_pos:billing_api' %}"
+     data-csrf="{{ csrf_token }}">
+  <aside class="pos-cats" id="posCats">
+    <button type="button" class="pos-cat on" data-cat="all">All</button>
+    {% for cat in categories %}
+    <button type="button" class="pos-cat" data-cat="{{ cat.id }}">{{ cat.name }}</button>
+    {% endfor %}
+  </aside>
+
+  <section class="pos-main">
+    <div class="pos-modes" id="posModes">
+      <button type="button" class="pos-mode on" data-type="DINE_IN">Dine In</button>
+      <button type="button" class="pos-mode" data-type="TAKEAWAY">Takeaway</button>
+      <button type="button" class="pos-mode" data-type="DELIVERY">Delivery</button>
+      <button type="button" class="pos-mode" data-type="ROOM_SERVICE">Room service</button>
+    </div>
+    <div class="pos-toolbar">
+      <select id="posTable">
+        <option value="">Table…</option>
+        {% for t in tables %}
+        <option value="{{ t.id }}" {% if preselect_table == t.id|stringformat:"s" or active_order.table_id == t.id %}selected{% endif %}>{{ t.name }}{% if t.is_occupied %} · busy{% endif %}</option>
+        {% endfor %}
+      </select>
+      <select id="posFolio">
+        <option value="">Bill to folio…</option>
+        {% for f in open_folios %}
+        <option value="{{ f.id }}">{{ f.guest_name }} · Rm {{ f.room_number|default:"—" }}</option>
+        {% endfor %}
+      </select>
+      <button type="button" id="posNew" class="px-3 py-2 rounded-lg bg-red-700 text-white text-sm font-bold">New ticket</button>
+    </div>
+    <div class="pos-grid" id="posGrid">
+      {% for cat in categories %}
+        {% for item in cat.items.all %}
+          {% if item.is_available %}
+          <button type="button" class="pos-card" data-cat="{{ cat.id }}" data-id="{{ item.id }}" data-name="{{ item.name }}" data-price="{{ item.price.amount }}">
+            {% if item.image_url %}<img src="{{ item.image_url }}" alt="">{% else %}<img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120'%3E%3Crect fill='%230b1016' width='200' height='120'/%3E%3Ctext x='50%25' y='54%25' fill='%23666' font-size='14' text-anchor='middle'%3E{{ item.name|truncatechars:12 }}%3C/text%3E%3C/svg%3E">{% endif %}
+            <div class="meta"><b>{{ item.name }}</b><span>₹ {{ item.price.amount }}</span></div>
+          </button>
+          {% endif %}
+        {% endfor %}
+      {% empty %}
+      <p class="text-gray-400 p-6">No menu items yet — add categories and dishes under Menu.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <aside class="pos-cart">
+    <h3>Current order</h3>
+    <div class="pos-cart-items" id="posCart">
+      {% if active_order %}
+        {% for line in active_order.items.all %}
+        <div class="pos-line" data-line="{{ line.id }}">
+          <span>{{ line.menu_item.name }} ×{{ line.quantity }}</span>
+          <strong>₹ {{ line.line_total.amount }}</strong>
+        </div>
+        {% empty %}
+        <p class="text-sm text-gray-400 py-6 text-center">Tap items to add</p>
+        {% endfor %}
+      {% else %}
+      <p class="text-sm text-gray-400 py-6 text-center">Tap items to add</p>
+      {% endif %}
+    </div>
+    <div class="pos-sum">
+      <div><span>Subtotal</span><span id="posSub">₹ {% if active_order %}{{ active_order.subtotal_amount.amount }}{% else %}0.00{% endif %}</span></div>
+      <div><span>Tax</span><span id="posTax">₹ {% if active_order %}{{ active_order.tax_amount.amount }}{% else %}0.00{% endif %}</span></div>
+      <div class="total"><span>Total</span><span id="posTotal">₹ {% if active_order %}{{ active_order.total_amount.amount }}{% else %}0.00{% endif %}</span></div>
+    </div>
+    <div class="pos-actions">
+      <button type="button" class="pos-hold" id="posHold">Hold</button>
+      <button type="button" class="pos-pay" id="posPay">Pay</button>
+    </div>
+  </aside>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  const root = document.getElementById('posTerminal');
+  if (!root) return;
+  const api = root.dataset.api;
+  const csrf = root.dataset.csrf;
+  let orderId = root.dataset.order || '';
+  let orderType = 'DINE_IN';
+
+  async function call(payload){
+    const res = await fetch(api, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-CSRFToken':csrf},
+      body: JSON.stringify(Object.assign({property_id: root.dataset.property, order_id: orderId}, payload))
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'request_failed');
+    return data;
+  }
+
+  function money(v){ return '₹ ' + Number(v||0).toFixed(2); }
+  function setTotals(d){
+    if (!d) return;
+    document.getElementById('posSub').textContent = money(d.subtotal);
+    document.getElementById('posTax').textContent = money(d.tax);
+    document.getElementById('posTotal').textContent = money(d.total);
+  }
+
+  async function ensureOrder(){
+    if (orderId) return orderId;
+    const tableId = document.getElementById('posTable').value;
+    const folioId = document.getElementById('posFolio').value;
+    const data = await call({
+      action:'create_order',
+      order_type: orderType,
+      channel: orderType === 'ROOM_SERVICE' ? 'POS' : 'POS',
+      table_id: orderType === 'DINE_IN' ? tableId : '',
+      bill_to_room: orderType === 'ROOM_SERVICE' || !!folioId,
+      folio_id: folioId,
+    });
+    orderId = String(data.order_id);
+    root.dataset.order = orderId;
+    history.replaceState({}, '', '?property={{ property.id }}&order=' + orderId);
+    return orderId;
+  }
+
+  document.querySelectorAll('.pos-mode').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pos-mode').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      orderType = btn.dataset.type;
+    });
+  });
+
+  document.querySelectorAll('.pos-cat').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pos-cat').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      const cat = btn.dataset.cat;
+      document.querySelectorAll('.pos-card').forEach(card => {
+        card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
+      });
+    });
+  });
+
+  document.getElementById('posGrid').addEventListener('click', async (e) => {
+    const card = e.target.closest('.pos-card');
+    if (!card) return;
+    try {
+      await ensureOrder();
+      const data = await call({action:'add_item', menu_item_id: card.dataset.id, quantity:1});
+      const cart = document.getElementById('posCart');
+      if (cart.querySelector('.text-center')) cart.innerHTML = '';
+      const row = document.createElement('div');
+      row.className = 'pos-line';
+      row.innerHTML = `<span>${card.dataset.name} ×1</span><strong>${money(card.dataset.price)}</strong>`;
+      cart.appendChild(row);
+      setTotals(data);
+    } catch (err) { alert(err.message); }
+  });
+
+  document.getElementById('posNew').addEventListener('click', () => {
+    orderId = '';
+    root.dataset.order = '';
+    document.getElementById('posCart').innerHTML = '<p class="text-sm text-gray-400 py-6 text-center">Tap items to add</p>';
+    setTotals({subtotal:0,tax:0,total:0});
+    history.replaceState({}, '', '?property={{ property.id }}');
+  });
+
+  document.getElementById('posHold').addEventListener('click', async () => {
+    if (!orderId) return;
+    try { await call({action:'set_status', status:'HELD'}); alert('Ticket on hold'); }
+    catch(e){ alert(e.message); }
+  });
+
+  document.getElementById('posPay').addEventListener('click', async () => {
+    if (!orderId) return;
+    try {
+      await call({action:'set_status', status:'PAID'});
+      alert('Paid');
+      location.href = '{% url "cloud_pos:orders" %}';
+    } catch(e){ alert(e.message); }
+  });
+})();
+</script>
+{% endblock %}

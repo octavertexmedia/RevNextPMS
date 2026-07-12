@@ -53,6 +53,7 @@ PUBLIC_PRODUCT_EXEMPT = (
     '/api/hotels/public/',
     '/oidc/',
     '/website-builder/',  # legacy stub → redirected to RevNextCMS
+    '/pos/qr/',  # guest QR ordering
 )
 
 

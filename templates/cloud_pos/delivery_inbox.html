@@ -1,0 +1,37 @@
+{% extends 'tenants/base_dashboard.html' %}
+{% block title %}Swiggy & Zomato — Cloud POS{% endblock %}
+{% block page_title %}Swiggy & Zomato{% endblock %}
+{% block page_description %}Manage online orders in one place{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-4 gap-3 flex-wrap">
+  <form method="get">
+    <select name="property" onchange="this.form.submit()" class="rounded-lg border-gray-300 text-sm">
+      <option value="">All properties</option>
+      {% for p in properties %}
+      <option value="{{ p.id }}" {% if request.GET.property == p.id|stringformat:'s' %}selected{% endif %}>{{ p.name }}</option>
+      {% endfor %}
+    </select>
+  </form>
+  <a href="{% url 'cloud_pos:delivery_create' %}" class="px-4 py-2 rounded-lg bg-red-700 text-white text-sm font-bold">Capture order</a>
+</div>
+<div class="bg-white rounded-xl border divide-y">
+  {% for o in orders %}
+  <div class="px-5 py-4 flex flex-wrap justify-between gap-3 items-center">
+    <div>
+      <p class="font-bold">{{ o.get_partner_display }} · #{{ o.partner_order_id }}</p>
+      <p class="text-sm text-gray-500">{{ o.customer_name|default:"Guest" }} · {{ o.get_status_display }} · ₹ {{ o.total_amount.amount }}</p>
+    </div>
+    <div class="flex gap-3 items-center">
+      {% if o.pos_order_id %}
+      <a class="text-indigo-600 font-semibold text-sm" href="{% url 'cloud_pos:order_detail' o.pos_order_id %}">POS #{{ o.pos_order_id }}</a>
+      {% else %}
+      <a class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm font-bold" href="{% url 'cloud_pos:delivery_accept' o.id %}">Accept → POS</a>
+      {% endif %}
+    </div>
+  </div>
+  {% empty %}
+  <p class="px-5 py-12 text-center text-gray-400">No online orders yet. Capture Swiggy/Zomato tickets manually, or wire webhooks later.</p>
+  {% endfor %}
+</div>
+{% endblock %}

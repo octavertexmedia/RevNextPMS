@@ -1,0 +1,40 @@
+{% extends 'tenants/base_dashboard.html' %}
+{% block title %}Waiter App — RevNext POS{% endblock %}
+{% block page_title %}Waiter App{% endblock %}
+{% block page_description %}Take orders, manage tables & serve smarter{% endblock %}
+
+{% block content %}
+<form method="get" class="mb-4 flex gap-2 items-center">
+  <select name="property" onchange="this.form.submit()" class="rounded-lg border-gray-300 text-sm">
+    {% for p in properties %}
+    <option value="{{ p.id }}" {% if property and property.id == p.id %}selected{% endif %}>{{ p.name }}</option>
+    {% endfor %}
+  </select>
+  <a href="{% url 'cloud_pos:billing' %}{% if property %}?property={{ property.id }}{% endif %}" class="text-sm font-semibold text-indigo-600">Open Billing POS →</a>
+</form>
+
+{% if not property %}
+<p class="text-gray-500">Select a property.</p>
+{% else %}
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  {% for t in tables %}
+  <a href="{% url 'cloud_pos:billing' %}?property={{ property.id }}&table={{ t.id }}"
+     class="rounded-2xl border p-5 shadow-sm {% if t.is_occupied %}bg-amber-50 border-amber-200{% else %}bg-white border-gray-200{% endif %}">
+    <div class="flex justify-between items-start">
+      <div>
+        <p class="text-xs uppercase tracking-wide text-gray-500">{{ t.section|default:"Floor" }}</p>
+        <h3 class="text-xl font-bold text-gray-900">{{ t.name }}</h3>
+        <p class="text-sm text-gray-500">{{ t.capacity }} seats</p>
+      </div>
+      <span class="text-xs font-bold px-2 py-1 rounded-full {% if t.is_occupied %}bg-amber-200 text-amber-900{% else %}bg-emerald-100 text-emerald-800{% endif %}">
+        {% if t.is_occupied %}Busy{% else %}Free{% endif %}
+      </span>
+    </div>
+    <p class="mt-4 text-xs text-gray-400 break-all">QR: /pos/qr/{{ t.qr_token }}/</p>
+  </a>
+  {% empty %}
+  <p class="text-gray-500 col-span-full">No tables — add them under Tables.</p>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

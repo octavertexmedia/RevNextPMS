@@ -8,9 +8,10 @@ from .models import MenuCategory, MenuItem, POSTable, POSOrder, POSOrderItem
 class MenuCategoryForm(forms.ModelForm):
     class Meta:
         model = MenuCategory
-        fields = ['property', 'name', 'display_order', 'is_active']
+        fields = ['property', 'name', 'icon', 'display_order', 'is_active']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'e.g., Starters'}),
+            'icon': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'burgers'}),
             'display_order': forms.NumberInput(attrs={'class': 'form-input', 'value': 0}),
             'property': forms.Select(attrs={'class': 'form-select'}),
         }
@@ -25,12 +26,18 @@ class MenuCategoryForm(forms.ModelForm):
 class MenuItemForm(forms.ModelForm):
     class Meta:
         model = MenuItem
-        fields = ['category', 'name', 'description', 'price', 'is_available']
+        fields = [
+            'category', 'name', 'description', 'price', 'image_url',
+            'is_available', 'track_inventory', 'stock_qty', 'low_stock_at',
+        ]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-input'}),
             'description': forms.Textarea(attrs={'class': 'form-input form-textarea', 'rows': 2}),
             'price': forms.NumberInput(attrs={'class': 'form-input', 'step': '0.01'}),
+            'image_url': forms.URLInput(attrs={'class': 'form-input', 'placeholder': 'https://…'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
+            'stock_qty': forms.NumberInput(attrs={'class': 'form-input', 'step': '0.01'}),
+            'low_stock_at': forms.NumberInput(attrs={'class': 'form-input', 'step': '0.01'}),
         }
     
     def __init__(self, *args, **kwargs):
@@ -43,10 +50,11 @@ class MenuItemForm(forms.ModelForm):
 class POSTableForm(forms.ModelForm):
     class Meta:
         model = POSTable
-        fields = ['property', 'name', 'capacity']
+        fields = ['property', 'name', 'capacity', 'section']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Table 1'}),
             'capacity': forms.NumberInput(attrs={'class': 'form-input', 'value': 4}),
+            'section': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Main hall'}),
             'property': forms.Select(attrs={'class': 'form-select'}),
         }
     
@@ -60,10 +68,19 @@ class POSTableForm(forms.ModelForm):
 class POSOrderForm(forms.ModelForm):
     class Meta:
         model = POSOrder
-        fields = ['property', 'table', 'bill_to_room', 'room_number', 'folio']
+        fields = [
+            'property', 'table', 'order_type', 'channel',
+            'guest_name', 'guest_phone', 'delivery_address',
+            'bill_to_room', 'room_number', 'folio',
+        ]
         widgets = {
             'property': forms.Select(attrs={'class': 'form-select'}),
             'table': forms.Select(attrs={'class': 'form-select'}),
+            'order_type': forms.Select(attrs={'class': 'form-select'}),
+            'channel': forms.Select(attrs={'class': 'form-select'}),
+            'guest_name': forms.TextInput(attrs={'class': 'form-input'}),
+            'guest_phone': forms.TextInput(attrs={'class': 'form-input'}),
+            'delivery_address': forms.Textarea(attrs={'class': 'form-input form-textarea', 'rows': 2}),
             'bill_to_room': forms.CheckboxInput(attrs={'class': 'form-checkbox h-4 w-4 text-indigo-600'}),
             'room_number': forms.TextInput(attrs={'class': 'form-input', 'placeholder': '101'}),
             'folio': forms.Select(attrs={'class': 'form-select'}),
@@ -88,12 +105,12 @@ class POSOrderForm(forms.ModelForm):
     def clean(self):
         data = super().clean()
         bill_to_room = data.get('bill_to_room')
+        order_type = data.get('order_type') or 'DINE_IN'
         if bill_to_room:
             if not data.get('folio'):
                 self.add_error('folio', 'Select a folio when billing to room.')
-        else:
-            if not data.get('table'):
-                self.add_error('table', 'Select a table when not billing to room.')
+        elif order_type == 'DINE_IN' and not data.get('table'):
+            self.add_error('table', 'Select a table for dine-in orders.')
         return data
 
 

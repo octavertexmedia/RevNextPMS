@@ -1,10 +1,22 @@
 from django.urls import path
 from . import views
+from . import views_terminal
+from . import views_public
+from . import views_ops
 
 app_name = 'cloud_pos'
 
 urlpatterns = [
     path('', views.pos_dashboard, name='dashboard'),
+    path('billing/', views_terminal.billing_terminal, name='billing'),
+    path('billing/api/', views_terminal.billing_api, name='billing_api'),
+    path('waiter/', views_terminal.waiter_board, name='waiter'),
+    path('inventory/', views_ops.inventory_list, name='inventory'),
+    path('inventory/<int:item_id>/adjust/', views_ops.inventory_adjust, name='inventory_adjust'),
+    path('delivery/', views_ops.delivery_inbox, name='delivery_inbox'),
+    path('delivery/add/', views_ops.delivery_create, name='delivery_create'),
+    path('delivery/<int:order_id>/accept/', views_ops.delivery_accept, name='delivery_accept'),
+    path('qr/<str:token>/', views_public.qr_order, name='qr_order'),
     path('orders/', views.pos_orders, name='orders'),
     path('orders/add/', views.order_create, name='order_create'),
     path('orders/<int:order_id>/', views.order_detail, name='order_detail'),

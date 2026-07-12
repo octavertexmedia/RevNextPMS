@@ -1,44 +1,72 @@
 {% extends 'tenants/base_dashboard.html' %}
 
 {% block title %}Cloud POS - RevNext{% endblock %}
-{% block page_title %}Cloud POS Dashboard{% endblock %}
-{% block page_description %}F&B management • Bill to Room • Touch-friendly{% endblock %}
+{% block page_title %}Cloud POS{% endblock %}
+{% block page_description %}Billing · Waiter · QR · Inventory · Swiggy & Zomato{% endblock %}
 
 {% block content %}
 <div class="space-y-6">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <p class="text-sm font-medium text-gray-500">Open Orders</p>
-            <p class="text-2xl font-bold text-gray-900">{{ open_orders }}</p>
-            <a href="{% url 'cloud_pos:orders' %}" class="mt-4 block text-sm font-medium text-indigo-600">View orders →</a>
-            <a href="{% url 'cloud_pos:order_create' %}" class="mt-2 block text-sm font-medium text-indigo-600">+ New Order</a>
-        </div>
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <p class="text-sm font-medium text-gray-500">Properties</p>
-            <p class="text-2xl font-bold text-gray-900">{{ properties|length }}</p>
-        </div>
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <a href="{% url 'cloud_pos:menu' %}" class="text-indigo-600 font-medium block">Manage Menu →</a>
-            <a href="{% url 'cloud_pos:tables' %}" class="text-indigo-600 font-medium block mt-2">Tables →</a>
-        </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+    <a href="{% url 'cloud_pos:billing' %}" class="rounded-2xl border border-red-100 bg-gradient-to-br from-red-50 to-white p-5 shadow-sm hover:shadow-md transition">
+      <p class="text-xs font-bold uppercase tracking-wide text-red-700">Billing POS</p>
+      <h3 class="mt-1 text-lg font-bold text-gray-900">Fast billing, easy to use</h3>
+      <p class="mt-1 text-sm text-gray-500">Dine In · Takeaway · Delivery · Bill to room</p>
+    </a>
+    <a href="{% url 'cloud_pos:waiter' %}" class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition">
+      <p class="text-xs font-bold uppercase tracking-wide text-gray-500">Waiter App</p>
+      <h3 class="mt-1 text-lg font-bold text-gray-900">Tables & floor service</h3>
+      <p class="mt-1 text-sm text-gray-500">Take orders, manage tables & serve smarter</p>
+    </a>
+    <a href="{% url 'cloud_pos:tables' %}" class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition">
+      <p class="text-xs font-bold uppercase tracking-wide text-gray-500">QR Ordering</p>
+      <h3 class="mt-1 text-lg font-bold text-gray-900">Guest self-order</h3>
+      <p class="mt-1 text-sm text-gray-500">Each table gets a /pos/qr/… link for contactless dining</p>
+    </a>
+    <a href="{% url 'cloud_pos:inventory' %}" class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition">
+      <p class="text-xs font-bold uppercase tracking-wide text-gray-500">Inventory</p>
+      <h3 class="mt-1 text-lg font-bold text-gray-900">Stock in real time</h3>
+      <p class="mt-1 text-sm text-gray-500">Track stock & reduce wastage</p>
+    </a>
+    <a href="{% url 'cloud_pos:delivery_inbox' %}" class="rounded-2xl border border-orange-100 bg-orange-50/40 p-5 shadow-sm hover:shadow-md transition">
+      <p class="text-xs font-bold uppercase tracking-wide text-orange-700">Swiggy & Zomato</p>
+      <h3 class="mt-1 text-lg font-bold text-gray-900">Online orders inbox</h3>
+      <p class="mt-1 text-sm text-gray-500">Capture & accept aggregator tickets into POS</p>
+    </a>
+    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+      <p class="text-sm font-medium text-gray-500">Open orders</p>
+      <p class="text-3xl font-bold text-gray-900 mt-1">{{ open_orders }}</p>
+      <a href="{% url 'cloud_pos:orders' %}" class="mt-3 inline-block text-sm font-semibold text-indigo-600">View orders →</a>
     </div>
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold">Recent Orders</h2>
-        </div>
-        <div class="divide-y divide-gray-200">
-            {% for order in orders %}
-            <div class="px-6 py-4 flex justify-between">
-                <div>
-                    <p class="font-medium">Order #{{ order.id }}</p>
-                    <p class="text-sm text-gray-500">{% if order.bill_to_room %}Bill to Room {{ order.room_number }}{% else %}Table {{ order.table.name|default:"—" }}{% endif %} • {{ order.get_status_display }}</p>
-                </div>
-                <span class="font-semibold">{{ order.total_amount.currency }} {{ order.total_amount.amount }}</span>
-            </div>
-            {% empty %}
-            <p class="px-6 py-12 text-center text-gray-500">No orders yet</p>
-            {% endfor %}
-        </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <a href="{% url 'cloud_pos:menu' %}" class="text-sm font-semibold text-indigo-600">Menu →</a>
+    <a href="{% url 'cloud_pos:tables' %}" class="text-sm font-semibold text-indigo-600">Tables →</a>
+    <a href="{% url 'cloud_pos:order_create' %}" class="text-sm font-semibold text-indigo-600">Classic new order →</a>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg font-semibold">Recent Orders</h2>
     </div>
+    <div class="divide-y divide-gray-200">
+      {% for order in orders %}
+      <a href="{% url 'cloud_pos:order_detail' order.id %}" class="px-6 py-4 flex justify-between hover:bg-gray-50">
+        <div>
+          <p class="font-medium">Order #{{ order.id }} · {{ order.get_order_type_display }}</p>
+          <p class="text-sm text-gray-500">
+            {% if order.bill_to_room %}Bill to Room {{ order.room_number }}
+            {% elif order.table %}Table {{ order.table.name }}
+            {% else %}{{ order.get_channel_display }}{% endif %}
+            · {{ order.get_status_display }}
+          </p>
+        </div>
+        <span class="font-semibold">{{ order.total_amount.currency }} {{ order.total_amount.amount }}</span>
+      </a>
+      {% empty %}
+      <p class="px-6 py-12 text-center text-gray-500">No orders yet — open Billing POS to start.</p>
+      {% endfor %}
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -27,10 +27,11 @@
         <div class="bg-white rounded-xl shadow-sm border p-4 flex justify-between items-center">
             <div>
                 <p class="font-semibold">{{ t.name }}</p>
-                <p class="text-sm text-gray-500">{{ t.property.name }} · Capacity {{ t.capacity }}</p>
+                <p class="text-sm text-gray-500">{{ t.property.name }} · Capacity {{ t.capacity }}{% if t.section %} · {{ t.section }}{% endif %}</p>
                 <span class="inline-block mt-2 px-2 py-0.5 text-xs rounded {% if t.is_occupied %}bg-amber-100 text-amber-800{% else %}bg-green-100 text-green-800{% endif %}">
                     {{ t.is_occupied|yesno:"Occupied,Available" }}
                 </span>
+                <p class="mt-2 text-xs text-gray-400 break-all">QR: <a class="text-indigo-600" href="{% url 'cloud_pos:qr_order' t.qr_token %}" target="_blank" rel="noopener">/pos/qr/{{ t.qr_token }}/</a></p>
             </div>
             <a href="{% url 'cloud_pos:table_edit' t.id %}" class="text-indigo-600 text-sm">Edit</a>
         </div>

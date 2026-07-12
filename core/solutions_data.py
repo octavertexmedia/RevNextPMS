@@ -119,57 +119,66 @@ SOLUTIONS = {
     'cloud-pos': {
         'slug': 'cloud-pos',
         'eyebrow': 'Cloud POS',
-        'title': 'F&B that posts straight to the folio',
+        'title': 'Outlet billing built for busy service',
         'lead': (
-            'Touch-friendly restaurant and outlet billing with tables, KOT flow, '
-            'and bill-to-room into Cloud PMS — no end-of-day spreadsheet merge.'
+            'Billing POS, waiter floor app, QR guest ordering, inventory, and '
+            'Swiggy / Zomato inbox — with bill-to-room into Cloud PMS.'
         ),
         'meta': (
-            'RevNext Cloud POS — hotel F&B point of sale with bill-to-room, '
-            'tables, and folio integration.'
+            'RevNext Cloud POS — hotel F&B point of sale with dine-in, takeaway, '
+            'delivery, QR ordering, inventory, and aggregator orders.'
         ),
-        'preview_caption': 'Outlet ticket · sample service',
+        'preview_caption': 'Billing POS · dine-in ticket',
         'highlights': [
-            {'label': 'Tables & outlets', 'text': 'Run dine-in, room service, and takeaway from one menu.'},
-            {'label': 'Bill to room', 'text': 'Post charges to the open guest folio in one tap.'},
-            {'label': 'Kitchen tickets', 'text': 'Print or route KOTs by station without leaving the order.'},
-            {'label': 'Settlements', 'text': 'Cash, card, UPI, or room charge — reconciled with PMS.'},
+            {'label': 'Billing POS', 'text': 'Fast billing — Dine In, Takeaway, Delivery, and bill to room.'},
+            {'label': 'Waiter App', 'text': 'Take orders, manage tables & serve smarter from the floor.'},
+            {'label': 'QR Ordering', 'text': 'Guests scan, order & enjoy contactless dining.'},
+            {'label': 'Inventory', 'text': 'Track stock in real time and cut wastage.'},
+            {'label': 'Swiggy & Zomato', 'text': 'Capture online orders and push them into one POS queue.'},
         ],
         'modules': [
             {
-                'title': 'Menu & categories',
-                'text': 'Build outlet menus with taxes, modifiers, and availability windows.',
+                'title': 'Touch billing terminal',
+                'text': 'Category rail, item grid, live cart, Hold and Pay — built for outlet speed.',
             },
             {
-                'title': 'Order lifecycle',
-                'text': 'Open, fire, modify, and settle tickets with clear status for floor staff.',
+                'title': 'Waiter & tables',
+                'text': 'Floor board with busy/free tables and deep-link into Billing POS.',
             },
             {
-                'title': 'Room service',
-                'text': 'Link orders to room number and push charges to the guest folio instantly.',
+                'title': 'QR per table',
+                'text': 'Every table gets a public /pos/qr/… link for guest self-ordering.',
             },
             {
-                'title': 'Outlet reports',
-                'text': 'Sales by outlet, payment mix, and tax summaries for the night audit.',
+                'title': 'Stock movements',
+                'text': 'Receive, sell, adjust, and waste — with low-stock flags on menu items.',
+            },
+            {
+                'title': 'Aggregator inbox',
+                'text': 'Manual Swiggy/Zomato capture today; webhook-ready model for API sync.',
+            },
+            {
+                'title': 'Bill to room',
+                'text': 'Post the ticket to an open PMS folio in one status transition.',
             },
         ],
         'outcomes': [
             {'stat': '1 folio', 'label': 'room + F&B together'},
-            {'stat': 'Touch UI', 'label': 'built for busy outlets'},
-            {'stat': 'Multi-outlet', 'label': 'restaurant, bar, café'},
+            {'stat': '5 modes', 'label': 'dine / take / deliver / QR / apps'},
+            {'stat': 'Live stock', 'label': 'on the menu'},
         ],
         'steps': [
-            {'num': '01', 'title': 'Set up outlets', 'text': 'Menus, tables, taxes, and kitchen stations.'},
-            {'num': '02', 'title': 'Take the order', 'text': 'Floor staff fire tickets; guests charge to room if in-house.'},
-            {'num': '03', 'title': 'Settle cleanly', 'text': 'Close the check — PMS folio already has the line items.'},
+            {'num': '01', 'title': 'Set up menu & tables', 'text': 'Categories, dishes, QR tokens, and stock levels.'},
+            {'num': '02', 'title': 'Run the outlet', 'text': 'Billing POS or Waiter App for the floor; QR for guests.'},
+            {'num': '03', 'title': 'Settle cleanly', 'text': 'Pay at counter or bill to room — PMS folio stays truthful.'},
         ],
         'features': [
-            'Touch-friendly F&B management',
-            'Direct integration with PMS folios',
-            'Bill-to-room for in-house guests',
-            'Tables, dine-in, room service, and takeaway',
-            'Kitchen order tickets and outlet reporting',
-            'Unified restaurant and room billing',
+            'Touch-friendly Billing POS with Dine In / Takeaway / Delivery',
+            'Waiter table board and QR guest ordering',
+            'F&B inventory with low-stock alerts',
+            'Swiggy & Zomato order inbox',
+            'Bill-to-room integration with Cloud PMS',
+            'Kitchen status flow and hold tickets',
         ],
     },
     'booking-engine': {

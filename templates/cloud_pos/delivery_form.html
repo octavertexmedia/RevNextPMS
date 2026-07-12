@@ -1,0 +1,45 @@
+{% extends 'tenants/base_dashboard.html' %}
+{% block title %}Capture online order{% endblock %}
+{% block page_title %}Capture Swiggy / Zomato order{% endblock %}
+
+{% block content %}
+<form method="post" class="bg-white rounded-xl border p-6 max-w-xl space-y-4">
+  {% csrf_token %}
+  <div>
+    <label class="block text-sm font-medium mb-1">Property</label>
+    <select name="property_id" required class="w-full rounded-lg border-gray-300">
+      {% for p in properties %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}
+    </select>
+  </div>
+  <div>
+    <label class="block text-sm font-medium mb-1">Partner</label>
+    <select name="partner" class="w-full rounded-lg border-gray-300">
+      <option value="SWIGGY">Swiggy</option>
+      <option value="ZOMATO">Zomato</option>
+    </select>
+  </div>
+  <div>
+    <label class="block text-sm font-medium mb-1">Partner order ID</label>
+    <input name="partner_order_id" required class="w-full rounded-lg border-gray-300">
+  </div>
+  <div class="grid grid-cols-2 gap-3">
+    <div>
+      <label class="block text-sm font-medium mb-1">Customer</label>
+      <input name="customer_name" class="w-full rounded-lg border-gray-300">
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Phone</label>
+      <input name="customer_phone" class="w-full rounded-lg border-gray-300">
+    </div>
+  </div>
+  <div>
+    <label class="block text-sm font-medium mb-1">Items (one per line)</label>
+    <textarea name="items" rows="4" class="w-full rounded-lg border-gray-300" placeholder="Veg Burger&#10;Margherita Pizza"></textarea>
+  </div>
+  <div>
+    <label class="block text-sm font-medium mb-1">Total (INR)</label>
+    <input name="total" type="number" step="0.01" value="0" class="w-full rounded-lg border-gray-300">
+  </div>
+  <button class="px-4 py-2 rounded-lg bg-red-700 text-white font-bold">Save order</button>
+</form>
+{% endblock %}

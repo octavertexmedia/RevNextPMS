@@ -70,39 +70,38 @@
     <div class="ui-app-main" style="width:100%;">
         <header class="ui-app-toolbar">
             <div>
-                <p class="ui-kicker">Outlet · All-day dining</p>
-                <h3>Point of sale</h3>
+                <p class="ui-kicker">Billing POS</p>
+                <h3>Outlet terminal</h3>
             </div>
-            <div class="ui-toolbar-actions">
-                <span class="ui-chip">Table 3 · Room 501</span>
+            <div class="ui-toolbar-actions" style="display:flex;gap:.35rem;flex-wrap:wrap;">
+                <span class="ui-chip" style="background:#3b82f6;color:#fff;">Dine In</span>
+                <span class="ui-chip" style="background:#eab308;color:#111;">Takeaway</span>
+                <span class="ui-chip" style="background:#f97316;color:#fff;">Delivery</span>
             </div>
         </header>
-        <div class="ui-pos-tables-light">
-            <span class="free">T1</span><span class="busy">T2</span><span class="busy on">T3</span><span class="free">T4</span><span class="free">T5</span><span class="busy">T6</span>
-        </div>
         <div class="ui-split-panels">
             <div class="ui-card">
-                <div class="ui-card-head">Menu</div>
+                <div class="ui-card-head">Burgers · Pizza · Drinks</div>
                 <div class="ui-menu-light">
-                    <button type="button">Masala Dosa<em>₹280</em></button>
-                    <button type="button">Club Sandwich<em>₹420</em></button>
-                    <button type="button">Filter Coffee<em>₹120</em></button>
-                    <button type="button">Thali<em>₹450</em></button>
-                    <button type="button">Fresh Lime<em>₹140</em></button>
-                    <button type="button">Biryani<em>₹520</em></button>
+                    <button type="button">Veg Burger<em>₹149</em></button>
+                    <button type="button">Margherita<em>₹299</em></button>
+                    <button type="button">Cold Coffee<em>₹99</em></button>
+                    <button type="button">Pasta Alfredo<em>₹249</em></button>
+                    <button type="button">Brownie<em>₹129</em></button>
+                    <button type="button">Combo Meal<em>₹399</em></button>
                 </div>
             </div>
             <div class="ui-card">
-                <div class="ui-card-head">Ticket · Table 3</div>
+                <div class="ui-card-head">Current order · Table 3</div>
                 <ul class="ui-lines">
-                    <li><span>2× Club Sandwich</span><strong>₹840</strong></li>
-                    <li><span>1× Filter Coffee</span><strong>₹120</strong></li>
-                    <li><span>1× Fresh Lime</span><strong>₹140</strong></li>
-                    <li class="total"><span>Total incl. tax</span><strong>₹1,240</strong></li>
+                    <li><span>Margherita Pizza</span><strong>₹299</strong></li>
+                    <li><span>Veg Burger</span><strong>₹149</strong></li>
+                    <li><span>Subtotal + tax</span><strong>₹470</strong></li>
+                    <li class="total"><span>Total</span><strong>₹470</strong></li>
                 </ul>
                 <div class="ui-card-actions">
-                    <span class="ui-btn-ghost">Print KOT</span>
-                    <span class="ui-btn-sm">Bill to room</span>
+                    <span class="ui-btn-ghost">Hold</span>
+                    <span class="ui-btn-sm" style="background:#16a34a;">Pay</span>
                 </div>
             </div>
         </div>

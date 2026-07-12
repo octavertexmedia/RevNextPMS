@@ -2363,15 +2363,23 @@ body.dawn-auth-body {
   gap: 0.25rem;
 }
 
-.ui-app-nav nav span {
+.ui-app-nav nav span,
+.ui-app-nav nav button {
   padding: 0.55rem 0.65rem;
   border-radius: 10px;
   font-size: 0.88rem;
   font-weight: 600;
   color: var(--muted);
+  background: transparent;
+  border: 0;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+  width: 100%;
 }
 
-.ui-app-nav nav span.on {
+.ui-app-nav nav span.on,
+.ui-app-nav nav button.on {
   background: var(--surface);
   color: var(--navy);
   box-shadow: 0 1px 0 var(--line);
@@ -2547,7 +2555,8 @@ body.dawn-auth-body {
   padding: 0.85rem;
 }
 
-.ui-hk-light div {
+.ui-hk-light div,
+.ui-hk-light button {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2558,6 +2567,9 @@ body.dawn-auth-body {
   font-weight: 700;
   font-size: 0.9rem;
   color: var(--ink);
+  font-family: inherit;
+  width: 100%;
+  cursor: pointer;
 }
 
 .ui-hk-light i {
@@ -2832,6 +2844,110 @@ body.dawn-auth-body {
   to { opacity: 1; }
 }
 
+/* Shared hero interactive demos */
+.ui-hero-demo {
+  position: relative;
+}
+
+.ui-hero-hint {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ui-hero-demo .is-demo-pulse {
+  animation: ui-hero-pulse 0.55s ease;
+}
+
+.ui-hero-demo .is-demo-selected,
+.ui-hero-demo tr.is-demo-selected {
+  outline: 2px solid rgba(43, 107, 255, 0.45);
+  outline-offset: -2px;
+  background: rgba(43, 107, 255, 0.06);
+}
+
+.ui-hero-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  z-index: 4;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(14, 36, 56, 0.2);
+  animation: ui-pos-toast-in 0.22s ease;
+  pointer-events: none;
+}
+
+.ui-hero-toast[hidden],
+.ui-hero-success[hidden] {
+  display: none;
+}
+
+.ui-hero-success {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 1.25rem;
+  background: rgba(248, 250, 252, 0.94);
+  backdrop-filter: blur(4px);
+  border-radius: inherit;
+  animation: ui-pos-success-in 0.28s ease;
+}
+
+.ui-book-light,
+.ui-gha-light,
+.ui-checklist-card,
+.ui-site-light {
+  position: relative;
+}
+
+.ui-book-light .ui-btn-sm,
+.ui-gha-light .ui-btn-sm,
+.ui-site-light .ui-btn-sm {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.ui-table-light tbody tr {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ui-table-light tbody tr:hover {
+  background: rgba(43, 107, 255, 0.04);
+}
+
+.ui-table-light button.ui-badge {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+@keyframes ui-hero-pulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-hero-demo .is-demo-pulse {
+    animation: none;
+  }
+}
+
 .ui-book-light,
 .ui-gha-light {
   max-width: 32rem;
@@ -2899,6 +3015,11 @@ body.dawn-auth-body {
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--paper);
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+  color: inherit;
 }
 
 .ui-rate.on {
@@ -2988,11 +3109,17 @@ body.dawn-auth-body {
   padding: 1rem;
 }
 
-.ui-browser-grid div {
+.ui-browser-grid div,
+.ui-browser-grid button {
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 0.85rem;
   background: var(--paper);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  width: 100%;
 }
 
 .ui-browser-grid strong {
@@ -3043,6 +3170,11 @@ body.dawn-auth-body {
   background: var(--paper);
   margin-bottom: 0.45rem;
   font-size: 0.85rem;
+  width: 100%;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
 }
 
 .ui-checklist-card { max-width: 36rem; margin: 0 auto; }

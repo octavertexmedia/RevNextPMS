@@ -1,13 +1,13 @@
 {% if solution_slug == 'cloud-pms' %}
-<div class="ui-app">
+<div class="ui-app ui-hero-demo" data-hero-demo="cloud-pms" aria-label="Interactive Cloud PMS demo">
     <aside class="ui-app-nav">
         <div class="ui-app-brand">RevNext PMS</div>
-        <nav>
-            <span class="on">Dashboard</span>
-            <span>Arrivals</span>
-            <span>Housekeeping</span>
-            <span>Folios</span>
-            <span>Linked rooms</span>
+        <nav data-pms-nav>
+            <button type="button" class="on" data-nav="Dashboard">Dashboard</button>
+            <button type="button" data-nav="Arrivals">Arrivals</button>
+            <button type="button" data-nav="Housekeeping">Housekeeping</button>
+            <button type="button" data-nav="Folios">Folios</button>
+            <button type="button" data-nav="Linked rooms">Linked rooms</button>
         </nav>
         <div class="ui-app-property">Harbour View · Mumbai</div>
     </aside>
@@ -15,34 +15,35 @@
         <header class="ui-app-toolbar">
             <div>
                 <p class="ui-kicker">Today · 11 Jul</p>
-                <h3>Front desk board</h3>
+                <h3 data-pms-title>Front desk board</h3>
             </div>
             <div class="ui-toolbar-actions">
-                <span class="ui-chip">Live sync</span>
-                <span class="ui-btn-sm">New reservation</span>
+                <span class="ui-chip" data-pms-live>Live sync</span>
+                <button type="button" class="ui-btn-sm" data-pms-new>New reservation</button>
             </div>
         </header>
-        <div class="ui-stat-row">
-            <div class="ui-stat"><b>12</b><span>Arrivals</span></div>
-            <div class="ui-stat"><b>8</b><span>Departures</span></div>
-            <div class="ui-stat"><b>41</b><span>In-house</span></div>
-            <div class="ui-stat"><b>6</b><span>HK pending</span></div>
+        <p class="ui-hero-hint">Watch arrivals check in · tap to explore</p>
+        <div class="ui-stat-row" data-pms-stats>
+            <div class="ui-stat"><b data-stat="arrivals">12</b><span>Arrivals</span></div>
+            <div class="ui-stat"><b data-stat="departures">8</b><span>Departures</span></div>
+            <div class="ui-stat"><b data-stat="inhouse">41</b><span>In-house</span></div>
+            <div class="ui-stat"><b data-stat="hk">6</b><span>HK pending</span></div>
         </div>
         <div class="ui-split-panels">
             <div class="ui-card">
                 <div class="ui-card-head">Arrivals</div>
                 <table class="ui-table-light">
                     <thead><tr><th>Guest</th><th>Room</th><th>Channel</th><th>Status</th></tr></thead>
-                    <tbody>
-                        <tr><td>Rajesh Kumar</td><td>Deluxe 204</td><td>Booking.com</td><td><span class="ui-badge warn">Due 14:00</span></td></tr>
-                        <tr><td>Priya Sharma</td><td>Suite 501</td><td>Direct</td><td><span class="ui-badge ok">Checked in</span></td></tr>
-                        <tr><td>Amit Patel</td><td>Twin 118</td><td>MakeMyTrip</td><td><span class="ui-badge info">Synced</span></td></tr>
-                        <tr><td>Neha Gupta</td><td>Deluxe 210</td><td>Expedia</td><td><span class="ui-badge warn">Pending</span></td></tr>
+                    <tbody data-pms-arrivals>
+                        <tr data-guest="0"><td>Rajesh Kumar</td><td>Deluxe 204</td><td>Booking.com</td><td><span class="ui-badge warn" data-guest-status>Due 14:00</span></td></tr>
+                        <tr data-guest="1"><td>Priya Sharma</td><td>Suite 501</td><td>Direct</td><td><span class="ui-badge ok" data-guest-status>Checked in</span></td></tr>
+                        <tr data-guest="2"><td>Amit Patel</td><td>Twin 118</td><td>MakeMyTrip</td><td><span class="ui-badge info" data-guest-status>Synced</span></td></tr>
+                        <tr data-guest="3"><td>Neha Gupta</td><td>Deluxe 210</td><td>Expedia</td><td><span class="ui-badge warn" data-guest-status>Pending</span></td></tr>
                     </tbody>
                 </table>
             </div>
             <div class="ui-stack">
-                <div class="ui-card">
+                <div class="ui-card" data-pms-folio>
                     <div class="ui-card-head">Open folio · Suite 501</div>
                     <ul class="ui-lines">
                         <li><span>Room · 2 nights</span><strong>₹18,000</strong></li>
@@ -53,20 +54,21 @@
                 </div>
                 <div class="ui-card">
                     <div class="ui-card-head">Housekeeping</div>
-                    <div class="ui-hk-light">
-                        <div><span>204</span><i class="dirty">Dirty</i></div>
-                        <div><span>210</span><i class="clean">Clean</i></div>
-                        <div><span>118</span><i class="insp">Inspect</i></div>
-                        <div><span>501</span><i class="occ">Occupied</i></div>
+                    <div class="ui-hk-light" data-pms-hk>
+                        <button type="button" data-room="204"><span>204</span><i class="dirty" data-hk-status>Dirty</i></button>
+                        <button type="button" data-room="210"><span>210</span><i class="clean" data-hk-status>Clean</i></button>
+                        <button type="button" data-room="118"><span>118</span><i class="insp" data-hk-status>Inspect</i></button>
+                        <button type="button" data-room="501"><span>501</span><i class="occ" data-hk-status>Occupied</i></button>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="ui-hero-toast" data-hero-toast hidden></div>
     </div>
 </div>
 
 {% elif solution_slug == 'cloud-pos' %}
-<div class="ui-app ui-app-compact ui-pos-demo" data-pos-demo aria-label="Interactive POS terminal demo">
+<div class="ui-app ui-app-compact ui-pos-demo ui-hero-demo" data-hero-demo="cloud-pos" data-pos-demo aria-label="Interactive POS terminal demo">
     <div class="ui-app-main" style="width:100%;">
         <header class="ui-app-toolbar">
             <div>
@@ -79,7 +81,7 @@
                 <button type="button" class="ui-chip ui-pos-mode" data-mode="delivery" data-label="Delivery #12" style="background:#f97316;color:#fff;">Delivery</button>
             </div>
         </header>
-        <p class="ui-pos-hint">Tap items to build a ticket · Hold or Pay to finish</p>
+        <p class="ui-pos-hint ui-hero-hint">Auto demo loops · tap anytime to take over</p>
         <div class="ui-split-panels">
             <div class="ui-card">
                 <div class="ui-card-head">Burgers · Pizza · Drinks</div>
@@ -119,7 +121,7 @@
 </div>
 
 {% elif solution_slug == 'booking-engine' %}
-<div class="ui-book-light">
+<div class="ui-book-light ui-hero-demo" data-hero-demo="booking-engine" aria-label="Interactive booking widget demo">
     <div class="ui-book-light-head">
         <img src="https://www.revnext.in/favicon.ico" alt="" width="20" height="20">
         <div>
@@ -127,200 +129,234 @@
             <span>Mumbai · Direct booking</span>
         </div>
     </div>
+    <p class="ui-hero-hint">Pick a rate · continue to checkout</p>
     <div class="ui-book-fields">
-        <div><label>Check-in</label><div class="ui-field">12 Jul 2026</div></div>
-        <div><label>Check-out</label><div class="ui-field">14 Jul 2026</div></div>
-        <div><label>Guests</label><div class="ui-field">2 adults</div></div>
+        <div><label>Check-in</label><div class="ui-field" data-book-in>12 Jul 2026</div></div>
+        <div><label>Check-out</label><div class="ui-field" data-book-out>14 Jul 2026</div></div>
+        <div><label>Guests</label><div class="ui-field" data-book-guests>2 adults</div></div>
     </div>
-    <div class="ui-rate-list">
-        <div class="ui-rate on">
+    <div class="ui-rate-list" data-book-rates>
+        <button type="button" class="ui-rate on" data-rate="8999" data-label="Deluxe King">
             <div><strong>Deluxe King</strong><span>Breakfast · Free cancellation</span></div>
             <div class="amt">₹8,999<em>/night</em></div>
-        </div>
-        <div class="ui-rate">
+        </button>
+        <button type="button" class="ui-rate" data-rate="14500" data-label="Sea View Suite">
             <div><strong>Sea View Suite</strong><span>Breakfast · Late checkout</span></div>
             <div class="amt">₹14,500<em>/night</em></div>
-        </div>
+        </button>
     </div>
     <div class="ui-book-foot">
-        <span class="ui-btn-sm">Continue · ₹17,998</span>
+        <button type="button" class="ui-btn-sm" data-book-continue>Continue · ₹17,998</button>
         <span class="ui-note">Commission-free · Razorpay ready</span>
     </div>
+    <div class="ui-hero-success" data-book-success hidden>
+        <p class="ui-pos-success-check" aria-hidden="true">✓</p>
+        <p class="ui-pos-success-title">Direct hold secured</p>
+        <p class="ui-pos-success-meta" data-book-success-meta>Deluxe King · 2 nights</p>
+        <button type="button" class="ui-btn-sm" data-book-reset>Book another</button>
+    </div>
+    <div class="ui-hero-toast" data-hero-toast hidden></div>
 </div>
 
 {% elif solution_slug == 'website-builder' %}
-<div class="ui-site-light">
+<div class="ui-site-light ui-hero-demo" data-hero-demo="website-builder" aria-label="Interactive hotel website demo">
     <div class="ui-browser">
         <div class="ui-browser-bar"><i></i><i></i><i></i><span>harbourview.revnext.site</span></div>
         <div class="ui-browser-hero">
             <p class="ui-kicker" style="color:var(--amber);">Harbour View Boutique</p>
-            <h3>Wake up to the harbour</h3>
-            <p>Boutique stays in Colaba — book direct and save.</p>
-            <span class="ui-btn-sm">Book now</span>
+            <h3 data-site-headline>Wake up to the harbour</h3>
+            <p data-site-lead>Boutique stays in Colaba — book direct and save.</p>
+            <button type="button" class="ui-btn-sm" data-site-cta>Book now</button>
         </div>
-        <div class="ui-browser-grid">
-            <div><strong>Deluxe King</strong><span>from ₹8,999</span></div>
-            <div><strong>Sea View Suite</strong><span>from ₹14,500</span></div>
-            <div><strong>Stay offer</strong><span>Stay 3, pay 2</span></div>
+        <div class="ui-browser-grid" data-site-rooms>
+            <button type="button"><strong>Deluxe King</strong><span>from ₹8,999</span></button>
+            <button type="button"><strong>Sea View Suite</strong><span>from ₹14,500</span></button>
+            <button type="button"><strong>Stay offer</strong><span>Stay 3, pay 2</span></button>
         </div>
     </div>
+    <div class="ui-hero-toast" data-hero-toast hidden></div>
 </div>
 
 {% elif solution_slug == 'mobile-apps' %}
-<div class="ui-phones-light">
-    <div class="ui-device">
+<div class="ui-phones-light ui-hero-demo" data-hero-demo="mobile-apps" aria-label="Interactive mobile apps demo">
+    <div class="ui-device" data-app-pms>
         <div class="ui-device-bar"></div>
         <p class="ui-kicker">RevNext PMS</p>
         <h4>Arrivals</h4>
-        <div class="ui-device-row"><strong>Rajesh · 204</strong><span class="ui-badge warn">Due</span></div>
-        <div class="ui-device-row"><strong>Priya · 501</strong><span class="ui-badge ok">In-house</span></div>
-        <div class="ui-device-row"><strong>Amit · 118</strong><span class="ui-badge info">Synced</span></div>
+        <button type="button" class="ui-device-row" data-app-row="0"><strong>Rajesh · 204</strong><span class="ui-badge warn" data-app-badge>Due</span></button>
+        <button type="button" class="ui-device-row" data-app-row="1"><strong>Priya · 501</strong><span class="ui-badge ok" data-app-badge>In-house</span></button>
+        <button type="button" class="ui-device-row" data-app-row="2"><strong>Amit · 118</strong><span class="ui-badge info" data-app-badge>Synced</span></button>
     </div>
-    <div class="ui-device">
+    <div class="ui-device" data-app-hk>
         <div class="ui-device-bar"></div>
         <p class="ui-kicker">Housekeeping</p>
         <h4>My rooms</h4>
-        <div class="ui-hk-light">
-            <div><span>204</span><i class="dirty">Dirty</i></div>
-            <div><span>210</span><i class="clean">Clean</i></div>
-            <div><span>118</span><i class="insp">Inspect</i></div>
-            <div><span>312</span><i class="dirty">Dirty</i></div>
+        <div class="ui-hk-light" data-app-rooms>
+            <button type="button" data-room="204"><span>204</span><i class="dirty" data-hk-status>Dirty</i></button>
+            <button type="button" data-room="210"><span>210</span><i class="clean" data-hk-status>Clean</i></button>
+            <button type="button" data-room="118"><span>118</span><i class="insp" data-hk-status>Inspect</i></button>
+            <button type="button" data-room="312"><span>312</span><i class="dirty" data-hk-status>Dirty</i></button>
         </div>
     </div>
+    <div class="ui-hero-toast" data-hero-toast hidden></div>
 </div>
 
 {% elif solution_slug == 'b2b-network' %}
-<div class="ui-app ui-app-compact">
+<div class="ui-app ui-app-compact ui-hero-demo" data-hero-demo="b2b-network" aria-label="Interactive B2B portal demo">
     <div class="ui-app-main" style="width:100%;">
         <header class="ui-app-toolbar">
             <div>
                 <p class="ui-kicker">Stay B2B</p>
                 <h3>Agent portal · Trails &amp; Tours</h3>
             </div>
-            <span class="ui-badge ok">Portal active</span>
+            <span class="ui-badge ok" data-b2b-status>Portal active</span>
         </header>
+        <p class="ui-hero-hint">Select a contract rate · reserve allotment</p>
         <div class="ui-card">
             <table class="ui-table-light">
                 <thead><tr><th>Room</th><th>Contract</th><th>Allotment</th><th>Rate</th></tr></thead>
-                <tbody>
-                    <tr><td>Deluxe King</td><td>CORP-2026</td><td>4</td><td>₹7,200</td></tr>
-                    <tr><td>Twin Deluxe</td><td>CORP-2026</td><td>6</td><td>₹6,800</td></tr>
-                    <tr><td>Suite</td><td>AGT-GOLD</td><td>2</td><td>₹11,500</td></tr>
+                <tbody data-b2b-rows>
+                    <tr data-b2b-row="0" data-allotment="4" data-rate="7200"><td>Deluxe King</td><td>CORP-2026</td><td data-b2b-allot>4</td><td>₹7,200</td></tr>
+                    <tr data-b2b-row="1" data-allotment="6" data-rate="6800"><td>Twin Deluxe</td><td>CORP-2026</td><td data-b2b-allot>6</td><td>₹6,800</td></tr>
+                    <tr data-b2b-row="2" data-allotment="2" data-rate="11500"><td>Suite</td><td>AGT-GOLD</td><td data-b2b-allot>2</td><td>₹11,500</td></tr>
                 </tbody>
             </table>
+            <div class="ui-card-actions">
+                <button type="button" class="ui-btn-sm" data-b2b-book>Reserve allotment</button>
+            </div>
         </div>
+        <div class="ui-hero-toast" data-hero-toast hidden></div>
     </div>
 </div>
 
 {% elif solution_slug == 'ota-listing' %}
-<div class="ui-card ui-checklist-card">
+<div class="ui-card ui-checklist-card ui-hero-demo" data-hero-demo="ota-listing" aria-label="Interactive OTA listing demo">
     <div class="ui-card-head">Listing project · Harbour View</div>
-    <ul class="ui-check-light">
-        <li class="done"><span>Property profile &amp; GST</span><strong>Done</strong></li>
-        <li class="done"><span>Photo set (24 images)</span><strong>Done</strong></li>
-        <li class="done"><span>Booking.com listing</span><strong>Live</strong></li>
-        <li class="active"><span>MakeMyTrip content</span><strong>In review</strong></li>
-        <li><span>Agoda amenities map</span><strong>Queued</strong></li>
-        <li><span>Channel Manager mapping</span><strong>Next</strong></li>
+    <p class="ui-hero-hint">Checklist advances channel by channel</p>
+    <ul class="ui-check-light" data-ota-list>
+        <li class="done" data-ota-step="0"><span>Property profile &amp; GST</span><strong>Done</strong></li>
+        <li class="done" data-ota-step="1"><span>Photo set (24 images)</span><strong>Done</strong></li>
+        <li class="done" data-ota-step="2"><span>Booking.com listing</span><strong>Live</strong></li>
+        <li class="active" data-ota-step="3"><span>MakeMyTrip content</span><strong>In review</strong></li>
+        <li data-ota-step="4"><span>Agoda amenities map</span><strong>Queued</strong></li>
+        <li data-ota-step="5"><span>Channel Manager mapping</span><strong>Next</strong></li>
     </ul>
+    <div class="ui-hero-toast" data-hero-toast hidden></div>
 </div>
 
 {% elif solution_slug == 'google-hotel-ads' %}
-<div class="ui-gha-light">
-    <div class="ui-field">hotels in mumbai colaba</div>
-    <div class="ui-serp">
+<div class="ui-gha-light ui-hero-demo" data-hero-demo="google-hotel-ads" aria-label="Interactive Google Hotel Ads demo">
+    <div class="ui-field" data-gha-query>hotels in mumbai colaba</div>
+    <p class="ui-hero-hint">Search → sponsored hotel → book on your site</p>
+    <div class="ui-serp" data-gha-serp>
         <p class="ui-kicker" style="color:var(--success);">Sponsored · Hotel</p>
         <h3>Harbour View Boutique Hotel</h3>
         <p class="ui-serp-rate">₹8,999 <em>nightly · Free cancellation</em></p>
         <p class="ui-serp-meta">Colaba · 4.6 ★ · Book on hotel site</p>
         <div class="ui-serp-actions">
-            <span class="ui-btn-sm">View deal</span>
+            <button type="button" class="ui-btn-sm" data-gha-deal>View deal</button>
             <span class="ui-note">Pay per conversion</span>
         </div>
     </div>
     <p class="ui-note" style="text-align:center;margin-top:.75rem;">Clicks land on your Booking Engine — not an OTA.</p>
+    <div class="ui-hero-success" data-gha-success hidden>
+        <p class="ui-pos-success-check" aria-hidden="true">✓</p>
+        <p class="ui-pos-success-title">Landed on direct book</p>
+        <p class="ui-pos-success-meta">No OTA commission on this click</p>
+        <button type="button" class="ui-btn-sm" data-gha-reset>Run again</button>
+    </div>
+    <div class="ui-hero-toast" data-hero-toast hidden></div>
 </div>
 
 {% elif solution_slug == 'channel-manager' %}
-<div class="ui-app">
+<div class="ui-app ui-hero-demo" data-hero-demo="channel-manager" aria-label="Interactive Channel Manager demo">
     <aside class="ui-app-nav">
         <div class="ui-app-brand">Channel Manager</div>
-        <nav>
-            <span class="on">Channels</span>
-            <span>Inventory</span>
-            <span>Rates</span>
-            <span>Reservations</span>
-            <span>Properties</span>
+        <nav data-cm-nav>
+            <button type="button" class="on" data-nav="Channels">Channels</button>
+            <button type="button" data-nav="Inventory">Inventory</button>
+            <button type="button" data-nav="Rates">Rates</button>
+            <button type="button" data-nav="Reservations">Reservations</button>
+            <button type="button" data-nav="Properties">Properties</button>
         </nav>
         <div class="ui-app-property">Harbour View · Mumbai</div>
     </aside>
     <div class="ui-app-main">
         <header class="ui-app-toolbar">
             <div>
-                <p class="ui-kicker">ARI sync · live</p>
-                <h3>Channel health</h3>
+                <p class="ui-kicker" data-cm-kicker>ARI sync · live</p>
+                <h3 data-cm-title>Channel health</h3>
             </div>
             <div class="ui-toolbar-actions">
                 <span class="ui-chip">75+ OTAs</span>
             </div>
         </header>
+        <p class="ui-hero-hint">Watch channels sync · tap a row to push ARI</p>
         <div class="ui-card">
             <table class="ui-table-light">
                 <thead><tr><th>Channel</th><th>Inventory</th><th>Rates</th><th>Status</th></tr></thead>
-                <tbody>
-                    <tr><td>Booking.com</td><td>Synced 2m ago</td><td>BAR + rest.</td><td><span class="ui-badge ok">Live</span></td></tr>
-                    <tr><td>Expedia</td><td>Synced 2m ago</td><td>BAR</td><td><span class="ui-badge ok">Live</span></td></tr>
-                    <tr><td>MakeMyTrip</td><td>Synced 5m ago</td><td>BAR + stop-sell</td><td><span class="ui-badge info">Syncing</span></td></tr>
-                    <tr><td>Agoda</td><td>Synced 2m ago</td><td>BAR</td><td><span class="ui-badge ok">Live</span></td></tr>
+                <tbody data-cm-rows>
+                    <tr data-cm-row="0"><td>Booking.com</td><td data-cm-inv>Synced 2m ago</td><td>BAR + rest.</td><td><span class="ui-badge ok" data-cm-status>Live</span></td></tr>
+                    <tr data-cm-row="1"><td>Expedia</td><td data-cm-inv>Synced 2m ago</td><td>BAR</td><td><span class="ui-badge ok" data-cm-status>Live</span></td></tr>
+                    <tr data-cm-row="2"><td>MakeMyTrip</td><td data-cm-inv>Synced 5m ago</td><td>BAR + stop-sell</td><td><span class="ui-badge info" data-cm-status>Syncing</span></td></tr>
+                    <tr data-cm-row="3"><td>Agoda</td><td data-cm-inv>Synced 2m ago</td><td>BAR</td><td><span class="ui-badge ok" data-cm-status>Live</span></td></tr>
                 </tbody>
             </table>
         </div>
+        <div class="ui-hero-toast" data-hero-toast hidden></div>
     </div>
 </div>
 
 {% elif solution_slug == 'hotel-aggregator' %}
-<div class="ui-app ui-app-compact">
+<div class="ui-app ui-app-compact ui-hero-demo" data-hero-demo="hotel-aggregator" aria-label="Interactive hotel search demo">
     <div class="ui-app-main" style="width:100%;">
         <header class="ui-app-toolbar">
             <div>
                 <p class="ui-kicker">RevNext Hotels</p>
-                <h3>Search · Mumbai · 2 nights</h3>
+                <h3 data-agg-title>Search · Mumbai · 2 nights</h3>
             </div>
-            <span class="ui-chip">24 stays</span>
+            <span class="ui-chip" data-agg-count>24 stays</span>
         </header>
+        <p class="ui-hero-hint">Browse stays · claim or book</p>
         <div class="ui-card">
             <table class="ui-table-light">
                 <thead><tr><th>Hotel</th><th>Area</th><th>From</th><th></th></tr></thead>
-                <tbody>
-                    <tr><td>Harbour View Boutique</td><td>Colaba</td><td>₹8,999</td><td><span class="ui-badge ok">Available</span></td></tr>
-                    <tr><td>Palm Grove Residences</td><td>Bandra</td><td>₹6,400</td><td><span class="ui-badge ok">Available</span></td></tr>
-                    <tr><td>Lakeview Inn</td><td>Powai</td><td>₹5,200</td><td><span class="ui-badge warn">3 left</span></td></tr>
+                <tbody data-agg-rows>
+                    <tr data-agg-row="0"><td>Harbour View Boutique</td><td>Colaba</td><td>₹8,999</td><td><button type="button" class="ui-badge ok" data-agg-action>Available</button></td></tr>
+                    <tr data-agg-row="1"><td>Palm Grove Residences</td><td>Bandra</td><td>₹6,400</td><td><button type="button" class="ui-badge ok" data-agg-action>Available</button></td></tr>
+                    <tr data-agg-row="2"><td>Lakeview Inn</td><td>Powai</td><td>₹5,200</td><td><button type="button" class="ui-badge warn" data-agg-action>3 left</button></td></tr>
                 </tbody>
             </table>
         </div>
+        <div class="ui-hero-toast" data-hero-toast hidden></div>
     </div>
 </div>
 
 {% elif solution_slug == 'tours' %}
-<div class="ui-app ui-app-compact">
+<div class="ui-app ui-app-compact ui-hero-demo" data-hero-demo="tours" aria-label="Interactive tours catalog demo">
     <div class="ui-app-main" style="width:100%;">
         <header class="ui-app-toolbar">
             <div>
                 <p class="ui-kicker">Tours catalog</p>
                 <h3>Packages · this week</h3>
             </div>
-            <span class="ui-chip">12 live</span>
+            <span class="ui-chip" data-tours-live>12 live</span>
         </header>
+        <p class="ui-hero-hint">Select a package · seats update live</p>
         <div class="ui-card">
             <table class="ui-table-light">
                 <thead><tr><th>Package</th><th>Duration</th><th>Seats</th><th>From</th></tr></thead>
-                <tbody>
-                    <tr><td>Elephanta day cruise</td><td>1 day</td><td>18</td><td>₹2,499</td></tr>
-                    <tr><td>Konkan coastal escape</td><td>3 days</td><td>8</td><td>₹12,900</td></tr>
-                    <tr><td>City heritage walk</td><td>4 hrs</td><td>24</td><td>₹899</td></tr>
+                <tbody data-tours-rows>
+                    <tr data-tours-row="0" data-seats="18"><td>Elephanta day cruise</td><td>1 day</td><td data-tours-seats>18</td><td>₹2,499</td></tr>
+                    <tr data-tours-row="1" data-seats="8"><td>Konkan coastal escape</td><td>3 days</td><td data-tours-seats>8</td><td>₹12,900</td></tr>
+                    <tr data-tours-row="2" data-seats="24"><td>City heritage walk</td><td>4 hrs</td><td data-tours-seats>24</td><td>₹899</td></tr>
                 </tbody>
             </table>
+            <div class="ui-card-actions">
+                <button type="button" class="ui-btn-sm" data-tours-book>Book seats</button>
+            </div>
         </div>
+        <div class="ui-hero-toast" data-hero-toast hidden></div>
     </div>
 </div>
 {% endif %}

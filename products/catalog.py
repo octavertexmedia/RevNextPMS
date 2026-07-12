@@ -5,7 +5,7 @@ Billable product hosts (shared Django backend):
   - channel-manager.revnext.in
   - pms.revnext.in
   - pos.revnext.in
-  - cms.revnext.in
+  - cms.revnext.in          (RevNextCMS on dedicated VPS 84.247.183.69 — not this process)
   - booking.revnext.in      (direct booking engine — standalone)
   - hotels.revnext.in       (hotel aggregator)
   - networks.revnext.in     (B2B / agent network — standalone)
@@ -61,10 +61,10 @@ PRODUCT_CATALOG = [
         'Hotel CMS',
         'cms',
         'cms.revnext.in',
-        ['/website-builder/'],
-        ['/api/website-builder/'],
-        'website_builder',
-        'Property websites, content, and brand publishing.',
+        [],  # externally served — no local web paths on ChannelManager
+        [],  # externally served — no local API paths on ChannelManager
+        '',  # runtime is RevNextCMS, not an in-process Django app
+        'Property websites, content, and brand publishing (RevNextCMS).',
         40,
     ),
     (
@@ -236,6 +236,18 @@ OIDC_PRODUCT_CLIENTS = {
     'tours': 'OIDC_CLIENT_TOURS',
 }
 
+# Products billed here but served on another deploy (RevNextCMS VPS).
+# Seed maps these onto Product.is_externally_served / runtime_url / launch_path.
+EXTERNAL_PRODUCT_RUNTIME = {
+    'cms': {
+        'is_externally_served': True,
+        'runtime_url': 'https://app.revnext.in',
+        'launch_path': '/dashboard/',
+        'oidc_authenticate_path': '/oidc/authenticate/',
+        'marketing_url': 'https://cms.revnext.in/',
+    },
+}
+
 HOST_ALIASES = {
     'channel-manager.revnext.in': 'channel_manager',
     'channel-manager.localhost': 'channel_manager',
@@ -261,4 +273,53 @@ HOST_ALIASES = {
     'auth.localhost': None,
     'localhost': None,
     '127.0.0.1': None,
+}
+
+# Product-host marketing homepage (unauthenticated `/` on each subdomain).
+# solution_slug → core.solutions_data.SOLUTIONS; app_home → post-login destination.
+PRODUCT_HOST_LANDING = {
+    'channel_manager': {
+        'solution_slug': 'channel-manager',
+        'app_home': '/tenants/dashboard/',
+        'login_label': 'Sign in to Channel Manager',
+        'cta_label': 'Start Channel Manager trial',
+    },
+    'pms': {
+        'solution_slug': 'cloud-pms',
+        'app_home': '/pms/',
+        'login_label': 'Front desk sign in',
+        'cta_label': 'Start Cloud PMS trial',
+    },
+    'pos': {
+        'solution_slug': 'cloud-pos',
+        'app_home': '/pos/',
+        'login_label': 'Sign in to POS',
+        'cta_label': 'Start Cloud POS trial',
+    },
+    'booking': {
+        'solution_slug': 'booking-engine',
+        'app_home': '/booking/',
+        'login_label': 'Sign in to Booking Engine',
+        'cta_label': 'Start Booking Engine trial',
+    },
+    'networks': {
+        'solution_slug': 'b2b-network',
+        'app_home': '/b2b/',
+        'login_label': 'Sign in to B2B Network',
+        'cta_label': 'Start B2B Network trial',
+    },
+    'aggregator': {
+        'solution_slug': 'hotel-aggregator',
+        'app_home': '/hotels/',
+        'login_label': 'Sign in to Hotels',
+        'cta_label': 'List your property',
+        'guest_cta': {'label': 'Search hotels', 'url': '/hotels/search/'},
+    },
+    'tours': {
+        'solution_slug': 'tours',
+        'app_home': '/tours/',
+        'login_label': 'Sign in to Tours',
+        'cta_label': 'Start Tours trial',
+        'guest_cta': {'label': 'Browse catalog', 'url': '/tours/catalog/'},
+    },
 }

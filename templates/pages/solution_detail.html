@@ -9,13 +9,21 @@
         <h1 class="dawn-h1">{{ solution.title }}</h1>
         <p class="dawn-lead">{{ solution.lead }}</p>
         <div class="dawn-page-hero-actions">
+            {% if product_host_mode %}
+            <a href="{{ login_url }}" class="dawn-btn dawn-btn-primary">{{ login_label }}</a>
+            <a href="{{ register_url }}" class="dawn-btn dawn-btn-ghost">{{ cta_label }}</a>
+            {% if guest_cta %}
+            <a href="{{ guest_cta.url }}" class="dawn-btn dawn-btn-ghost">{{ guest_cta.label }}</a>
+            {% endif %}
+            {% else %}
             <a href="{% url 'tenants:register' %}" class="dawn-btn dawn-btn-primary">Start free trial</a>
             <a href="{% url 'core:contact' %}" class="dawn-btn dawn-btn-ghost">Talk to sales</a>
+            {% endif %}
         </div>
     </div>
 </section>
 
-<section class="dawn-section" style="padding-top:2.5rem;">
+<section class="dawn-section" style="padding-top:2.5rem;" id="why">
     <div class="dawn-container">
         <div class="dawn-sol-preview-wrap dawn-reveal">
             <div class="dawn-sol-preview-bar">
@@ -47,7 +55,7 @@
     </div>
 </section>
 
-<section class="dawn-section">
+<section class="dawn-section" id="modules">
     <div class="dawn-container">
         <div class="dawn-section-head dawn-reveal">
             <p class="dawn-eyebrow" style="color:var(--navy);">Modules</p>
@@ -82,41 +90,11 @@
     </div>
 </section>
 
+{% if not product_host_mode %}
 <section class="dawn-section">
-    <div class="dawn-container dawn-split">
-        <div>
-            <div class="dawn-section-head">
-                <p class="dawn-eyebrow" style="color:var(--navy);">How it works</p>
-                <h2 class="dawn-h2">From setup to steady state</h2>
-            </div>
-            <div style="display:grid;gap:1rem;">
-                {% for step in solution.steps %}
-                <div class="dawn-panel-soft dawn-reveal">
-                    <p class="dawn-meta" style="color:var(--amber);">{{ step.num }}</p>
-                    <h3 style="font-family:var(--font-display);margin:.35rem 0 .35rem;">{{ step.title }}</h3>
-                    <p style="margin:0;color:var(--muted);">{{ step.text }}</p>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        <div>
-            <div class="dawn-section-head">
-                <p class="dawn-eyebrow" style="color:var(--navy);">Included</p>
-                <h2 class="dawn-h2" style="font-size:1.75rem;">Capability checklist</h2>
-            </div>
-            <ul class="dawn-check-list">
-                {% for feature in solution.features %}
-                <li>{{ feature }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-</section>
-
-<section class="dawn-section dawn-section-alt">
     <div class="dawn-container">
         <div class="dawn-section-head dawn-reveal">
-            <p class="dawn-eyebrow" style="color:var(--navy);">Stack</p>
+            <p class="dawn-eyebrow" style="color:var(--navy);">Suite</p>
             <h2 class="dawn-h2">Works with the rest of RevNext</h2>
             <p class="dawn-section-lead">Every solution shares inventory, rates, and guest truth with Channel Manager.</p>
         </div>
@@ -125,13 +103,18 @@
             <a href="{% url 'core:solution_cloud_pos' %}" class="dawn-card"><h3>Cloud POS</h3><p>F&amp;B + bill to room</p></a>
             <a href="{% url 'core:solution_booking_engine' %}" class="dawn-card"><h3>Booking Engine</h3><p>Commission-free directs</p></a>
             <a href="{% url 'core:solution_mobile_apps' %}" class="dawn-card"><h3>Mobile Apps</h3><p>Desk on iOS &amp; Android</p></a>
-            <a href="{% url 'core:solution_website_builder' %}" class="dawn-card"><h3>Website Builder</h3><p>Sites that book</p></a>
+            <a href="{% url 'core:solution_website_builder' %}" class="dawn-card"><h3>Hotel CMS</h3><p>Sites that book</p></a>
             <a href="{% url 'core:solution_b2b' %}" class="dawn-card"><h3>Stay B2B</h3><p>Agent &amp; corporate rates</p></a>
             <a href="{% url 'core:solution_ota_listing' %}" class="dawn-card"><h3>OTA Listing</h3><p>Go live on platforms</p></a>
             <a href="{% url 'core:solution_google_hotel_ads' %}" class="dawn-card"><h3>Google Hotel Ads</h3><p>Pay per conversion</p></a>
         </div>
     </div>
 </section>
+{% endif %}
 
+{% if product_host_mode %}
+{% include 'landing/partials/page_cta.html' with cta_title=login_label cta_lead=solution.lead cta_primary_url=login_url cta_primary=login_label cta_secondary_url=register_url cta_secondary=cta_label %}
+{% else %}
 {% include 'landing/partials/page_cta.html' with cta_title="Ready to run this on your desk?" %}
+{% endif %}
 {% endblock %}

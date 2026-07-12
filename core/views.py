@@ -146,10 +146,68 @@ def health_check(request):
 
 
 def landing_page(request):
-    """Landing page for RevNext Channel Manager"""
+    """
+    Suite marketing homepage on apex, or product-specific landing on
+    channel-manager / pms / pos / booking / networks / hotels / tours hosts.
+    """
+    from django.conf import settings as dj_settings
+    from products.catalog import HOST_ALIASES, PRODUCT_CATALOG, PRODUCT_HOST_LANDING
+    from .solutions_data import get_solution
+
+    product = getattr(request, 'product', None)
+    host = getattr(request, 'product_host', '') or request.get_host().split(':')[0].lower()
+    apex_hosts = {
+        'revnext.in', 'www.revnext.in', 'revnext.localhost', 'www.localhost',
+        'localhost', '127.0.0.1',
+    }
+    product_code = product.code if product else HOST_ALIASES.get(host)
+
+    # Product subdomain → dedicated SaaS landing + auth CTAs
+    if product_code and product_code in PRODUCT_HOST_LANDING and host not in apex_hosts:
+        meta = PRODUCT_HOST_LANDING[product_code]
+        solution = get_solution(meta['solution_slug'])
+        if solution:
+            app_home = meta['app_home']
+            if getattr(dj_settings, 'OIDC_ENABLED', False):
+                login_url = f'/oidc/login/?next={app_home}'
+            else:
+                login_url = f'/tenants/login/?next={app_home}'
+            register_url = f'/tenants/register/?product={product_code}&next={app_home}'
+            if product:
+                product_name = product.short_name or product.name
+            else:
+                product_name = next(
+                    (row[2] for row in PRODUCT_CATALOG if row[0] == product_code),
+                    solution['eyebrow'],
+                )
+            context = {
+                'page_title': f"{solution['eyebrow']} | RevNext",
+                'meta_description': solution['meta'],
+                'solution': solution,
+                'solution_slug': solution['slug'],
+                'solution_title': solution['title'],
+                'solution_description': solution['lead'],
+                'solution_features': solution['features'],
+                'product_host_mode': True,
+                'product_code': product_code,
+                'product_name': product_name,
+                'login_url': login_url,
+                'login_label': meta.get('login_label', 'Sign in'),
+                'register_url': register_url,
+                'cta_label': meta.get('cta_label', 'Start free trial'),
+                'guest_cta': meta.get('guest_cta'),
+                'app_home': app_home,
+            }
+            return render(request, 'pages/solution_detail.html', context)
+
     context = {
         'page_title': 'RevNext Channel Manager - Hotel Channel Management SaaS',
-        'meta_description': 'Manage your hotel inventory, rates, and bookings across 75+ OTA platforms with RevNext Channel Manager. Real-time synchronization, multi-tenant support, and India-specific GST compliance.',
+        'meta_description': (
+            'Manage your hotel inventory, rates, and bookings across 75+ OTA platforms '
+            'with RevNext Channel Manager. Real-time synchronization, multi-tenant support, '
+            'and India-specific GST compliance.'
+        ),
+        'product_host_mode': False,
     }
     return render(request, 'landing/index.html', context)
 

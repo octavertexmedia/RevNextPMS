@@ -4,6 +4,62 @@ Each entry drives hero copy, UI preview type, modules, and outcomes.
 """
 
 SOLUTIONS = {
+    'channel-manager': {
+        'slug': 'channel-manager',
+        'eyebrow': 'Channel Manager',
+        'title': 'One control plane for every OTA',
+        'lead': (
+            'Push rates, inventory, and restrictions to 75+ channels from a single desk — '
+            'so overbooks stop and the morning board stays truthful.'
+        ),
+        'meta': (
+            'RevNext Channel Manager — distribute hotel rates and inventory across '
+            'OTAs with real-time sync, built for Indian hotels.'
+        ),
+        'preview_caption': 'Channel desk · sample ARI sync',
+        'highlights': [
+            {'label': 'Multi-OTA sync', 'text': 'Booking.com, Expedia, MakeMyTrip, Agoda, Airbnb, and 70+ more.'},
+            {'label': 'Live ARI', 'text': 'Availability, rates, and inventory update before the first walk-in.'},
+            {'label': 'Overbook guard', 'text': 'One source of truth locks rooms across channels.'},
+            {'label': 'India-ready', 'text': 'GST-aware workflows and multi-property tenants.'},
+        ],
+        'modules': [
+            {
+                'title': 'Channel connections',
+                'text': 'Connect OTAs once; map room types and rate plans cleanly.',
+            },
+            {
+                'title': 'Inventory & rates',
+                'text': 'Push BAR, restrictions, and allotments without spreadsheet merges.',
+            },
+            {
+                'title': 'Reservation inbox',
+                'text': 'New bookings land in one queue with channel attribution.',
+            },
+            {
+                'title': 'Property portfolio',
+                'text': 'Run multiple hotels under one tenant with role-based access.',
+            },
+        ],
+        'outcomes': [
+            {'stat': '75+', 'label': 'OTA channels'},
+            {'stat': 'Real-time', 'label': 'rate & inventory sync'},
+            {'stat': 'Zero', 'label': 'double-book chaos'},
+        ],
+        'steps': [
+            {'num': '01', 'title': 'Add properties', 'text': 'Room types, rate plans, and staff roles.'},
+            {'num': '02', 'title': 'Connect channels', 'text': 'Map OTAs and enable live ARI.'},
+            {'num': '03', 'title': 'Run the desk', 'text': 'Monitor sync health and reservations from one login.'},
+        ],
+        'features': [
+            'Distribute rates & inventory across 75+ OTAs',
+            'Real-time availability and restriction sync',
+            'Central reservation visibility by channel',
+            'Multi-property SaaS with role-based access',
+            'GST-ready workflows for Indian hotels',
+            'API access on growth plans',
+        ],
+    },
     'cloud-pms': {
         'slug': 'cloud-pms',
         'eyebrow': 'Cloud PMS',
@@ -174,39 +230,39 @@ SOLUTIONS = {
     },
     'website-builder': {
         'slug': 'website-builder',
-        'eyebrow': 'Website Builder',
+        'eyebrow': 'Hotel CMS',
         'title': 'A property site that books, not just browses',
         'lead': (
-            'No-code hotel websites with SEO, SSL, and a direct pipe into the Booking Engine — '
-            'so your brand page becomes a revenue channel.'
+            'RevNextCMS — multi-tenant Wagtail hotel websites with themes, SEO, custom domains, '
+            'and SSO via auth.revnext.in. Subscribe alone or inside the Hospitality Suite.'
         ),
         'meta': (
-            'RevNext Website Builder — no-code hotel websites with SEO, SSL, '
-            'and Booking Engine integration.'
+            'RevNext Hotel CMS (cms.revnext.in) — Wagtail property websites with SEO, SSL, '
+            'custom domains, and suite SSO.'
         ),
         'preview_caption': 'Property site · sample homepage',
         'highlights': [
-            {'label': 'No-code templates', 'text': 'Launch a polished property site without a developer sprint.'},
+            {'label': 'Wagtail CMS', 'text': 'Full content editing on cms.revnext.in with owner portal at app.revnext.in.'},
             {'label': 'Book now', 'text': 'CTA wired to live availability — not a contact form dead-end.'},
             {'label': 'SEO & SSL', 'text': 'Hosting, certificate, and search-friendly structure included.'},
-            {'label': 'Multi-language', 'text': 'Reach domestic and international guests on one site.'},
+            {'label': 'Suite SSO', 'text': 'Same IdP as Channel Manager, PMS, and POS — one login across products.'},
         ],
         'modules': [
             {
-                'title': 'Visual editor',
-                'text': 'Update photos, amenities, and offers without touching code.',
+                'title': 'Owner portal',
+                'text': 'Provision properties, themes, and domains from app.revnext.in.',
             },
             {
-                'title': 'Rooms & rates pages',
-                'text': 'Pull room copy from your inventory so the site never drifts from the desk.',
+                'title': 'Themes & branding',
+                'text': 'Layout families and brand settings without a developer sprint.',
             },
             {
-                'title': 'Hosting included',
-                'text': 'SSL and hosting managed — focus on content and conversion.',
+                'title': 'Custom domains',
+                'text': 'Verified custom domains with on-demand TLS on the CMS VPS.',
             },
             {
-                'title': 'Analytics-ready',
-                'text': 'Track visits and booking starts from the same property brand.',
+                'title': 'Suite packaging',
+                'text': 'Buy CMS alone (cms_starter / cms_pro) or unlock it with revnext_suite.',
             },
         ],
         'outcomes': [
@@ -215,16 +271,16 @@ SOLUTIONS = {
             {'stat': 'Direct', 'label': 'bookings from day one'},
         ],
         'steps': [
-            {'num': '01', 'title': 'Pick a template', 'text': 'Choose a layout that fits boutique, resort, or city hotel.'},
-            {'num': '02', 'title': 'Add your story', 'text': 'Photos, amenities, location — publish when ready.'},
-            {'num': '03', 'title': 'Turn on booking', 'text': 'Connect the engine and start taking direct stays.'},
+            {'num': '01', 'title': 'Subscribe', 'text': 'Choose cms_starter, cms_pro, or the Hospitality Suite.'},
+            {'num': '02', 'title': 'Open Hotel CMS', 'text': 'SSO into app.revnext.in and provision your property.'},
+            {'num': '03', 'title': 'Publish', 'text': 'Edit in Wagtail, attach a domain, and go live on *.sites.revnext.in.'},
         ],
         'features': [
-            'No-code templates with SEO optimization',
-            'Multi-language support',
-            'Free hosting with SSL certificate',
-            'Direct link to Booking Engine',
-            'Room pages synced with inventory',
+            'Wagtail CMS on cms.revnext.in',
+            'Owner portal on app.revnext.in',
+            'Shared OIDC IdP (auth.revnext.in)',
+            'Individual CMS plans or suite package',
+            'Custom domains with on-demand TLS',
             'Mobile-responsive property sites',
         ],
     },
@@ -449,6 +505,116 @@ SOLUTIONS = {
             'Improve look-to-book and ARR',
             'Budget control tied to conversions',
             'Brand-safe landing on your site',
+        ],
+    },
+    'hotel-aggregator': {
+        'slug': 'hotel-aggregator',
+        'eyebrow': 'RevNext Hotels',
+        'title': 'Discover, claim, and sell hotel inventory',
+        'lead': (
+            'Hotel discovery for travelers, listing claims for owners, and metasearch-ready '
+            'feeds — one aggregator surface for the RevNext network.'
+        ),
+        'meta': (
+            'RevNext Hotels — hotel search, listing claims, OTA setup, and metasearch feeds.'
+        ),
+        'preview_caption': 'Hotel search · sample results',
+        'highlights': [
+            {'label': 'Guest search', 'text': 'Find stays by destination, dates, and budget.'},
+            {'label': 'Listing claims', 'text': 'Owners claim and manage their property presence.'},
+            {'label': 'OTA setup', 'text': 'Bridge into channel distribution when you go live.'},
+            {'label': 'Metasearch', 'text': 'Feeds ready for Google Hotel Ads and partners.'},
+        ],
+        'modules': [
+            {
+                'title': 'Public search',
+                'text': 'Traveler-facing hotel discovery without leaving RevNext.',
+            },
+            {
+                'title': 'Owner console',
+                'text': 'Claim listings, update content, and connect distribution.',
+            },
+            {
+                'title': 'OTA listing tools',
+                'text': 'Prepare properties for channel onboarding.',
+            },
+            {
+                'title': 'Ads & feeds',
+                'text': 'Push live rates toward metasearch when Booking Engine is linked.',
+            },
+        ],
+        'outcomes': [
+            {'stat': 'Search', 'label': 'for travelers'},
+            {'stat': 'Claim', 'label': 'for owners'},
+            {'stat': 'Distribute', 'label': 'when ready'},
+        ],
+        'steps': [
+            {'num': '01', 'title': 'Search or claim', 'text': 'Travelers browse; owners claim their hotel.'},
+            {'num': '02', 'title': 'Connect products', 'text': 'Link Channel Manager, PMS, or Booking Engine.'},
+            {'num': '03', 'title': 'Go live', 'text': 'Sell direct and across OTAs from one tenant.'},
+        ],
+        'features': [
+            'Hotel discovery and public search',
+            'Listing claims for property owners',
+            'OTA listing and metasearch feed tools',
+            'Bridge into Channel Manager and Booking Engine',
+            'Multi-property owner login',
+            'India-focused hospitality inventory',
+        ],
+    },
+    'tours': {
+        'slug': 'tours',
+        'eyebrow': 'Tours Planner',
+        'title': 'Packages, itineraries, and activity inventory',
+        'lead': (
+            'Build tour products, publish a guest catalog, and manage bookings — '
+            'alongside your hotel stack, not in a separate spreadsheet world.'
+        ),
+        'meta': (
+            'RevNext Tours — tour packages, itineraries, and activity inventory for hospitality operators.'
+        ),
+        'preview_caption': 'Tour catalog · sample package',
+        'highlights': [
+            {'label': 'Packages', 'text': 'Day trips, multi-day itineraries, and add-ons.'},
+            {'label': 'Guest catalog', 'text': 'Public browse-and-book surface for travelers.'},
+            {'label': 'Inventory', 'text': 'Capacity and departure dates without overselling.'},
+            {'label': 'Ops desk', 'text': 'Operator login to manage products and bookings.'},
+        ],
+        'modules': [
+            {
+                'title': 'Product builder',
+                'text': 'Define tours, pricing, and departure windows.',
+            },
+            {
+                'title': 'Public catalog',
+                'text': 'Let guests explore packages before they talk to the desk.',
+            },
+            {
+                'title': 'Booking queue',
+                'text': 'Confirm, amend, and settle tour reservations.',
+            },
+            {
+                'title': 'Hotel link',
+                'text': 'Attach tours to stays when the guest is already in-house.',
+            },
+        ],
+        'outcomes': [
+            {'stat': 'Catalog', 'label': 'guest-ready'},
+            {'stat': 'Capacity', 'label': 'controlled'},
+            {'stat': 'One login', 'label': 'with your suite'},
+        ],
+        'steps': [
+            {'num': '01', 'title': 'Create packages', 'text': 'Itineraries, prices, and seats.'},
+            {'num': '02', 'title': 'Publish catalog', 'text': 'Guests browse; operators stay in control.'},
+            {'num': '03', 'title': 'Fulfill', 'text': 'Confirm bookings and run the day\'s departures.'},
+        ],
+        'features': [
+            'Tour package and itinerary management',
+            'Public guest catalog',
+            'Activity inventory and capacity',
+            'Operator dashboard and booking queue',
+            'Works alongside PMS and Channel Manager',
+            'Multi-property tenant support',
         ],
     },
 }

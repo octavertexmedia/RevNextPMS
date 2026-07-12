@@ -17,6 +17,7 @@ EXEMPT_PREFIXES = (
     '/api/auth/',
     '/api/rbac/',
     '/api/products/',
+    '/api/internal/',
     '/tenants/login/',
     '/tenants/register/',
     '/tenants/logout/',
@@ -51,7 +52,22 @@ PUBLIC_PRODUCT_EXEMPT = (
     '/hotels/search/',
     '/api/hotels/public/',
     '/oidc/',
+    '/website-builder/',  # legacy stub → redirected to RevNextCMS
 )
+
+
+CMS_RUNTIME_FALLBACK = 'https://app.revnext.in/oidc/authenticate/?next=%2Fdashboard%2F'
+
+
+def _cms_launch_url() -> str:
+    try:
+        from .models import Product
+        product = Product.objects.filter(code='cms', is_active=True).first()
+        if product:
+            return product.launch_url(with_oidc=True)
+    except Exception:
+        pass
+    return CMS_RUNTIME_FALLBACK
 
 
 class ProductHostMiddleware(MiddlewareMixin):
@@ -59,47 +75,43 @@ class ProductHostMiddleware(MiddlewareMixin):
     Resolve request.product from Host header.
 
     Also attaches request.product_host and request.is_product_host.
+    Redirects legacy /website-builder/ to RevNextCMS.
     """
 
     def process_request(self, request):
+        # Legacy website_builder stub → external RevNextCMS
+        if request.path.startswith('/website-builder/') or request.path.startswith('/api/website-builder/'):
+            return HttpResponseRedirect(_cms_launch_url())
+
         host = request.get_host()
         product = get_product_by_host(host)
         request.product = product
         request.product_host = host.split(':')[0].lower()
         request.is_product_host = product is not None
 
-        # If on a product subdomain and hitting bare /, send to product home
+        # External products are never served on this process — send home to runtime
+        if product and product.is_externally_served and request.path == '/':
+            return HttpResponseRedirect(product.launch_url(with_oidc=True))
+
+        # If on a product subdomain and hitting bare /, send authenticated users
+        # to the product app. Guests see the product-specific landing (core.landing_page).
         if product and request.path == '/':
             homes = {
                 'channel_manager': '/tenants/dashboard/',
                 'pms': '/pms/',
                 'pos': '/pos/',
-                'cms': '/website-builder/',
                 'booking': '/booking/',
                 'aggregator': '/hotels/',
                 'networks': '/b2b/',
                 'tours': '/tours/',
             }
             target = homes.get(product.code)
-            # Aggregator keeps marketing homepage only on apex revnext.in / www
+            # Suite marketing homepage only on apex (Vercel or local)
             apex_hosts = {'revnext.in', 'www.revnext.in', 'revnext.localhost', 'www.localhost'}
             host_only = request.product_host
             if product.code == 'aggregator' and host_only in apex_hosts:
                 return None
-            if target and target != '/' and request.user.is_authenticated:
-                return HttpResponseRedirect(target)
-            if target and target != '/' and product.code in ('booking', 'networks', 'tours', 'aggregator'):
-                if not request.user.is_authenticated:
-                    # Guest storefronts for tours / hotels
-                    if product.code == 'tours':
-                        return HttpResponseRedirect('/tours/catalog/')
-                    if product.code == 'aggregator':
-                        return HttpResponseRedirect('/hotels/search/')
-                    from django.conf import settings as dj_settings
-                    if getattr(dj_settings, 'OIDC_ENABLED', False):
-                        return HttpResponseRedirect(f'/oidc/login/?next={target}')
-                    from django.contrib.auth.views import redirect_to_login
-                    return redirect_to_login(target)
+            if target and request.user.is_authenticated:
                 return HttpResponseRedirect(target)
         return None
 
@@ -110,15 +122,16 @@ class ProductEntitlementMiddleware(MiddlewareMixin):
 
     Superusers bypass. Unauthenticated users hitting product apps are redirected
     to login (web) or 401 (API). Missing entitlement → 402 Payment Required.
+    Externally served products are not gated on local paths (they live elsewhere).
     """
 
     PRODUCT_WEB_PREFIXES = (
-        '/pms/', '/pos/', '/website-builder/', '/booking/',
+        '/pms/', '/pos/', '/booking/',
         '/ota-listing/', '/google-hotel-ads/', '/hotels/', '/b2b/', '/tours/',
         '/tenants/dashboard/', '/tenants/properties/',
     )
     PRODUCT_API_PREFIXES = (
-        '/api/pms/', '/api/pos/', '/api/website-builder/', '/api/booking-engine/',
+        '/api/pms/', '/api/pos/', '/api/booking-engine/',
         '/api/ota-listing/', '/api/google-hotel-ads/', '/api/hotels/', '/api/b2b/', '/api/tours/',
         '/api/core/', '/api/integrations/', '/api/bookings/',
     )
@@ -160,6 +173,10 @@ class ProductEntitlementMiddleware(MiddlewareMixin):
         if not product:
             return None  # path not mapped to a billable product
 
+        # External products are enforced on their own VPS, not here
+        if product.is_externally_served:
+            return None
+
         if not product.is_billable:
             return None
 
@@ -175,6 +192,7 @@ class ProductEntitlementMiddleware(MiddlewareMixin):
                 'host': product.primary_host,
                 'subscribe_url': f'/api/products/plans/?product={product.code}',
                 'suite_code': 'revnext_suite',
+                'launch_url': product.launch_url(with_oidc=True) if product.is_externally_served else '',
             },
         )
 

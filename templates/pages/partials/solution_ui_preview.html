@@ -231,4 +231,87 @@
     </div>
     <p class="ui-note" style="text-align:center;margin-top:.75rem;">Clicks land on your Booking Engine — not an OTA.</p>
 </div>
+
+{% elif solution_slug == 'channel-manager' %}
+<div class="ui-app">
+    <aside class="ui-app-nav">
+        <div class="ui-app-brand">Channel Manager</div>
+        <nav>
+            <span class="on">Channels</span>
+            <span>Inventory</span>
+            <span>Rates</span>
+            <span>Reservations</span>
+            <span>Properties</span>
+        </nav>
+        <div class="ui-app-property">Harbour View · Mumbai</div>
+    </aside>
+    <div class="ui-app-main">
+        <header class="ui-app-toolbar">
+            <div>
+                <p class="ui-kicker">ARI sync · live</p>
+                <h3>Channel health</h3>
+            </div>
+            <div class="ui-toolbar-actions">
+                <span class="ui-chip">75+ OTAs</span>
+            </div>
+        </header>
+        <div class="ui-card">
+            <table class="ui-table-light">
+                <thead><tr><th>Channel</th><th>Inventory</th><th>Rates</th><th>Status</th></tr></thead>
+                <tbody>
+                    <tr><td>Booking.com</td><td>Synced 2m ago</td><td>BAR + rest.</td><td><span class="ui-badge ok">Live</span></td></tr>
+                    <tr><td>Expedia</td><td>Synced 2m ago</td><td>BAR</td><td><span class="ui-badge ok">Live</span></td></tr>
+                    <tr><td>MakeMyTrip</td><td>Synced 5m ago</td><td>BAR + stop-sell</td><td><span class="ui-badge info">Syncing</span></td></tr>
+                    <tr><td>Agoda</td><td>Synced 2m ago</td><td>BAR</td><td><span class="ui-badge ok">Live</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% elif solution_slug == 'hotel-aggregator' %}
+<div class="ui-app ui-app-compact">
+    <div class="ui-app-main" style="width:100%;">
+        <header class="ui-app-toolbar">
+            <div>
+                <p class="ui-kicker">RevNext Hotels</p>
+                <h3>Search · Mumbai · 2 nights</h3>
+            </div>
+            <span class="ui-chip">24 stays</span>
+        </header>
+        <div class="ui-card">
+            <table class="ui-table-light">
+                <thead><tr><th>Hotel</th><th>Area</th><th>From</th><th></th></tr></thead>
+                <tbody>
+                    <tr><td>Harbour View Boutique</td><td>Colaba</td><td>₹8,999</td><td><span class="ui-badge ok">Available</span></td></tr>
+                    <tr><td>Palm Grove Residences</td><td>Bandra</td><td>₹6,400</td><td><span class="ui-badge ok">Available</span></td></tr>
+                    <tr><td>Lakeview Inn</td><td>Powai</td><td>₹5,200</td><td><span class="ui-badge warn">3 left</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% elif solution_slug == 'tours' %}
+<div class="ui-app ui-app-compact">
+    <div class="ui-app-main" style="width:100%;">
+        <header class="ui-app-toolbar">
+            <div>
+                <p class="ui-kicker">Tours catalog</p>
+                <h3>Packages · this week</h3>
+            </div>
+            <span class="ui-chip">12 live</span>
+        </header>
+        <div class="ui-card">
+            <table class="ui-table-light">
+                <thead><tr><th>Package</th><th>Duration</th><th>Seats</th><th>From</th></tr></thead>
+                <tbody>
+                    <tr><td>Elephanta day cruise</td><td>1 day</td><td>18</td><td>₹2,499</td></tr>
+                    <tr><td>Konkan coastal escape</td><td>3 days</td><td>8</td><td>₹12,900</td></tr>
+                    <tr><td>City heritage walk</td><td>4 hrs</td><td>24</td><td>₹899</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endif %}

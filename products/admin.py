@@ -18,11 +18,24 @@ class ProductPlanInline(TabularInline):
 @admin.register(Product)
 class ProductAdmin(ModelAdmin):
     list_display = [
-        'short_name', 'code', 'primary_host', 'is_billable', 'is_active', 'sort_order',
+        'short_name', 'code', 'primary_host', 'is_externally_served',
+        'is_billable', 'is_active', 'sort_order',
     ]
-    list_filter = ['is_active', 'is_billable']
+    list_filter = ['is_active', 'is_billable', 'is_externally_served']
     search_fields = ['code', 'name', 'short_name', 'primary_host']
     inlines = [ProductPlanInline]
+    fieldsets = (
+        (None, {
+            'fields': (
+                'code', 'name', 'short_name', 'tagline', 'description',
+                'subdomain', 'primary_host', 'path_prefixes', 'api_prefixes',
+                'app_label', 'marketing_url', 'is_active', 'is_billable', 'sort_order',
+            ),
+        }),
+        ('External runtime (RevNextCMS)', {
+            'fields': ('is_externally_served', 'runtime_url', 'launch_path'),
+        }),
+    )
 
 
 @admin.register(ProductPlan)

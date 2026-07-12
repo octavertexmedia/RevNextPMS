@@ -4,13 +4,19 @@ from .models import Product, ProductInvoice, ProductPlan, TenantProductSubscript
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    launch_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
         fields = [
             'id', 'code', 'name', 'short_name', 'tagline', 'description',
             'subdomain', 'primary_host', 'path_prefixes', 'api_prefixes',
             'app_label', 'is_active', 'is_billable', 'sort_order', 'marketing_url',
+            'is_externally_served', 'runtime_url', 'launch_path', 'launch_url',
         ]
+
+    def get_launch_url(self, obj):
+        return obj.launch_url(with_oidc=True)
 
 
 class ProductPlanSerializer(serializers.ModelSerializer):

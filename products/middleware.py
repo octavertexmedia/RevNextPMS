@@ -90,7 +90,11 @@ class ProductHostMiddleware(MiddlewareMixin):
         request.is_product_host = product is not None
 
         # External products are never served on this process — send home to runtime
-        if product and product.is_externally_served and request.path == '/':
+        if (
+            product
+            and getattr(product, 'is_externally_served', False)
+            and request.path == '/'
+        ):
             return HttpResponseRedirect(product.launch_url(with_oidc=True))
 
         # If on a product subdomain and hitting bare /, send authenticated users
@@ -174,7 +178,7 @@ class ProductEntitlementMiddleware(MiddlewareMixin):
             return None  # path not mapped to a billable product
 
         # External products are enforced on their own VPS, not here
-        if product.is_externally_served:
+        if getattr(product, 'is_externally_served', False):
             return None
 
         if not product.is_billable:
@@ -192,7 +196,11 @@ class ProductEntitlementMiddleware(MiddlewareMixin):
                 'host': product.primary_host,
                 'subscribe_url': f'/api/products/plans/?product={product.code}',
                 'suite_code': 'revnext_suite',
-                'launch_url': product.launch_url(with_oidc=True) if product.is_externally_served else '',
+                'launch_url': (
+                    product.launch_url(with_oidc=True)
+                    if getattr(product, 'is_externally_served', False)
+                    else ''
+                ),
             },
         )
 

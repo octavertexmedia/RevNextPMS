@@ -49,6 +49,22 @@ class Product(TimeStampedModel):
     sort_order = models.PositiveIntegerField(default=100)
     marketing_url = models.URLField(blank=True)
 
+    # External runtime (e.g. RevNextCMS on dedicated VPS) — billed here, served elsewhere
+    is_externally_served = models.BooleanField(
+        default=False,
+        help_text='If true, product UI lives on runtime_url (not this Django process).',
+    )
+    runtime_url = models.URLField(
+        blank=True,
+        help_text='Base URL of the external product, e.g. https://app.revnext.in',
+    )
+    launch_path = models.CharField(
+        max_length=255,
+        blank=True,
+        default='/',
+        help_text='Path appended after OIDC auth on the external host, e.g. /dashboard/',
+    )
+
     class Meta:
         db_table = 'products'
         ordering = ['sort_order', 'name']
@@ -59,6 +75,26 @@ class Product(TimeStampedModel):
     def matches_path(self, path: str) -> bool:
         prefixes = list(self.path_prefixes or []) + list(self.api_prefixes or [])
         return any(path.startswith(p) for p in prefixes)
+
+    def launch_url(self, *, with_oidc: bool = True) -> str:
+        """
+        Absolute URL to open this product after subscribe / from the dashboard.
+
+        External products go to RevNextCMS OIDC authenticate → launch_path.
+        Local products use marketing_url or https://{primary_host}/.
+        """
+        if self.is_externally_served and self.runtime_url:
+            base = self.runtime_url.rstrip('/')
+            path = self.launch_path or '/'
+            if not path.startswith('/'):
+                path = f'/{path}'
+            if with_oidc:
+                from urllib.parse import quote
+                return f'{base}/oidc/authenticate/?next={quote(path)}'
+            return f'{base}{path}'
+        if self.marketing_url:
+            return self.marketing_url
+        return f'https://{self.primary_host}/'
 
 
 class ProductPlan(TimeStampedModel):

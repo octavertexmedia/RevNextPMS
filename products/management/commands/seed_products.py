@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from djmoney.money import Money
 
-from products.catalog import PRODUCT_CATALOG, PRODUCT_PLANS, SUITE_PACKAGE
+from products.catalog import EXTERNAL_PRODUCT_RUNTIME, PRODUCT_CATALOG, PRODUCT_PLANS, SUITE_PACKAGE
 from products.models import Product, ProductPlan
 
 
@@ -23,25 +23,31 @@ class Command(BaseCommand):
         for (
             code, name, short_name, subdomain, host, paths, apis, app_label, tagline, sort
         ) in PRODUCT_CATALOG:
+            external = EXTERNAL_PRODUCT_RUNTIME.get(code, {})
+            defaults = {
+                'name': name,
+                'short_name': short_name,
+                'subdomain': subdomain,
+                'primary_host': host,
+                'path_prefixes': paths,
+                'api_prefixes': apis,
+                'app_label': app_label,
+                'tagline': tagline,
+                'sort_order': sort,
+                'is_active': True,
+                'is_billable': True,
+                'marketing_url': external.get('marketing_url') or f'https://{host}/',
+                'is_externally_served': bool(external.get('is_externally_served', False)),
+                'runtime_url': external.get('runtime_url', ''),
+                'launch_path': external.get('launch_path', '/'),
+            }
             product, created = Product.objects.update_or_create(
                 code=code,
-                defaults={
-                    'name': name,
-                    'short_name': short_name,
-                    'subdomain': subdomain,
-                    'primary_host': host,
-                    'path_prefixes': paths,
-                    'api_prefixes': apis,
-                    'app_label': app_label,
-                    'tagline': tagline,
-                    'sort_order': sort,
-                    'is_active': True,
-                    'is_billable': True,
-                    'marketing_url': f'https://{host}/',
-                },
+                defaults=defaults,
             )
             products[code] = product
-            self.stdout.write(f'  {"+" if created else "✓"} {code} → {host}')
+            ext_note = ' [external]' if product.is_externally_served else ''
+            self.stdout.write(f'  {"+" if created else "✓"} {code} → {host}{ext_note}')
 
         self.stdout.write('💳 Seeding product plans (monthly / yearly)...')
         for product_code, plans in PRODUCT_PLANS.items():

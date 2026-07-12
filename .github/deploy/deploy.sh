@@ -219,6 +219,24 @@ print_status "Starting containers..."
 cd "$DEPLOY_DIR"
 $DOCKER_COMPOSE_CMD -f docker-compose.yml up -d
 
+# Ensure independent OpenBao is reachable via Docker DNS alias `openbao`
+# (stack lives in ~/revnext-secrets; CM compose does not own that container)
+print_status "Linking OpenBao network alias (if secrets stack is running)..."
+CM_NET="$($DOCKER_COMPOSE_CMD -f docker-compose.yml ps -q web 2>/dev/null | xargs -r docker inspect --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}{{end}}' 2>/dev/null | head -1)"
+if [ -z "$CM_NET" ]; then
+  CM_NET="$(docker network ls --format '{{.Name}}' | grep -E 'channel-manager.*network|channel-manager_default' | head -1 || true)"
+fi
+if [ -n "$CM_NET" ] && docker inspect revnext_secrets_openbao >/dev/null 2>&1; then
+  docker network connect --alias openbao "$CM_NET" revnext_secrets_openbao 2>/dev/null \
+    || print_status "OpenBao already on $CM_NET (or connect skipped)"
+  # Prefer in-network alias over docker-bridge IP when AppRole .env uses openbao hostname
+  if grep -qE '^OPENBAO_ADDR=http://172\.17\.0\.1:8200' "$DEPLOY_DIR/.env" 2>/dev/null; then
+    sed -i 's|^OPENBAO_ADDR=http://172\.17\.0\.1:8200|OPENBAO_ADDR=http://openbao:8200|' "$DEPLOY_DIR/.env" || true
+  fi
+else
+  print_warning "OpenBao container revnext_secrets_openbao not linked — ensure ~/revnext-secrets is up"
+fi
+
 print_status "Waiting for services..."
 sleep 20
 
@@ -294,4 +312,5 @@ print_success "Channel Manager deployment completed."
 print_status "Hosts: channel-manager · pms · pos · cms · booking · hotels · networks · tours · apex"
 print_status "Upstream: 127.0.0.1:8001  |  Logs: cd $DEPLOY_DIR && $DOCKER_COMPOSE_CMD logs -f"
 print_status "OpenBao (independent): ~/revnext-secrets — deploy via .github/workflows/deploy-secrets.yml"
-print_status "TLS products: certbot --nginx -d channel-manager.revnext.in -d booking.revnext.in -d networks.revnext.in -d pms.revnext.in -d pos.revnext.in -d cms.revnext.in -d hotels.revnext.in -d tours.revnext.in -d revnext.in -d www.revnext.in"
+print_status "TLS products: certbot --nginx -d channel-manager.revnext.in -d booking.revnext.in -d networks.revnext.in -d pms.revnext.in -d pos.revnext.in -d hotels.revnext.in -d tours.revnext.in -d revnext.in -d www.revnext.in"
+print_status "cms.revnext.in + hotel sites → VPS 84.247.183.69 (RevNextCMS), not this stack"

@@ -70,7 +70,6 @@ For API support, contact: support@revnext.in
         path('api/pms/', include('cloud_pms.urls_api')),
         path('api/pos/', include('cloud_pos.urls_api')),
         path('api/booking-engine/', include('booking_engine.urls_api')),
-        path('api/website-builder/', include('website_builder.urls_api')),
         path('api/b2b/', include('b2b_network.urls_api')),
         path('api/ota-listing/', include('ota_listing.urls_api')),
         path('api/google-hotel-ads/', include('google_hotel_ads.urls_api')),
@@ -92,7 +91,6 @@ urlpatterns = [
     path('pms/', include('cloud_pms.urls')),
     path('pos/', include('cloud_pos.urls')),
     path('booking/', include('booking_engine.urls')),
-    path('website-builder/', include('website_builder.urls')),
     path('b2b/', include('b2b_network.urls')),
     path('ota-listing/', include('ota_listing.urls')),
     path('google-hotel-ads/', include('google_hotel_ads.urls')),
@@ -118,13 +116,13 @@ urlpatterns = [
     path('api/', include('tenants.urls_api')),  # Tenant and subscription APIs
     path('api/rbac/', include('rbac.urls')),  # Enterprise hospitality RBAC
     path('api/products/', include('products.urls')),  # Multi-product catalog & billing
+    path('api/internal/', include('products.internal_urls')),  # S2S entitlements for RevNextCMS
     path('api/core/', include('core.urls_api')),
     path('api/integrations/', include('integrations.urls')),
     path('api/bookings/', include('bookings.urls')),
     path('api/pms/', include('cloud_pms.urls_api')),
     path('api/pos/', include('cloud_pos.urls_api')),
     path('api/booking-engine/', include('booking_engine.urls_api')),
-    path('api/website-builder/', include('website_builder.urls_api')),
     path('api/b2b/', include('b2b_network.urls_api')),
     path('api/ota-listing/', include('ota_listing.urls_api')),
     path('api/google-hotel-ads/', include('google_hotel_ads.urls_api')),

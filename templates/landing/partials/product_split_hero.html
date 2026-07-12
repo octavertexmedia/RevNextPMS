@@ -1,48 +1,50 @@
-{# Variant 1: Integrated & Narrative — one merged hero (copy | product UI). #}
+{# Variant 1: one inset narrative card — dark copy | light product UI (merged hero). #}
 <section class="dawn-split-hero" aria-label="{{ product_name }} hero">
-    <div class="dawn-split-hero-copy">
-        <div class="dawn-split-hero-copy-inner">
-            <p class="dawn-split-eyebrow">{{ solution.eyebrow }}</p>
-            <h1 class="dawn-split-h1">{{ solution.title }}</h1>
-            <p class="dawn-split-lead">{{ solution.lead }}</p>
-            <div class="dawn-split-actions">
-                <a href="{{ login_url }}" class="dawn-btn dawn-btn-primary dawn-btn-hero">{{ login_label }}</a>
-                <a href="{{ register_url }}" class="dawn-btn dawn-btn-ghost dawn-btn-hero-ghost">{{ cta_label }}</a>
-                {% if guest_cta %}
-                <a href="{{ guest_cta.url }}" class="dawn-btn dawn-btn-ghost dawn-btn-hero-ghost">{{ guest_cta.label }}</a>
-                {% endif %}
+    <div class="dawn-split-hero-shell">
+        <div class="dawn-split-hero-copy">
+            <div class="dawn-split-hero-copy-inner">
+                <p class="dawn-split-eyebrow">{{ solution.eyebrow }}</p>
+                <h1 class="dawn-split-h1">{{ solution.title }}</h1>
+                <p class="dawn-split-lead">{{ solution.lead }}</p>
+                <div class="dawn-split-actions">
+                    <a href="{{ login_url }}" class="dawn-btn dawn-btn-primary dawn-btn-hero">{{ login_label }}</a>
+                    <a href="{{ register_url }}" class="dawn-btn dawn-btn-hero-secondary">{{ cta_label }}</a>
+                    {% if guest_cta %}
+                    <a href="{{ guest_cta.url }}" class="dawn-btn dawn-btn-hero-secondary">{{ guest_cta.label }}</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
-    <div class="dawn-split-hero-stage">
-        <div class="dawn-split-bridge" aria-hidden="true">
-            <span class="dawn-split-badge" title="">
-                <svg viewBox="0 0 48 56" width="40" height="46" fill="none" aria-hidden="true">
-                    <rect x="6" y="4" width="36" height="48" rx="6" fill="#E8D4B8"/>
-                    <rect x="12" y="12" width="24" height="18" rx="9" fill="#C4A882"/>
-                    <circle cx="24" cy="18" r="6" fill="#F7F1E8"/>
-                    <rect x="14" y="36" width="20" height="3" rx="1.5" fill="#B57E4F"/>
-                    <rect x="16" y="42" width="16" height="2.5" rx="1.25" fill="#D2B48C"/>
-                </svg>
-            </span>
-            <span class="dawn-split-compass" title="">
-                <svg viewBox="0 0 48 48" width="42" height="42" fill="none" aria-hidden="true">
-                    <circle cx="24" cy="24" r="20" fill="#1a3a5c"/>
-                    <circle cx="24" cy="24" r="15" stroke="#E8D4B8" stroke-width="1.5"/>
-                    <path d="M24 10l4 14-4 14-4-14 4-14z" fill="#C97B2E"/>
-                    <path d="M24 10l-4 14h8L24 10z" fill="#F3E2C8"/>
-                    <circle cx="24" cy="24" r="2.5" fill="#fff"/>
-                </svg>
-            </span>
-        </div>
-        <div class="dawn-split-hero-stage-inner">
-            <div class="dawn-split-preview">
-                <div class="dawn-sol-preview-bar">
-                    <span>{{ solution.preview_caption }}</span>
-                    <span class="ui-chip">Product UI</span>
-                </div>
-                <div class="dawn-sol-preview-body">
-                    {% include 'pages/partials/solution_ui_preview.html' %}
+        <div class="dawn-split-hero-stage">
+            <div class="dawn-split-bridge" aria-hidden="true">
+                <span class="dawn-split-badge">
+                    <svg viewBox="0 0 48 56" width="36" height="42" fill="none" aria-hidden="true">
+                        <rect x="6" y="4" width="36" height="48" rx="6" fill="#E8D4B8"/>
+                        <rect x="12" y="12" width="24" height="18" rx="9" fill="#C4A882"/>
+                        <circle cx="24" cy="18" r="6" fill="#F7F1E8"/>
+                        <rect x="14" y="36" width="20" height="3" rx="1.5" fill="#B57E4F"/>
+                        <rect x="16" y="42" width="16" height="2.5" rx="1.25" fill="#D2B48C"/>
+                    </svg>
+                </span>
+                <span class="dawn-split-compass">
+                    <svg viewBox="0 0 48 48" width="38" height="38" fill="none" aria-hidden="true">
+                        <circle cx="24" cy="24" r="20" fill="#1a3a5c"/>
+                        <circle cx="24" cy="24" r="15" stroke="#E8D4B8" stroke-width="1.5"/>
+                        <path d="M24 10l4 14-4 14-4-14 4-14z" fill="#C97B2E"/>
+                        <path d="M24 10l-4 14h8L24 10z" fill="#F3E2C8"/>
+                        <circle cx="24" cy="24" r="2.5" fill="#fff"/>
+                    </svg>
+                </span>
+            </div>
+            <div class="dawn-split-hero-stage-inner">
+                <div class="dawn-split-preview">
+                    <div class="dawn-sol-preview-bar">
+                        <span>{{ solution.preview_caption }}</span>
+                        <span class="ui-chip">Product UI</span>
+                    </div>
+                    <div class="dawn-sol-preview-body">
+                        {% include 'pages/partials/solution_ui_preview.html' %}
+                    </div>
                 </div>
             </div>
         </div>

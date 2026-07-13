@@ -1,8 +1,9 @@
-// RevNext landing — looping interactive hero demos for every product UI
+// RevNext landing — looping interactive hero demos with animated mouse pointer
 
 (function () {
   const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const IDLE_RESUME_MS = 12000;
+  const CURSOR_MOVE_MS = 520;
 
   function inr(n) {
     return '₹' + Math.round(n).toLocaleString('en-IN');
@@ -34,8 +35,78 @@
     nodes.forEach((n) => n.classList.toggle('is-demo-selected', n === active));
   }
 
+  function createDemoCursor(root) {
+    let host = root;
+    const stage = root.closest('.dawn-split-preview, .dawn-sol-preview-wrap, .dawn-sol-preview-body');
+    if (stage) host = stage;
+
+    if (getComputedStyle(host).position === 'static') {
+      host.style.position = 'relative';
+    }
+
+    let cursor = host.querySelector(':scope > .ui-hero-cursor');
+    if (!cursor) {
+      cursor = document.createElement('div');
+      cursor.className = 'ui-hero-cursor';
+      cursor.setAttribute('aria-hidden', 'true');
+      cursor.innerHTML =
+        '<svg class="ui-hero-cursor-arrow" viewBox="0 0 24 24" width="28" height="28" fill="none">' +
+        '<path d="M4.5 3.2l15.2 8.05c.7.37.55 1.4-.22 1.55l-6.3 1.25-2.7 6.55c-.3.72-1.35.6-1.45-.18L4.5 3.2z" fill="#0f172a" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/>' +
+        '</svg>' +
+        '<span class="ui-hero-cursor-ripple"></span>';
+      host.appendChild(cursor);
+    }
+
+    let lastHover = null;
+
+    function clearHover() {
+      if (lastHover) {
+        lastHover.classList.remove('is-demo-hover');
+        lastHover = null;
+      }
+    }
+
+    function setVisible(on) {
+      cursor.classList.toggle('is-visible', !!on);
+      if (!on) {
+        cursor.classList.remove('is-clicking', 'is-pressing');
+        clearHover();
+      }
+    }
+
+    async function moveTo(el) {
+      if (!el || !host.contains(el)) return;
+      const hostRect = host.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
+      const x = rect.left - hostRect.left + Math.min(rect.width * 0.55, Math.max(12, rect.width / 2));
+      const y = rect.top - hostRect.top + Math.min(rect.height * 0.55, Math.max(10, rect.height / 2));
+      setVisible(true);
+      cursor.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+      clearHover();
+      el.classList.add('is-demo-hover');
+      lastHover = el;
+      await sleep(CURSOR_MOVE_MS);
+    }
+
+    async function click(el) {
+      if (!el) return;
+      await moveTo(el);
+      cursor.classList.add('is-pressing', 'is-clicking');
+      await sleep(140);
+      cursor.classList.remove('is-pressing');
+      await sleep(180);
+      cursor.classList.remove('is-clicking');
+    }
+
+    // Park near top-left of demo on start
+    cursor.style.transform = 'translate(24px, 24px)';
+
+    return { el: cursor, moveTo, click, setVisible, clearHover };
+  }
+
   function createLooper(root, buildSteps, opts) {
-    const options = Object.assign({ gap: 900, resumeMs: IDLE_RESUME_MS }, opts || {});
+    const options = Object.assign({ gap: 700, resumeMs: IDLE_RESUME_MS }, opts || {});
+    const cursor = createDemoCursor(root);
     let stopped = false;
     let paused = false;
     let generation = 0;
@@ -44,6 +115,7 @@
     function pauseForUser() {
       paused = true;
       generation += 1;
+      cursor.setVisible(false);
       clearTimeout(resumeTimer);
       resumeTimer = setTimeout(() => {
         paused = false;
@@ -59,10 +131,22 @@
       { capture: true }
     );
 
+    async function runStep(step) {
+      if (step.target) {
+        await cursor.click(step.target);
+      } else if (step.hover) {
+        await cursor.moveTo(step.hover);
+      }
+      if (typeof step.fn === 'function') {
+        await step.fn();
+      }
+    }
+
     async function loop() {
       const gen = ++generation;
       while (!stopped && gen === generation) {
         if (paused || document.hidden) {
+          cursor.setVisible(false);
           await sleep(400);
           continue;
         }
@@ -70,11 +154,12 @@
           await sleep(4000);
           continue;
         }
-        const steps = buildSteps();
+        cursor.setVisible(true);
+        const steps = buildSteps(cursor);
         for (const step of steps) {
           if (stopped || paused || gen !== generation) return;
           try {
-            await step.fn();
+            await runStep(step);
           } catch (_) {
             /* ignore demo step errors */
           }
@@ -96,7 +181,7 @@
                 }
               });
             },
-            { threshold: 0.25 }
+            { threshold: 0.2 }
           );
           io.observe(root);
         } else {
@@ -106,7 +191,7 @@
       start();
     }
 
-    return { pauseForUser };
+    return { pauseForUser, cursor };
   }
 
   /* ---------------- POS ---------------- */
@@ -127,7 +212,6 @@
 
     let cart = [];
     let modeLabel = 'Table 3';
-    let autoPlaying = false;
 
     function render() {
       if (!linesEl || !subtotalEl || !totalEl) return;
@@ -275,39 +359,36 @@
 
       return [
         {
-          wait: 500,
-          fn: async () => {
-            autoPlaying = true;
-            resetTicket();
-            setMode(modeBtn);
-          },
-        },
-        ...picks.map(([name, price]) => ({
-          wait: 700,
-          fn: async () => addItem(name, price),
-        })),
-        {
-          wait: 900,
-          fn: async () => {
-            pulse(payBtn);
-          },
+          wait: 350,
+          fn: async () => resetTicket(),
         },
         {
-          wait: 1600,
+          target: modeBtn,
+          wait: 450,
+          fn: async () => setMode(modeBtn),
+        },
+        ...picks.map(([name, price]) => {
+          const btn = menuBtns.find((b) => b.getAttribute('data-name') === name);
+          return {
+            target: btn,
+            wait: 480,
+            fn: async () => addItem(name, price),
+          };
+        }),
+        {
+          target: payBtn,
+          wait: 1400,
           fn: async () => pay(),
         },
         {
-          wait: 1400,
-          fn: async () => {
-            resetTicket();
-            autoPlaying = false;
-          },
+          target: resetBtn,
+          wait: 900,
+          fn: async () => resetTicket(),
         },
       ];
     });
 
     render();
-    return { autoPlaying: () => autoPlaying };
   }
 
   /* ---------------- PMS ---------------- */
@@ -374,32 +455,24 @@
     createLooper(root, () => {
       const row = arrivals[guestIdx % arrivals.length];
       guestIdx += 1;
+      const arrivalsNav = navBtns.find((b) => b.getAttribute('data-nav') === 'Arrivals');
+      const hkNav = navBtns.find((b) => b.getAttribute('data-nav') === 'Housekeeping');
+      const dashNav = navBtns.find((b) => b.getAttribute('data-nav') === 'Dashboard');
+      const dirty = hkBtns.find((b) => b.querySelector('.dirty')) || hkBtns[0];
       return [
-        { wait: 700, fn: async () => setNav('Arrivals') },
+        { target: arrivalsNav, wait: 400, fn: async () => setNav('Arrivals') },
+        { target: row, wait: 500, fn: async () => checkIn(row) },
+        { target: hkNav, wait: 400, fn: async () => setNav('Housekeeping') },
+        { hover: folio, wait: 350, fn: async () => pulse(folio) },
         {
-          wait: 900,
+          target: dirty,
+          wait: 500,
           fn: async () => {
-            selectOnly(arrivals, row);
-            pulse(row);
-          },
-        },
-        { wait: 1000, fn: async () => checkIn(row) },
-        {
-          wait: 800,
-          fn: async () => {
-            setNav('Housekeeping');
-            pulse(folio);
-          },
-        },
-        {
-          wait: 900,
-          fn: async () => {
-            const dirty = hkBtns.find((b) => b.querySelector('.dirty')) || hkBtns[0];
             cycleHk(dirty);
             showToast(root, 'Room status updated');
           },
         },
-        { wait: 800, fn: async () => setNav('Dashboard') },
+        { target: dashNav, wait: 500, fn: async () => setNav('Dashboard') },
       ];
     });
   }
@@ -447,18 +520,21 @@
     createLooper(root, () => {
       const row = rows[rowIdx % rows.length];
       rowIdx += 1;
+      const channels = navBtns.find((b) => b.getAttribute('data-nav') === 'Channels');
+      const inventory = navBtns.find((b) => b.getAttribute('data-nav') === 'Inventory');
+      const rates = navBtns.find((b) => b.getAttribute('data-nav') === 'Rates');
       return [
-        { wait: 600, fn: async () => setNav('Channels') },
+        { target: channels, wait: 350, fn: async () => setNav('Channels') },
         {
-          wait: 500,
+          wait: 300,
           fn: async () => {
             if (kicker) kicker.textContent = 'ARI sync · pushing';
           },
         },
-        { wait: 1200, fn: async () => syncRow(row) },
-        { wait: 700, fn: async () => setNav('Inventory') },
-        { wait: 700, fn: async () => setNav('Rates') },
-        { wait: 700, fn: async () => setNav('Channels') },
+        { target: row, wait: 1100, fn: async () => syncRow(row) },
+        { target: inventory, wait: 400, fn: async () => setNav('Inventory') },
+        { target: rates, wait: 400, fn: async () => setNav('Rates') },
+        { target: channels, wait: 450, fn: async () => setNav('Channels') },
       ];
     });
   }
@@ -484,7 +560,9 @@
       if (!selected || !success) return;
       if (successMeta) {
         successMeta.textContent =
-          (selected.getAttribute('data-label') || 'Stay') + ' · 2 nights · ' + continueBtn.textContent.replace('Continue · ', '');
+          (selected.getAttribute('data-label') || 'Stay') +
+          ' · 2 nights · ' +
+          continueBtn.textContent.replace('Continue · ', '');
       }
       success.hidden = false;
       pulse(continueBtn);
@@ -505,18 +583,19 @@
       i += 1;
       return [
         {
-          wait: 400,
+          wait: 250,
           fn: async () => {
             if (success) success.hidden = true;
           },
         },
-        { wait: 800, fn: async () => selectRate(rate) },
-        { wait: 700, fn: async () => pulse(continueBtn) },
-        { wait: 1400, fn: async () => complete() },
+        { target: rate, wait: 450, fn: async () => selectRate(rate) },
+        { target: continueBtn, wait: 1200, fn: async () => complete() },
         {
-          wait: 1200,
+          target: resetBtn,
+          wait: 800,
           fn: async () => {
             if (success) success.hidden = true;
+            selectRate(rates[0]);
           },
         },
       ];
@@ -556,7 +635,8 @@
       i += 1;
       return [
         {
-          wait: 700,
+          hover: headline,
+          wait: 500,
           fn: async () => {
             if (headline) headline.textContent = copy[0];
             if (lead) lead.textContent = copy[1];
@@ -564,14 +644,16 @@
           },
         },
         {
-          wait: 800,
+          target: room,
+          wait: 450,
           fn: async () => {
             selectOnly(rooms, room);
             pulse(room);
           },
         },
         {
-          wait: 900,
+          target: cta,
+          wait: 700,
           fn: async () => {
             pulse(cta);
             showToast(root, 'Book now → direct checkout');
@@ -614,10 +696,10 @@
       const room = rooms[i % rooms.length];
       i += 1;
       return [
-        { wait: 800, fn: async () => flipArrival(row) },
-        { wait: 900, fn: async () => flipRoom(room) },
+        { target: row, wait: 500, fn: async () => flipArrival(row) },
+        { target: room, wait: 550, fn: async () => flipRoom(room) },
         {
-          wait: 700,
+          wait: 450,
           fn: async () => {
             const badge = row.querySelector('[data-app-badge]');
             if (badge && i % 2 === 0) {
@@ -663,13 +745,12 @@
       const row = rows[i % rows.length];
       i += 1;
       return [
-        { wait: 700, fn: async () => selectRow(row) },
-        { wait: 900, fn: async () => reserve() },
+        { target: row, wait: 450, fn: async () => selectRow(row) },
+        { target: bookBtn, wait: 600, fn: async () => reserve() },
         {
-          wait: 1000,
+          wait: 700,
           fn: async () => {
             const allot = row.querySelector('[data-b2b-allot]');
-            const base = Number(row.getAttribute('data-allotment-base') || row.getAttribute('data-allotment') || allot.textContent);
             if (!row.getAttribute('data-allotment-base')) {
               row.setAttribute('data-allotment-base', String(Number(allot.textContent) + 1));
             }
@@ -685,13 +766,6 @@
   /* ---------------- OTA listing ---------------- */
   function initOta(root) {
     const steps = Array.from(root.querySelectorAll('[data-ota-step]'));
-    const states = [
-      { cls: 'done', label: 'Done' },
-      { cls: 'done', label: 'Live' },
-      { cls: 'active', label: 'In review' },
-      { cls: '', label: 'Queued' },
-      { cls: '', label: 'Next' },
-    ];
 
     function paint(activeIndex) {
       steps.forEach((li, idx) => {
@@ -704,8 +778,8 @@
           li.classList.add('active');
           if (strong) strong.textContent = 'In review';
           pulse(li);
-        } else {
-          if (strong) strong.textContent = idx === steps.length - 1 ? 'Next' : 'Queued';
+        } else if (strong) {
+          strong.textContent = idx === steps.length - 1 ? 'Next' : 'Queued';
         }
       });
       showToast(root, steps[Math.min(activeIndex, steps.length - 1)].querySelector('span').textContent.trim());
@@ -717,7 +791,7 @@
     createLooper(root, () => {
       const idx = i % steps.length;
       i += 1;
-      return [{ wait: 1400, fn: async () => paint(idx) }];
+      return [{ target: steps[idx], wait: 1100, fn: async () => paint(idx) }];
     });
   }
 
@@ -733,8 +807,8 @@
     async function typeQuery(text) {
       if (!query) return;
       query.textContent = '';
-      for (let i = 0; i < text.length; i += 1) {
-        query.textContent += text[i];
+      for (let c = 0; c < text.length; c += 1) {
+        query.textContent += text[c];
         await sleep(28);
       }
       pulse(query);
@@ -759,16 +833,17 @@
       i += 1;
       return [
         {
-          wait: 300,
+          wait: 200,
           fn: async () => {
             if (success) success.hidden = true;
           },
         },
-        { wait: 200, fn: async () => typeQuery(q) },
-        { wait: 800, fn: async () => pulse(serp) },
-        { wait: 900, fn: async () => openDeal() },
+        { hover: query, wait: 100, fn: async () => typeQuery(q) },
+        { hover: serp, wait: 450, fn: async () => pulse(serp) },
+        { target: deal, wait: 1100, fn: async () => openDeal() },
         {
-          wait: 1400,
+          target: resetBtn,
+          wait: 800,
           fn: async () => {
             if (success) success.hidden = true;
           },
@@ -809,27 +884,31 @@
     rows.forEach((row) => {
       row.addEventListener('click', () => selectRow(row));
       const action = row.querySelector('[data-agg-action]');
-      if (action) action.addEventListener('click', (e) => {
-        e.stopPropagation();
-        selectRow(row);
-      });
+      if (action) {
+        action.addEventListener('click', (e) => {
+          e.stopPropagation();
+          selectRow(row);
+        });
+      }
     });
 
     let i = 0;
     createLooper(root, () => {
       const row = rows[i % rows.length];
       i += 1;
+      const action = row.querySelector('[data-agg-action]');
       return [
         {
-          wait: 600,
+          wait: 300,
           fn: async () => {
             if (title) title.textContent = 'Search · Mumbai · 2 nights';
             if (count) count.textContent = '24 stays';
           },
         },
-        { wait: 900, fn: async () => selectRow(row) },
+        { target: action || row, wait: 550, fn: async () => selectRow(row) },
         {
-          wait: 800,
+          hover: count,
+          wait: 500,
           fn: async () => {
             if (count) count.textContent = 'Match ready';
             pulse(count);
@@ -877,10 +956,10 @@
       const row = rows[i % rows.length];
       i += 1;
       return [
-        { wait: 700, fn: async () => selectRow(row) },
-        { wait: 900, fn: async () => book() },
+        { target: row, wait: 450, fn: async () => selectRow(row) },
+        { target: bookBtn, wait: 600, fn: async () => book() },
         {
-          wait: 1000,
+          wait: 700,
           fn: async () => {
             const seats = row.querySelector('[data-tours-seats]');
             if (Number(seats.textContent) <= 2) {

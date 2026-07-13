@@ -2849,6 +2849,71 @@ body.dawn-auth-body {
   position: relative;
 }
 
+.dawn-split-preview,
+.dawn-sol-preview-wrap {
+  position: relative;
+}
+
+.ui-hero-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  width: 28px;
+  height: 28px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(24px, 24px);
+  transition: transform 0.52s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+  filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.35));
+  will-change: transform;
+}
+
+.ui-hero-cursor.is-visible {
+  opacity: 1;
+}
+
+.ui-hero-cursor-arrow {
+  display: block;
+  transform-origin: 4px 4px;
+  transition: transform 0.12s ease;
+}
+
+.ui-hero-cursor.is-pressing .ui-hero-cursor-arrow {
+  transform: scale(0.86);
+}
+
+.ui-hero-cursor-ripple {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.35);
+  opacity: 0;
+  transform: scale(0.4);
+  pointer-events: none;
+}
+
+.ui-hero-cursor.is-clicking .ui-hero-cursor-ripple {
+  animation: ui-hero-cursor-ripple 0.38s ease-out;
+}
+
+.ui-hero-demo .is-demo-hover,
+.ui-hero-demo tr.is-demo-hover,
+.dawn-split-preview .is-demo-hover {
+  outline: 2px solid rgba(37, 99, 235, 0.55);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+  transition: outline 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+@keyframes ui-hero-cursor-ripple {
+  0% { opacity: 0.7; transform: scale(0.45); }
+  100% { opacity: 0; transform: scale(2.4); }
+}
+
 .ui-hero-hint {
   margin: 0 0 0.75rem;
   font-family: var(--font-mono);
@@ -2945,6 +3010,10 @@ body.dawn-auth-body {
 @media (prefers-reduced-motion: reduce) {
   .ui-hero-demo .is-demo-pulse {
     animation: none;
+  }
+
+  .ui-hero-cursor {
+    display: none;
   }
 }
 
